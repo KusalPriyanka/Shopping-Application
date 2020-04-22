@@ -11,7 +11,7 @@ dotenv.config();
 
 // Connect DB
 mongoose.connect(
-  process.env.DB_CONTEXT,
+    process.env.DB_CONTEXT,
   { useNewUrlParser: true, useUnifiedTopology: true },
   () => {
     console.log("Connected to the mongodb");
@@ -25,6 +25,6 @@ app.use(express.json());
 app.use("/api/users", UserRoutes);
 
 // Start server
-app.listen(3000, () => {
+app.listen(3001, () => {
   console.log("Server is up and running on server on 3000");
 });

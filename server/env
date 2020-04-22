@@ -1,0 +1,2 @@
+DB_CONTEXT = mongodb+srv://ishopuser:6YjhvmV9JvBuiud@ishopdb-xpnqn.mongodb.net/iShopDb?retryWrites=true&w=majority
+TOKEN_SECRET = THIS_IS_A_SECRET_KEY_FOR_GENERATE_THE_TOKEN_FOR_LOGED_IN_USERS_INTO_SHOPPING_APP
