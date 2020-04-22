@@ -1,0 +1,6 @@
+# env
+/webapi/.env
+
+# node modules
+/webapi/node_modules
+
