@@ -1,6 +1,6 @@
 # env
-/webapi/.env
+/server/.env
 
 # node modules
-/webapi/node_modules
+/server/node_modules
 
