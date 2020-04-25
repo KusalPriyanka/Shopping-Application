@@ -1,11 +1,11 @@
 const router = require("express").Router();
-const Products  = require('../model/Product');
+const Products = require('../model/Product');
 
 /*Router to get all Products from db*/
-router.get("/", (req, res) =>{
-   Products.find()
-       .then(products => res.send(products))
-       .catch(err => res.status(400).send('Error: ' + err))
+router.get("/", (req, res) => {
+    Products.find()
+        .then(products => res.send(products))
+        .catch(err => res.status(400).send('Error: ' + err))
 
 });
 
@@ -17,19 +17,19 @@ router.get("/:id", (req, res) => {
 });
 
 /*Router to add Products to db*/
-router.post('/AddProduct' , (req, res)=>{
+router.post('/AddProduct', (req, res) => {
     let product = new Products({
-        productName : req.body.productName,
-        productDescription : req.body.productDescription,
-        productCategory : req.body.productCategory,
-        productImageURLS : req.body.productImageURLS,
-        productBrand : req.body.productBrand,
-        productWatchers : req.body.productWatchers,
-        detailsWithSize : req.body.detailsWithSize,
+        productName: req.body.productName,
+        productDescription: req.body.productDescription,
+        productCategory: req.body.productCategory,
+        productImageURLS: req.body.productImageURLS,
+        productBrand: req.body.productBrand,
+        productWatchers: req.body.productWatchers,
+        detailsWithSize: req.body.detailsWithSize,
     });
 
     product.save()
-        .then(() => res.send({productID : product._id}))
+        .then(() => res.send({productID: product._id}))
         .catch(err => res.status(400).send('Error: ' + err))
 
 });
@@ -41,6 +41,24 @@ router.delete("/DeleteProduct/:id", (req, res) => {
         .catch(err => res.status(400).send("Error : " + err))
 });
 
+/*Router to Update Products*/
+router.put("/UpdateProduct/:id", (req, res) => {
+    Products.findById(req.params.id)
+        .then(product => {
+                product.productName = req.body.productName;
+                product.productDescription = req.body.productDescription;
+                product.productCategory = req.body.productCategory;
+                product.productImageURLS = req.body.productImageURLS;
+                product.productBrand = req.body.productBrand;
+                product.productWatchers = req.body.productWatchers;
+                product.detailsWithSize = req.body.detailsWithSize;
+
+                product.save()
+                    .then(() => res.send({productID: product._id}))
+                    .catch(err => res.status(400).send('Error: ' + err))
+        })
+        .catch(err => res.status(400).send("Error : " + err))
+});
 
 
 module.exports = router;
