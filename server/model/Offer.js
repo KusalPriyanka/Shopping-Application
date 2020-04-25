@@ -14,7 +14,7 @@ const OfferSchema = new mongoose.Schema({
         max: 255,
     },
     offerAmount: {
-        type: Integer,
+        type: Number,
         required: true,
         min: 6,
         max: 255,
@@ -25,6 +25,14 @@ const OfferSchema = new mongoose.Schema({
         min: 6,
         max: 255,
     },
+    products :[
+        {
+            productID :  {
+                type : String,
+                required : true,
+            }
+        }
+    ],
     offerImageURL: {
         type : String,
         required : true,
