@@ -9,6 +9,7 @@ const PORT = process.env.PORT || 8080;
 
 // Import routes
 const UserRoutes = require("./routes/UserRoutes");
+const ProductRoutes = require("./routes/ProductRoutes");
 
 dotenv.config();
 
@@ -26,6 +27,7 @@ app.use(express.json());
 
 // Config routes
 app.use("/api/users", UserRoutes);
+app.use("/api/products", ProductRoutes);
 
 // Start server
 app.listen(PORT, () => {
