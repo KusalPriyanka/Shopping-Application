@@ -3,6 +3,7 @@ const express = require("express");
 const app = express();
 const dotenv = require("dotenv");
 const mongoose = require("mongoose");
+const cors = require("cors");
 
 // Config PORT
 const PORT = process.env.PORT || 8080;
@@ -24,6 +25,7 @@ mongoose.connect(
 
 // Middlewares
 app.use(express.json());
+app.use(cors());
 
 // Config routes
 app.use("/api/users", UserRoutes);
