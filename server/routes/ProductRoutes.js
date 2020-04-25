@@ -9,6 +9,13 @@ router.get("/", (req, res) =>{
 
 });
 
+/*Router to get ProductById from db*/
+router.get("/:id", (req, res) => {
+    Products.findById(req.params.id)
+        .then((product) => res.send(product))
+        .catch(err => res.status(400).send("Error : " + err))
+});
+
 /*Router to add Products to db*/
 router.post('/AddProduct' , (req, res)=>{
     let product = new Products({
@@ -33,5 +40,7 @@ router.delete("/DeleteProduct/:id", (req, res) => {
         .then(() => res.send(req.params.id + " Deleted!"))
         .catch(err => res.status(400).send("Error : " + err))
 });
+
+
 
 module.exports = router;
