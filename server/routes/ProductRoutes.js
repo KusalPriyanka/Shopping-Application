@@ -27,4 +27,11 @@ router.post('/AddProduct' , (req, res)=>{
 
 });
 
+/*Router to delete Products from db*/
+router.delete("/DeleteProduct/:id", (req, res) => {
+    Products.findByIdAndDelete(req.params.id)
+        .then(() => res.send(req.params.id + " Deleted!"))
+        .catch(err => res.status(400).send("Error : " + err))
+});
+
 module.exports = router;
