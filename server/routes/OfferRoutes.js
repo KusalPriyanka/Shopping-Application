@@ -16,6 +16,13 @@ router.get("/:id", (req, res) => {
         .catch(err => res.status(400).send("Error : " + err))
 });
 
+/*Router to get Offer By Product Id from db*/
+router.get("/GetProductOffer/:id", (req, res) => {
+    Offer.find({"products.productID" : req.params.id})
+        .then((offer) => res.send(offer))
+        .catch(err => res.status(400).send("Error : " + err))
+});
+
 /*Router To Add Offers*/
 router.post("/AddOffer", (req, res) =>{
 
@@ -63,7 +70,5 @@ router.put("/UpdateOffer/:id", (req, res) => {
         })
         .catch(err => res.status(400).send("Error : " + err));
 });
-
-
 
 module.exports = router;
