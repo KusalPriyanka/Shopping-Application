@@ -11,6 +11,7 @@ const PORT = process.env.PORT || 8080;
 // Import routes
 const UserRoutes = require("./routes/UserRoutes");
 const ProductRoutes = require("./routes/ProductRoutes");
+const OfferRoutes = require("./routes/OfferRoutes");
 
 dotenv.config();
 
@@ -30,6 +31,7 @@ app.use(cors());
 // Config routes
 app.use("/api/users", UserRoutes);
 app.use("/api/products", ProductRoutes);
+app.use("/api/offers", OfferRoutes);
 
 // Start server
 app.listen(PORT, () => {
