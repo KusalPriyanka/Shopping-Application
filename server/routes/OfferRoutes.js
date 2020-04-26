@@ -37,5 +37,13 @@ router.post("/AddOffer", (req, res) =>{
 });
 
 
+/*Router to delete offer from db*/
+router.delete("/DeleteOffer/:id", (req, res) => {
+    Offer.findByIdAndDelete(req.params.id)
+        .then(() => res.send(req.params.id + " Deleted!"))
+        .catch(err => res.status(400).send("Error : " + err))
+});
+
+
 
 module.exports = router;
