@@ -44,6 +44,26 @@ router.delete("/DeleteOffer/:id", (req, res) => {
         .catch(err => res.status(400).send("Error : " + err))
 });
 
+/*Router to Update Offer*/
+router.put("/UpdateOffer/:id", (req, res) => {
+    Offer.findById(req.params.id)
+        .then(offer => {
+                offer.offerName = req.body.offerName;
+                offer.offerType = req.body.offerType;
+                offer.offerAmount = req.body.offerAmount;
+                offer.productCategory = req.body.productCategory;
+                offer.products = req.body.products;
+                offer.offerImageURL = req.body.offerImageURL;
+                offer.offerCode = req.body.offerCode;
+                offer.offerEndDate = req.body.offerEndDate;
+
+            offer.save()
+                .then(() => res.send({OfferID : offer._id}))
+                .catch(err => res.status(400).send('Error: ' + err))
+        })
+        .catch(err => res.status(400).send("Error : " + err));
+});
+
 
 
 module.exports = router;
