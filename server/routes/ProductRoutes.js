@@ -45,20 +45,32 @@ router.delete("/DeleteProduct/:id", (req, res) => {
 router.put("/UpdateProduct/:id", (req, res) => {
     Products.findById(req.params.id)
         .then(product => {
-                product.productName = req.body.productName;
-                product.productDescription = req.body.productDescription;
-                product.productCategory = req.body.productCategory;
-                product.productImageURLS = req.body.productImageURLS;
-                product.productBrand = req.body.productBrand;
-                product.productWatchers = req.body.productWatchers;
-                product.detailsWithSize = req.body.detailsWithSize;
+            product.productName = req.body.productName;
+            product.productDescription = req.body.productDescription;
+            product.productCategory = req.body.productCategory;
+            product.productImageURLS = req.body.productImageURLS;
+            product.productBrand = req.body.productBrand;
+            product.productWatchers = req.body.productWatchers;
+            product.detailsWithSize = req.body.detailsWithSize;
 
-                product.save()
-                    .then(() => res.send({productID: product._id}))
-                    .catch(err => res.status(400).send('Error: ' + err))
+            product.save()
+                .then(() => res.send({productID: product._id}))
+                .catch(err => res.status(400).send('Error: ' + err))
         })
         .catch(err => res.status(400).send("Error : " + err))
 });
 
+/*Route To update the Product View count*/
+router.put("/UpdateProductWatchers/:id", (req, res) => {
+    Products.findById(req.params.id)
+        .then(product => {
+            product.productWatchers += 1;
+
+            product.save()
+                .then(() => res.send({productID: product._id}))
+                .catch(err => res.status(400).send('Error: ' + err))
+        })
+        .catch(err => res.status(400).send("Error : " + err))
+});
 
 module.exports = router;
