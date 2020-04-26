@@ -1,6 +1,21 @@
 const router = require("express").Router();
 const Offer =  require('../model/Offer');
 
+/*Router to get all Offers from db*/
+router.get("/", (req, res) => {
+    Offer.find()
+        .then(offers => res.send(offers))
+        .catch(err => res.status(400).send('Error: ' + err))
+
+});
+
+/*Router to get OfferById from db*/
+router.get("/:id", (req, res) => {
+    Offer.findById(req.params.id)
+        .then((offer) => res.send(offer))
+        .catch(err => res.status(400).send("Error : " + err))
+});
+
 /*Router To Add Offers*/
 router.post("/AddOffer", (req, res) =>{
 
