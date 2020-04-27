@@ -35,6 +35,11 @@ const Navigation = () => {
                   Register
                 </Link>
               </li>
+              <li className="nav-item">
+                <Link className="nav-link" to="/storeManager">
+                  SM-Dashboard
+                </Link>
+              </li>
             </ul>
           </div>
         </nav>

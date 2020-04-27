@@ -5,6 +5,7 @@ import Navigation from "./components/Shared/Navigation";
 
 import LoginForm from "./components/User/LoginForm";
 import RegisterForm from "./components/User/RegisterForm";
+import StoreManagerDashBoard from "./components/StoreManager/StoreManagerDashBoard";
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
             {/* <Route path="/" exact component={LoginForm} /> */}
             <Route path="/login" component={LoginForm} />
             <Route path="/register" component={RegisterForm} />
+            <Route path="/storeManager" component={StoreManagerDashBoard} />
           </Switch>
         </Router>
       </div>
