@@ -24,6 +24,7 @@ const PORT = process.env.PORT || 8080;
 const UserRoutes = require("./routes/UserRoutes");
 const ProductRoutes = require("./routes/ProductRoutes");
 const OfferRoutes = require("./routes/OfferRoutes");
+const ShoppingCartRoutes = require("./routes/ShoppingCartRoutes")
 
 dotenv.config();
 
@@ -44,6 +45,7 @@ app.use(cors());
 app.use("/api/users", UserRoutes);
 app.use("/api/products", ProductRoutes);
 app.use("/api/offers", OfferRoutes);
+app.use("/api/shoppingcarts",ShoppingCartRoutes);
 
 app.post('/upload',function(req, res) {
 
