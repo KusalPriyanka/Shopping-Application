@@ -8,21 +8,21 @@ import RegisterForm from "./components/User/RegisterForm";
 import StoreManagerDashBoard from "./components/StoreManager/StoreManagerDashBoard";
 
 function App() {
-  return (
-    <div>
-      <div className="container-fluid">
-        <Router>
-          <Navigation />
-          <Switch>
-            {/* <Route path="/" exact component={LoginForm} /> */}
-            <Route path="/login" component={LoginForm} />
-            <Route path="/register" component={RegisterForm} />
-            <Route path="/storeManager" component={StoreManagerDashBoard} />
-          </Switch>
-        </Router>
-      </div>
-    </div>
-  );
+    return (
+        <div>
+            <div>
+                <Router>
+                    <Navigation />
+                    <Switch>
+                        {/* <Route path="/" exact component={LoginForm} /> */}
+                        <Route path="/login" component={LoginForm} />
+                        <Route path="/register" component={RegisterForm} />
+                        <Route path="/storeManager" component={StoreManagerDashBoard} />
+                    </Switch>
+                </Router>
+            </div>
+        </div>
+    );
 }
 
 export default App;
