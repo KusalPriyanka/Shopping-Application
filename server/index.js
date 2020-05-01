@@ -18,13 +18,15 @@ var storage = multer.diskStorage({
 var upload = multer({ storage: storage }).array('file')
 
 // Config PORT
-const PORT = process.env.PORT || 8080;
+const PORT = process.env.PORT || 8081;
 
 // Import routes
 const UserRoutes = require("./routes/UserRoutes");
 const ProductRoutes = require("./routes/ProductRoutes");
 const OfferRoutes = require("./routes/OfferRoutes");
-const ShoppingCartRoutes = require("./routes/ShoppingCartRoutes")
+const ShoppingCartRoutes = require("./routes/ShoppingCartRoutes");
+const WishListRoutes = require("./routes/WishListRoutes");
+
 
 dotenv.config();
 
@@ -46,6 +48,8 @@ app.use("/api/users", UserRoutes);
 app.use("/api/products", ProductRoutes);
 app.use("/api/offers", OfferRoutes);
 app.use("/api/shoppingcarts",ShoppingCartRoutes);
+app.use("/api/wishlists",WishListRoutes);
+
 
 app.post('/upload',function(req, res) {
 
