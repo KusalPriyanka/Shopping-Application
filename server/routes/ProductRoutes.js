@@ -29,9 +29,8 @@ router.post('/AddProduct', (req, res) => {
     });
 
     product.save()
-        .then(() => res.send({productID: product._id}))
+        .then((product) => res.send(product))
         .catch(err => res.status(400).send('Error: ' + err))
-
 });
 
 /*Router to delete Products from db*/
