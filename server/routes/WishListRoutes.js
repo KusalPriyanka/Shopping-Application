@@ -30,4 +30,13 @@ router.post('/AddToWishList',(req,res)=>{
         .catch(err=>res.status(400).send('Error :' + err))
 });
 
+/*
+Delete a wishListItem from the cart
+*/
+router.delete("/DeleteWishListItem/:id", (req, res) => {
+    WishLists.findByIdAndDelete(req.params.id)
+        .then(() => res.send(req.params.id + " Deleted Successfully!"))
+        .catch(err => res.status(400).send("Error : " + err))
+});
+
 module.exports=router;
