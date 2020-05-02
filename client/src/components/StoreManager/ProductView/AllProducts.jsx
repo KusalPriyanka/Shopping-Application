@@ -16,6 +16,8 @@ import Slide from '@material-ui/core/Slide';
 import SmallSnackbar from "../Shared/SnackBar";
 import Grid from '@material-ui/core/Grid';
 import Container from '@material-ui/core/Container';
+import '../../../css/hoverable.css'
+import { Redirect } from "react-router-dom";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="down" ref={ref} {...props} />;
@@ -40,6 +42,8 @@ class AllProducts extends Component {
             open: false,
             isShow: false,
             isShowSnackBar: false,
+            redirect: false,
+            path : "",
             id: ""
         }
     }
@@ -122,13 +126,26 @@ class AllProducts extends Component {
             })
     }
 
+    setRedirect = (path) => {
+        this.setState({
+            redirect: true,
+            path : path
+        })
+    }
+    renderRedirect = () => {
+        if (this.state.redirect) {
+            return <Redirect to={this.state.path} />
+        }
+    }
+
 
     render() {
         const {classes} = this.props
         return (
             <Container>
                 <Grid container>
-                    <Grid item xs={12} className={classes.paper}>
+                    <Grid item xs={12} className={classes.paper + " hoverable"}>
+                        {this.renderRedirect()}
                         {(this.state.isShowSnackBar) ? <SmallSnackbar setShowSnackBar={this.setShowSnackBar}/> :
                             <React.Fragment></React.Fragment>}
                         <Dialog
@@ -180,7 +197,7 @@ class AllProducts extends Component {
                                     icon: () => this.getIcon("add"),
                                     tooltip: 'Add New Product',
                                     isFreeAction: true,
-                                    onClick: (event) => alert("You want to add a new row")
+                                    onClick: (event) => this.setRedirect("/storeManager/addProducts")
                                 },
                                 {
 
