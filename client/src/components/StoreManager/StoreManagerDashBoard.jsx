@@ -13,8 +13,8 @@ class StoreManagerDashBoard extends Component{
                 <Router>
                     <TopSearchAppBar/>
                     <Switch>
-                        <Route path="/" exact component={AllProducts} />
-                        <Route path="/addProducts" component={AddProduct} />
+                        <Route path="/storeManager" exact component={AllProducts} />
+                        <Route path="/storeManager/addProducts" component={AddProduct} />
                     </Switch>
                     <OpenIconSpeedDial/>
                 </Router>

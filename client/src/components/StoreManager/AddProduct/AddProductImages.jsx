@@ -38,9 +38,6 @@ class AddProductImages extends React.Component {
 
 
                 />
-                <button type="button"  className="btn btn-success btn-block"
-                        onClick={this.onClickHandler}>Upload
-                </button>
             </React.Fragment>
         )
     }

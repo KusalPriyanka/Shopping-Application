@@ -148,13 +148,13 @@ export default function TopSearchAppBar() {
             </div>
 
             <List>
-                <ListItem button component={Link} to="/">
+                <ListItem button component={Link} to="/storeManager">
                     <ListItemIcon>
                         <InboxIcon />
                     </ListItemIcon>
                     <ListItemText>All Products</ListItemText>
                 </ListItem>
-                <ListItem button component={Link} to="/addProducts">
+                <ListItem button component={Link} to="/storeManager/addProducts">
                     <ListItemIcon>
                         <InboxIcon />
                     </ListItemIcon>
@@ -254,7 +254,7 @@ export default function TopSearchAppBar() {
                         <MenuIcon />
                     </IconButton>
                     <Typography className={classes.title} variant="h6" noWrap>
-                        Material-UI
+                        IShop Plaza
                     </Typography>
                     <div className={classes.search}>
                         <div className={classes.searchIcon}>
