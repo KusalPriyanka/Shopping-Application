@@ -108,6 +108,7 @@ const Navigation = (props) => {
                     <Button component={Link} to="/login" color="inherit">Login</Button>
                     <Button component={Link} to="/register" color="inherit">Register</Button>
                     <Button component={Link} to="/storeManager" color="inherit">Store Manager</Button>
+                    <Button component={Link} to="/cartItems" color="inherit">Cart View</Button>
                 </Toolbar>
             </AppBar>
             <Drawer anchor={"left"} open={state} onClose={toggleDrawer(false)}>
