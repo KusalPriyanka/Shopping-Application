@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {BrowserRouter as Router, Switch, Route} from "react-router-dom";
 
 import Navigation from "./components/Shared/Navigation";
@@ -24,7 +24,7 @@ function App() {
         <div>
             <div>
                 <Router>
-                    <Navigation/>
+                    <Navigation categories={categories}/>
                     <Switch>
                         <Route path="/" exact component={Home}/>
                         <Route path="/login" component={LoginForm}/>
