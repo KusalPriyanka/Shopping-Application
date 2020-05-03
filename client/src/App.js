@@ -7,6 +7,7 @@ import LoginForm from "./components/User/LoginForm";
 import RegisterForm from "./components/User/RegisterForm";
 import StoreManagerDashBoard from "./components/StoreManager/StoreManagerDashBoard";
 import Home from "./components/Home/Home";
+import CartView from "./components/CartItems/CartView";
 
 function App() {
     return (
@@ -19,6 +20,7 @@ function App() {
                         <Route path="/login" component={LoginForm}/>
                         <Route path="/register" component={RegisterForm}/>
                         <Route path="/storeManager" component={StoreManagerDashBoard}/>
+                        <Route path="/cartItems" component={CartView}/>
                     </Switch>
                 </Router>
             </div>
