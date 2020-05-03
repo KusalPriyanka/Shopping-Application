@@ -16,6 +16,13 @@ router.get("/:id", (req, res) => {
         .catch(err => res.status(400).send("Error : " + err))
 });
 
+/*Router to get ProductByCategory from db*/
+router.get("/productByCategory/:category", (req, res) => {
+    Products.find({productCategory : req.params.category})
+        .then((products) => res.send(products))
+        .catch(err => res.status(400).send("Error : " + err))
+});
+
 /*Router to add Products to db*/
 router.post('/AddProduct', (req, res) => {
     let product = new Products({

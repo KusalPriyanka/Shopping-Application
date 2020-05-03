@@ -3,11 +3,12 @@ import Carousel from 'react-material-ui-carousel';
 import autoBind from 'auto-bind';
 import {Paper, Button} from '@material-ui/core'
 import "../../scss/imageSlider.scss"
+import "../../css/hoverable.css"
 
 function Project(props) {
     return (
         <Paper
-            className="Project"
+            className="Project hoverable"
             style={{
                 backgroundColor: props.item.color,
                 backgroundImage: `url(${props.item.image})`,
@@ -33,7 +34,7 @@ const items = [
         name: "Lear Music Reader",
         description: "A PDF Reader specially designed for musicians.",
         color: "#7D85B1",
-        image: "https://source.unsplash.com/featured/?wedding-dress"
+        image: "https://source.unsplash.com/featured/?wedding"
 
     },
     {

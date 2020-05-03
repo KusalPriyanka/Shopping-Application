@@ -11,6 +11,7 @@ export default class AddProductDetails extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            allCategories : [],
             open: false,
             productName: this.props.product.productName,
             brandName: this.props.product.brandName,
@@ -47,6 +48,14 @@ export default class AddProductDetails extends Component {
                 [e.target.name] : e.target.value
             }
         )
+    }
+
+    componentDidMount() {
+        let allCategories = ['Women Top', 'Men Top', 'Kids', 'Bags', 'Shoes']
+
+        this.setState({
+            allCategories : allCategories
+        })
     }
 
     componentWillUnmount() {
@@ -106,9 +115,9 @@ export default class AddProductDetails extends Component {
                                 <MenuItem value="">
                                     <em>None</em>
                                 </MenuItem>
-                                <MenuItem value={10}>Ten</MenuItem>
-                                <MenuItem value={20}>Twenty</MenuItem>
-                                <MenuItem value={30}>Thirty</MenuItem>
+                                {this.state.allCategories.map(category =>{
+                                    return <MenuItem key={category} value={category}>{category}</MenuItem>
+                                })}
                             </Select>
                         </FormControl>
                     </Grid>

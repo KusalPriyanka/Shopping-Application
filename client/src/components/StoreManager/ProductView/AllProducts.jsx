@@ -25,7 +25,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 
 const styles = (theme) => ({
     backdrop: {
-        zIndex: 100,
+        zIndex: 1500,
         color: '#fff',
     },
     paper: {

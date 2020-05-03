@@ -43,13 +43,14 @@ mongoose.connect(
 app.use(express.json());
 app.use(cors());
 
+
 // Config routes
 app.use("/api/users", UserRoutes);
 app.use("/api/products", ProductRoutes);
 app.use("/api/offers", OfferRoutes);
 app.use("/api/shoppingcarts",ShoppingCartRoutes);
 app.use("/api/wishlists",WishListRoutes);
-
+app.use('/images', express.static('images'))
 
 app.post('/upload',function(req, res) {
 
@@ -59,10 +60,16 @@ app.post('/upload',function(req, res) {
         } else if (err) {
             return res.status(500).json(err)
         }
-        return res.status(200).send({files : req.files})
+        let url = req.protocol + '://' + req.get('host');
+        return res.status(200).send({
+            files : req.files,
+            url : url
+        })
     })
 
 });
+
+
 
 
 // Start server

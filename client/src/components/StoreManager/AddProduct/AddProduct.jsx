@@ -10,7 +10,7 @@ import AddProductDetails from './AddProductDetails';
 import AddProductSizeAndPrice from "./AddProductSizeAndPrice";
 import AddProductImages from "./AddProductImages";
 import LoadingView from "../LoadingView/LoadingView";
-import ProductView from "../ProductView/ProductView";
+import ProductView from "../ProductView/SmallProductView";
 import Backdrop from '@material-ui/core/Backdrop';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import axios from "axios";
@@ -95,10 +95,11 @@ export default function AddProduct() {
             .then(res => { // then print response status
                 console.log(res.statusText)
                 console.log(res.data.files)
+                let imageHostUrl = res.data.url;
 
                 let productImageURLS = [];
                 res.data.files.map(image => {
-                    productImageURLS.push({imageURL: image.filename})
+                    productImageURLS.push({imageURL: imageHostUrl + '/images/' + image.filename})
                 })
 
                 let product = {
