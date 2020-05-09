@@ -56,11 +56,11 @@ class MainProductView extends Component {
                     {(this.state.product != null) ?
                         <Paper className={'hoverable'} elevation={3} style={{marginTop: '40px'}}>
                             <Container style={{padding: "30px"}}>
-                                <Grid container>
-                                    <Grid xs={12} sm={5} container alignItems={"center"} justify={"center"}>
+                                <Grid container item>
+                                    <Grid item xs={12} sm={5} container alignItems={"center"} justify={"center"}>
                                         <img style={{maxWidth:"100%"}} width={'400px'} src={this.state.images[0]}/>
                                     </Grid>
-                                    <Grid xs={12} sm={7}>
+                                    <Grid item xs={12} sm={7}>
                                         <Typography variant={'h4'} color={"primary"}>
                                             {this.state.product.productName}
                                         </Typography>

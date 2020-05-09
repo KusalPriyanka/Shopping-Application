@@ -18,7 +18,7 @@ var storage = multer.diskStorage({
 var upload = multer({ storage: storage }).array('file')
 
 // Config PORT
-const PORT = process.env.PORT || 8081;
+const PORT = process.env.PORT || 8080;
 
 // Import routes
 const UserRoutes = require("./routes/UserRoutes");
