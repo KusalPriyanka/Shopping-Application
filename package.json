@@ -4,7 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon index.js"
+    "start": "npm install && cd server/ && nodemon index.js",
+    "heroku-prebuild": "npm install --only=dev",
+    "heroku-postbuild": "cd client/ && npm install && npm run build"
   },
   "author": "",
   "license": "ISC",

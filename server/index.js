@@ -5,6 +5,7 @@ const dotenv = require("dotenv");
 const mongoose = require("mongoose");
 const cors = require("cors");
 const multer = require("multer");
+const path = require("path");
 
 var storage = multer.diskStorage({
     destination: function (req, file, cb) {
@@ -69,8 +70,17 @@ app.post('/upload',function(req, res) {
 
 });
 
-
-
+// Return view if production environment
+if (process.env.NODE_ENV === "production") {
+    app.use(express.static(__dirname + "/../client/build"));
+  
+    app.get("*", (req, res) => {
+      res.sendFile(
+        path.resolve(__dirname + "/../", "client", "build", "index.html")
+      );
+      console.log(__dirname);
+    });
+  }
 
 // Start server
 app.listen(PORT, () => {
