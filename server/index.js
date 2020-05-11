@@ -80,7 +80,7 @@ if (process.env.NODE_ENV === "production") {
       );
       console.log(__dirname);
     });
-  }
+}
 
 // Start server
 app.listen(PORT, () => {
