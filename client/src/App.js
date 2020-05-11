@@ -14,17 +14,21 @@ import CartView from "./components/CartItems/CartView";
 
 function App() {
 
+    const [navBarStatus, setNavBarStatus] = useState(true);
     let [categories, setCategories] = useState([]);
 
     useEffect( ()=>{
-        setCategories(['Women Top', 'Men Top', 'Kids', 'Bags', 'Shoes'])
+        setCategories(['Women Top', 'Men Top', 'Kids', 'Bags', 'Shoes']);
+        if(window.location.pathname === '/login' || window.location.pathname === '/register'){
+            setNavBarStatus(false);
+        }
     }, [] );
 
     return (
         <div>
             <div>
                 <Router>
-                    <Navigation categories={categories}/>
+                    {navBarStatus ? <Navigation categories={categories}/> : null}
                     <Switch>
                         <Route path="/" exact component={Home}/>
                         <Route path="/login" component={LoginForm}/>
