@@ -60,4 +60,15 @@ router.put("/edit", async (req, res) => {
   }
 });
 
+router.delete("/delete", async (req, res) => {
+  const ObjectId = require("mongoose").Types.ObjectId;
+
+  try {
+    await FeedbackModel.deleteOne({ _id: new ObjectId(req.body.feedbackId) });
+    res.send({ feedbackId: req.body.feedbackId });
+  } catch (err) {
+    res.status(400).send(err);
+  }
+});
+
 module.exports = router;
