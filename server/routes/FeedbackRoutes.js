@@ -39,4 +39,25 @@ router.post("/add", async (req, res) => {
   }
 });
 
+router.put("/edit", async (req, res) => {
+  const ObjectId = require("mongoose").Types.ObjectId;
+
+  const feedback = await FeedbackModel.findById(
+    new ObjectId(req.body.feedbackId)
+  );
+
+  if (!feedback)
+    return res.status(404).send("There is no feedback related to the id");
+
+  feedback.rating = req.body.rating;
+  feedback.feedback = req.body.feedback;
+
+  try {
+    await feedback.save();
+    res.send({ feedbackId: feedback._id });
+  } catch (err) {
+    res.status(400).send(err);
+  }
+});
+
 module.exports = router;
