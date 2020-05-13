@@ -53,6 +53,7 @@ router.post("/login", async (req, res) => {
     req.body.password,
     user.userPassword
   );
+
   if (!validPassword)
     return res.status(404).send("Email or password is wrong!");
 
@@ -60,6 +61,7 @@ router.post("/login", async (req, res) => {
   const token = jwt.sign({ _id: user._id }, process.env.TOKEN_SECRET, {
     expiresIn: "1h",
   });
+
   res.header("auth-token", token);
 
   res.send(token);

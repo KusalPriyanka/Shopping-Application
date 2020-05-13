@@ -15,20 +15,20 @@ const shoppingCartSchema = new mongoose.Schema({
         required: true,
       },
       quantity: {
-        type: String,
+        type: Number,
         required: true,
-        min: 6,
+        min: 1,
         max: 255,
       },
       productPrice: {
-        type: String,
+        type: Number,
         required: true,
       },
     },
   ],
 
   totalPrice: {
-    type: String,
+    type: Number,
     required: true,
   },
 });

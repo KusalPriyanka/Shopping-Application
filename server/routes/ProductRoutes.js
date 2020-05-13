@@ -16,6 +16,13 @@ router.get("/:id", (req, res) => {
         .catch(err => res.status(400).send("Error : " + err))
 });
 
+/*Router to get ProductByCategory from db*/
+router.get("/productByCategory/:category", (req, res) => {
+    Products.find({productCategory : req.params.category})
+        .then((products) => res.send(products))
+        .catch(err => res.status(400).send("Error : " + err))
+});
+
 /*Router to add Products to db*/
 router.post('/AddProduct', (req, res) => {
     let product = new Products({
@@ -25,13 +32,13 @@ router.post('/AddProduct', (req, res) => {
         productImageURLS: req.body.productImageURLS,
         productBrand: req.body.productBrand,
         productWatchers: req.body.productWatchers,
+        productPrice: req.body.productPrice,
         detailsWithSize: req.body.detailsWithSize,
     });
 
     product.save()
-        .then(() => res.send({productID: product._id}))
+        .then((product) => res.send(product))
         .catch(err => res.status(400).send('Error: ' + err))
-
 });
 
 /*Router to delete Products from db*/
@@ -51,6 +58,7 @@ router.put("/UpdateProduct/:id", (req, res) => {
             product.productImageURLS = req.body.productImageURLS;
             product.productBrand = req.body.productBrand;
             product.productWatchers = req.body.productWatchers;
+            product.productPrice = req.body.productPrice;
             product.detailsWithSize = req.body.detailsWithSize;
 
             product.save()
