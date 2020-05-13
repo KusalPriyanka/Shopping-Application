@@ -9,7 +9,7 @@ import StoreManagerDashBoard from "./components/StoreManager/StoreManagerDashBoa
 import MainProductView from "./components/MainProductView/MainProductView";
 import Home from "./components/Home/Home";
 import ProductByCategory from "./components/StoreManager/ProductByCategory/ProductByCategory";
-
+import Admin from "./components/Admin/Admin"
 import CartView from "./components/CartItems/CartView";
 
 function App() {
@@ -19,7 +19,7 @@ function App() {
 
     useEffect( ()=>{
         setCategories(['Women Top', 'Men Top', 'Kids', 'Bags', 'Shoes']);
-        if(window.location.pathname === '/login' || window.location.pathname === '/register'){
+        if(window.location.pathname === '/login' || window.location.pathname === '/register'  || window.location.pathname === '/Admin'){
             setNavBarStatus(false);
         }
     }, [] );
@@ -33,10 +33,11 @@ function App() {
                         <Route path="/" exact component={Home}/>
                         <Route path="/login" component={LoginForm}/>
                         <Route path="/register" component={RegisterForm}/>
-                        <Route path="/storeManager" component={StoreManagerDashBoard}/>
+                        <Route path="/storeManager" component={StoreManagerDashBoard}/>                        
                         <Route path="/mainProductView/:id" component={MainProductView}/>
                         <Route path="/category/:category" component={(props) => <ProductByCategory {...props} key={window.location.pathname}/>}/>
                         <Route path="/cartItems" component={CartView}/>
+                        <Route path="/Admin" component={Admin}/>
                     </Switch>
                 </Router>
             </div>
