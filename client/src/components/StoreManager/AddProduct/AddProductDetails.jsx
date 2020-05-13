@@ -6,17 +6,19 @@ import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
+import {number} from "prop-types";
 
 export default class AddProductDetails extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            allCategories : [],
+            allCategories: [],
             open: false,
             productName: this.props.product.productName,
             brandName: this.props.product.brandName,
             description: this.props.product.description,
             category: this.props.product.category,
+            productPrice: this.props.product.productPrice,
         }
 
         this.handleChange = this.handleChange.bind(this);
@@ -45,7 +47,7 @@ export default class AddProductDetails extends Component {
 
     updateForm = (e) => {
         this.setState({
-                [e.target.name] : e.target.value
+                [e.target.name]: e.target.value
             }
         )
     }
@@ -54,7 +56,7 @@ export default class AddProductDetails extends Component {
         let allCategories = ['Women Top', 'Men Top', 'Kids', 'Bags', 'Shoes']
 
         this.setState({
-            allCategories : allCategories
+            allCategories: allCategories
         })
     }
 
@@ -63,7 +65,8 @@ export default class AddProductDetails extends Component {
             productName: this.state.productName,
             brandName: this.state.brandName,
             description: this.state.description,
-            category: this.state.category
+            category: this.state.category,
+            productPrice: this.state.productPrice
         })
     }
 
@@ -98,7 +101,8 @@ export default class AddProductDetails extends Component {
                             onChange={e => this.updateForm(e)}
                         />
                     </Grid>
-                    <Grid item xs={12} sm={12}>
+
+                    <Grid item xs={12} sm={6}>
                         <FormControl fullWidth required>
                             <InputLabel id="demo-controlled-open-select-label">Product Category</InputLabel>
                             <Select
@@ -115,12 +119,26 @@ export default class AddProductDetails extends Component {
                                 <MenuItem value="">
                                     <em>None</em>
                                 </MenuItem>
-                                {this.state.allCategories.map(category =>{
+                                {this.state.allCategories.map(category => {
                                     return <MenuItem key={category} value={category}>{category}</MenuItem>
                                 })}
                             </Select>
                         </FormControl>
                     </Grid>
+                    <Grid item xs={12} sm={6}>
+                        <TextField
+                            required
+                            id="productPrice"
+                            name="productPrice"
+                            label="Product Price"
+                            fullWidth
+                            autoComplete="brandName"
+                            value={this.state.productPrice}
+                            onChange={e => this.updateForm(e)}
+                            type={'number'}
+                        />
+                    </Grid>
+
                     <Grid item xs={12}>
                         <TextField
                             required

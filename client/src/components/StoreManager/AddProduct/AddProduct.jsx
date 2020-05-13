@@ -64,7 +64,8 @@ export default function AddProduct() {
         productName: "",
         brandName: "",
         description: "",
-        category: ""
+        category: "",
+        productPrice: ""
     });
     const [sizeAndPrice, setSizeAndPrice] = React.useState([]);
     const [selectedFile, setSelectedFile] = React.useState([]);
@@ -109,6 +110,7 @@ export default function AddProduct() {
                     "productImageURLS": productImageURLS,
                     "productBrand": productDetails.brandName,
                     "productWatchers": 0,
+                    "productPrice" : productDetails.productPrice,
 
                     "detailsWithSize": [
                         {
@@ -155,7 +157,7 @@ export default function AddProduct() {
         setSelectedFile(selectedFile);
     }
 
-    const steps = ['Product Details', 'Sizes & Price', 'Product Images'];
+    const steps = ['Product Details', 'Product Size', 'Product Images'];
 
     function getStepContent(step) {
         switch (step) {
