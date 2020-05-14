@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import {BrowserRouter as Router, Switch, Route} from "react-router-dom";
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 
 import Navigation from "./components/Shared/Navigation";
 
@@ -13,35 +13,53 @@ import ProductByCategory from "./components/StoreManager/ProductByCategory/Produ
 import CartView from "./components/CartItems/CartView";
 
 function App() {
+  const [navBarStatus, setNavBarStatus] = useState(true);
+  let [categories, setCategories] = useState([]);
 
-    const [navBarStatus, setNavBarStatus] = useState(true);
-    let [categories, setCategories] = useState([]);
+  useEffect(() => {
+    setCategories(["Women Top", "Men Top", "Kids", "Bags", "Shoes"]);
+    if (
+      window.location.pathname === "/login" ||
+      window.location.pathname === "/register"
+    ) {
+    }
+  }, []);
 
-    useEffect( ()=>{
-        setCategories(['Women Top', 'Men Top', 'Kids', 'Bags', 'Shoes']);
-        if(window.location.pathname === '/login' || window.location.pathname === '/register'){
-            setNavBarStatus(false);
-        }
-    }, [] );
+  const withOutHeader = (component) => {
+    setNavBarStatus(false);
+    if (component === "login") {
+      return <LoginForm />;
+    } else if (component === "register") {
+      return <RegisterForm />;
+    }
+  };
 
-    return (
-        <div>
-            <div>
-                <Router>
-                    {navBarStatus ? <Navigation categories={categories}/> : null}
-                    <Switch>
-                        <Route path="/" exact component={Home}/>
-                        <Route path="/login" component={LoginForm}/>
-                        <Route path="/register" component={RegisterForm}/>
-                        <Route path="/storeManager" component={StoreManagerDashBoard}/>
-                        <Route path="/mainProductView/:id" component={MainProductView}/>
-                        <Route path="/category/:category" component={(props) => <ProductByCategory {...props} key={window.location.pathname}/>}/>
-                        <Route path="/cartItems" component={CartView}/>
-                    </Switch>
-                </Router>
-            </div>
-        </div>
-    );
+  return (
+    <div>
+      <div>
+        <Router>
+          {navBarStatus ? <Navigation categories={categories} /> : null}
+          <Switch>
+            <Route path="/" exact component={Home} />
+            <Route path="/login" component={() => withOutHeader("login")} />
+            <Route
+              path="/register"
+              component={() => withOutHeader("register")}
+            />
+            <Route path="/storeManager" component={StoreManagerDashBoard} />
+            <Route path="/mainProductView/:id" component={MainProductView} />
+            <Route
+              path="/category/:category"
+              component={(props) => (
+                <ProductByCategory {...props} key={window.location.pathname} />
+              )}
+            />
+            <Route path="/cartItems" component={CartView} />
+          </Switch>
+        </Router>
+      </div>
+    </div>
+  );
 }
 
 export default App;
