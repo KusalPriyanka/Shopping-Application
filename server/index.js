@@ -27,6 +27,7 @@ const UserRoutes = require("./routes/UserRoutes");
 const UserFeedbacks = require("./routes/FeedbackRoutes");
 const ProductRoutes = require("./routes/ProductRoutes");
 const OfferRoutes = require("./routes/OfferRoutes");
+const CategoryRoutes = require("./routes/CategoryRoutes");
 const ShoppingCartRoutes = require("./routes/ShoppingCartRoutes");
 const WishListRoutes = require("./routes/WishListRoutes");
 
@@ -50,6 +51,7 @@ app.use("/api/users", UserRoutes);
 app.use("/api/feedback", UserFeedbacks);
 app.use("/api/products", ProductRoutes);
 app.use("/api/offers", OfferRoutes);
+app.use("/api/Categories",CategoryRoutes);
 app.use("/api/shoppingcarts", ShoppingCartRoutes);
 app.use("/api/wishlists", WishListRoutes);
 app.use("/images", express.static("images"));

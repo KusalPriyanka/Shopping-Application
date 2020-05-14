@@ -32,6 +32,7 @@ router.post('/AddProduct', (req, res) => {
         productImageURLS: req.body.productImageURLS,
         productBrand: req.body.productBrand,
         productWatchers: req.body.productWatchers,
+        productPrice: req.body.productPrice,
         detailsWithSize: req.body.detailsWithSize,
     });
 
@@ -57,6 +58,7 @@ router.put("/UpdateProduct/:id", (req, res) => {
             product.productImageURLS = req.body.productImageURLS;
             product.productBrand = req.body.productBrand;
             product.productWatchers = req.body.productWatchers;
+            product.productPrice = req.body.productPrice;
             product.detailsWithSize = req.body.detailsWithSize;
 
             product.save()

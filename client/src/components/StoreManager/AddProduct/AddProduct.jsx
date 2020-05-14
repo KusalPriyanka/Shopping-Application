@@ -7,7 +7,7 @@ import StepLabel from '@material-ui/core/StepLabel';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import AddProductDetails from './AddProductDetails';
-import AddProductSizeAndPrice from "./AddProductSizeAndPrice";
+import AddProductSizeAndPrice from "./AddProductSize.jsx";
 import AddProductImages from "./AddProductImages";
 import LoadingView from "../LoadingView/LoadingView";
 import ProductView from "../ProductView/SmallProductView";
@@ -64,9 +64,11 @@ export default function AddProduct() {
         productName: "",
         brandName: "",
         description: "",
-        category: ""
+        category: "",
+        productPrice: ""
     });
     const [sizeAndPrice, setSizeAndPrice] = React.useState([]);
+    const [sizes, setSizes] = React.useState([]);
     const [selectedFile, setSelectedFile] = React.useState([]);
 
     const handleClose = () => {
@@ -80,11 +82,42 @@ export default function AddProduct() {
         setProductDetails(productDetails);
     }
 
-    const updateSizeAndPrice = (sizeAndPrice) => {
+    const updateSizeAndPrice = (sizeAndPrice, sizes) => {
         setSizeAndPrice(sizeAndPrice);
+        setSizes(sizes);
     }
 
     const onClickHandler = () => {
+        let detailsWithSize = [];
+        let b = {}
+
+        sizes.map(size => {
+
+            Object.defineProperty(b, "productSize", {
+                value: size,
+                writable: true,
+                enumerable: true,
+                configurable: true
+            });
+            Object.defineProperty(b, "productDetails", {
+                value: [],
+                writable: true,
+                enumerable: true,
+                configurable: true
+            });
+
+            sizeAndPrice.map(item => {
+                if(item.productSize === size){
+                    b.productDetails.push({
+                        productColour: item.productColour,
+                        productQuantity : item.productQuantity
+                    })
+                }
+            })
+
+            detailsWithSize.push(b)
+            b = {}
+        })
 
         const data = new FormData()
         for (let x = 0; x < selectedFile.length; x++) {
@@ -101,7 +134,7 @@ export default function AddProduct() {
                 res.data.files.map(image => {
                     productImageURLS.push({imageURL: imageHostUrl + '/images/' + image.filename})
                 })
-
+                console.log(sizeAndPrice)
                 let product = {
                     "productName": productDetails.productName,
                     "productDescription": productDetails.description,
@@ -109,25 +142,9 @@ export default function AddProduct() {
                     "productImageURLS": productImageURLS,
                     "productBrand": productDetails.brandName,
                     "productWatchers": 0,
+                    "productPrice" : productDetails.productPrice,
+                    "detailsWithSize": detailsWithSize
 
-                    "detailsWithSize": [
-                        {
-                            "productSize": "small",
-                            "productDetails": [{
-                                "productPrice": 2300.00,
-                                "productQuantity": 100,
-                                "productColour": "BLack"
-                            }]
-                        },
-                        {
-                            "productSize": "Large",
-                            "productDetails": [{
-                                "productPrice": 2500.00,
-                                "productQuantity": 200,
-                                "productColour": "Red"
-                            }]
-                        }
-                    ]
                 }
 
                 axios.post('http://localhost:8080/api/products/AddProduct', product)
@@ -155,14 +172,14 @@ export default function AddProduct() {
         setSelectedFile(selectedFile);
     }
 
-    const steps = ['Product Details', 'Sizes & Price', 'Product Images'];
+    const steps = ['Product Details', 'Product Size', 'Product Images'];
 
     function getStepContent(step) {
         switch (step) {
             case 0:
                 return <AddProductDetails product={productDetails} updateProductDetails={updateProductDetails}/>;
             case 1:
-                return <AddProductSizeAndPrice sizeAndPrice={sizeAndPrice} updateSizeAndPrice={updateSizeAndPrice}/>;
+                return <AddProductSizeAndPrice sizeAndPrice={sizeAndPrice} sizes={sizes} updateSizeAndPrice={updateSizeAndPrice}/>;
             case 2:
                 return <AddProductImages selectedFile={selectedFile} updateSelectedFile={updateSelectedFile}/>;
             default:

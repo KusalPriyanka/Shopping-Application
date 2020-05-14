@@ -13,13 +13,15 @@
     "axios": "^0.19.2",
     "material-auto-rotating-carousel": "^3.0.2",
     "material-table": "^1.57.2",
+    "material-ui-chip-input": "^2.0.0-beta.2",
     "material-ui-dropzone": "^3.0.0",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-material-ui-carousel": "^1.4.3",
     "react-router-dom": "^5.1.2",
     "react-scripts": "3.4.1",
-    "react-swipeable-views": "^0.13.9"
+    "react-swipeable-views": "^0.13.9",
+    "recharts": "^1.8.5"
   },
   "scripts": {
     "start": "react-scripts start",
