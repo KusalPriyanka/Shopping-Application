@@ -1,24 +1,32 @@
 const router = require("express").Router();
-
 const FeedbackModel = require("../model/FeedbackModel");
 const {
   feedbackValidation,
 } = require("../model/Validation/FeedbackModel.Validation");
+const verifyToken = require("./Authentication/VerifyToken");
 
-const userId = "5eba1e88a99d72339008a1eb";
-
-router.get("/", async (req, res) => {
+router.get("/", verifyToken, async (req, res) => {
   const feedbacks = await FeedbackModel.find();
-  res.send(feedbacks);
+  const feedbackList = [];
+  feedbacks.map((feedbackObj) => {
+    const obj = {
+      _id: feedbackObj._id,
+      rating: feedbackObj.rating,
+      feedback: feedbackObj.feedback,
+      editable: feedbackObj.userId === req.user._id ? true : false,
+    };
+    feedbackList.push(obj);
+  });
+  res.send(feedbackList);
 });
 
-router.post("/add", async (req, res) => {
+router.post("/add", verifyToken, async (req, res) => {
   // Validation
   const { error } = feedbackValidation(req.body);
   if (error) return res.status(404).send(error.details[0].message);
 
   const feedbackExist = await FeedbackModel.findOne({
-    $and: [{ userId: userId }, { productId: req.body.productId }],
+    $and: [{ userId: req.user._id }, { productId: req.body.productId }],
   });
 
   if (feedbackExist)
@@ -28,7 +36,7 @@ router.post("/add", async (req, res) => {
     productId: req.body.productId,
     rating: req.body.rating,
     feedback: req.body.feedback,
-    userId: userId,
+    userId: req.user._id,
   });
 
   try {
@@ -39,7 +47,7 @@ router.post("/add", async (req, res) => {
   }
 });
 
-router.put("/edit", async (req, res) => {
+router.put("/edit", verifyToken, async (req, res) => {
   const ObjectId = require("mongoose").Types.ObjectId;
 
   const feedback = await FeedbackModel.findById(
@@ -48,6 +56,9 @@ router.put("/edit", async (req, res) => {
 
   if (!feedback)
     return res.status(404).send("There is no feedback related to the id");
+
+  if (feedback.userId != req.user._id)
+    return res.status(401).send("Access Denied!");
 
   feedback.rating = req.body.rating;
   feedback.feedback = req.body.feedback;
@@ -60,7 +71,7 @@ router.put("/edit", async (req, res) => {
   }
 });
 
-router.delete("/delete", async (req, res) => {
+router.delete("/delete", verifyToken, async (req, res) => {
   const ObjectId = require("mongoose").Types.ObjectId;
 
   try {
