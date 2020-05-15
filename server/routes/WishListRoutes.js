@@ -1,9 +1,9 @@
 const router = require("express").Router();
-const WishLists =require('../model/WishList');
+const WishLists = require('../model/WishList');
 /*
 get all the data from the database
 */
-router.get("/",(req,res)=>{
+router.get("/", (req, res) => {
     WishLists.find()
         .then(wishlists => res.send(wishlists))
         .catch(err => res.status(400).send('Error: ' + err))
@@ -12,22 +12,39 @@ router.get("/",(req,res)=>{
 get the wishListItem by userId
 */
 router.get("/:id", (req, res) => {
-    WishLists.find({"userId":req.params.id})
-        .then((wishlist) => res.send(wishlist))
+    WishLists.find({"userId": req.params.id})
+        .then((wishlist) => res.send(wishlist[0]))
         .catch(err => res.status(400).send("Error : " + err))
 });
 
 /*
 Add wishListItem to the database
 */
-router.post('/AddToWishList',(req,res)=>{
+router.post('/AddToWishList', (req, res) => {
     let wishlist = new WishLists({
-        userId:req.body.userId,
-        cartItems:req.body.cartItems,
+        userId: req.body.userId,
+        watchingProducts: req.body.watchingProducts,
     });
     wishlist.save()
-        .then(()=>res.send({wishListItemID:wishlist._id}))
-        .catch(err=>res.status(400).send('Error :' + err))
+        .then(() => res.send({wishListItemID: wishlist._id}))
+        .catch(err => res.status(400).send('Error :' + err))
+});
+
+/*
+Add wishListItem to the database
+*/
+router.put('/UpdateWishList/:userId', (req, res) => {
+    WishLists.find({"userId": req.params.userId})
+        .then(wishlist => {
+            WishLists.findById(wishlist[0]._id)
+                .then(wishlist => {
+                    wishlist.watchingProducts = req.body.watchingProducts
+                    wishlist.save()
+                        .then(() => res.send({wishlist_id: wishlist._id}))
+                        .catch(err => res.status(400).send('Error :' + err))
+                })
+
+        });
 });
 
 /*
@@ -39,4 +56,4 @@ router.delete("/DeleteWishListItem/:id", (req, res) => {
         .catch(err => res.status(400).send("Error : " + err))
 });
 
-module.exports=router;
+module.exports = router;
