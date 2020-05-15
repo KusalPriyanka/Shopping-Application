@@ -13,7 +13,7 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import Slide from "@material-ui/core/Slide";
-import SmallSnackbar from "../Shared/SnackBar";
+import SmallSnackbar from "../../Shared/SnackBar";
 import Grid from "@material-ui/core/Grid";
 import Container from "@material-ui/core/Container";
 import "../../../css/hoverable.css";
@@ -146,7 +146,7 @@ class AllProducts extends Component {
           <Grid item xs={12} className={classes.paper + " hoverable"}>
             {this.renderRedirect()}
             {this.state.isShowSnackBar ? (
-              <SmallSnackbar setShowSnackBar={this.setShowSnackBar} />
+              <SmallSnackbar setShowSnackBar={this.setShowSnackBar} msg={"Product Deleted Successfully"}/>
             ) : (
               <React.Fragment></React.Fragment>
             )}

@@ -25,7 +25,7 @@ export default function SmallSnackbar(props) {
                 open={open}
                 autoHideDuration={3000}
                 onClose={handleClose}
-                message="Product Deleted Successfully"
+                message={props.msg}
                 action={
                     <React.Fragment>
                         <IconButton size="small" aria-label="close" color="inherit" onClick={handleClose}>
