@@ -9,10 +9,10 @@ router.get("/",(req,res)=>{
         .catch(err => res.status(400).send('Error: ' + err))
 })
 /*
-get the wishListItem by id
+get the wishListItem by userId
 */
 router.get("/:id", (req, res) => {
-    WishLists.findById(req.params.id)
+    WishLists.find({"userId":req.params.id})
         .then((wishlist) => res.send(wishlist))
         .catch(err => res.status(400).send("Error : " + err))
 });
