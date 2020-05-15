@@ -19,7 +19,6 @@ import Chip from '@material-ui/core/Chip';
 import VisibilityIcon from '@material-ui/icons/Visibility';
 import AddShoppingCartIcon from '@material-ui/icons/AddShoppingCart';
 
-/*import '../../css/hoverable.css'*/
 
 
 class MainProductView extends Component {
@@ -37,10 +36,12 @@ class MainProductView extends Component {
             errorText: "",
             selectedQuantity: 1,
             isShowBackDrop: false,
+            userWishList: null,
         }
 
         this.getDetailsBySize = this.getDetailsBySize.bind(this)
         this.getQuantityByColor = this.getQuantityByColor.bind(this)
+        this.addToWatchList = this.addToWatchList.bind(this)
     }
 
     componentDidMount() {
@@ -127,6 +128,68 @@ class MainProductView extends Component {
                 selectedQuantity: val
             })
         }
+    }
+
+    addToWatchList(){
+        let userID = 33;
+        this.setState({
+            isShowBackDrop : true
+        })
+        let userWishList = null;
+        axios.get(`http://localhost:8080/api/wishlists/${userID}`)
+            .then(res => {
+                userWishList = res.data
+                console.log(res.data)
+
+
+                if(res.data.length === 0){
+                    let url = "http://localhost:8080/api/wishlists/AddToWishList"
+                    let wishList = {
+                        "userId": userID,
+                        "watchingProducts": [
+                            {
+                                "productID": this.state.product._id
+                            }
+                        ]
+                    }
+                    axios.post(url, wishList)
+                        .then( res => {
+                                this.setState({
+                                    isShowBackDrop  : false
+                                })
+                                alert("Added added")
+                            }
+                        )
+                        .catch(err => {
+                            console.log(err)
+                        })
+                }else {
+                    userWishList.watchingProducts.push({productID : this.state.product._id})
+                    let url = `http://localhost:8080/api/wishlists/UpdateWishList/${userID}`
+                    let updateWishList = {
+                        "watchingProducts": userWishList.watchingProducts
+                    }
+
+                    console.log(userWishList.watchingProducts)
+                    axios.put(url, updateWishList)
+                        .then( res => {
+                                this.setState({
+                                    isShowBackDrop  : false
+                                })
+                                alert("Update added")
+                            }
+                        )
+                        .catch(err => {
+                            console.log(err)
+                        })
+                }
+            })
+            .catch(err => {
+                console.log(err)
+            })
+
+
+
     }
 
     render() {
@@ -272,6 +335,7 @@ class MainProductView extends Component {
                                                         size={"large"}
                                                         startIcon={<VisibilityIcon/>}
                                                         style={{marginTop: "10px"}}
+                                                        onClick={() => this.addToWatchList()}
                                                     >
                                                         Add To Watch List
                                                     </Button>

@@ -49,6 +49,9 @@ function App() {
           />
           <Route path="/cartItems" component={CartView} />
           <Route path="/admin" component={() => withOutHeader("admin")} />
+{/*
+          <Route path="/wishList" component={() => <WishList userID={"123456"} />} />
+*/}
         </Switch>
       </Router>
     </div>
