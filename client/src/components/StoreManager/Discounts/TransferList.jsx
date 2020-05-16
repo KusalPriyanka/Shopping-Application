@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useImperativeHandle} from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import List from '@material-ui/core/List';
@@ -42,7 +42,7 @@ function union(a, b) {
     return [...a, ...not(b, a)];
 }
 
-export default function TransferList(props) {
+const TransferList = React.forwardRef((props, ref) => {
     const classes = useStyles();
     const [checked, setChecked] = React.useState([]);
     const [left, setLeft] = React.useState(props.products);
@@ -85,9 +85,13 @@ export default function TransferList(props) {
         setChecked(not(checked, rightChecked));
     };
 
-    const getSelectedProducts = () => {
-        return right;
-    }
+
+    useImperativeHandle(ref, () =>({
+        getSelectedProducts() {
+            alert("Adddddddddddddddddooododododod")
+            return right;
+        }
+    }));
 
     const customList = (title, items) => (
         <Card className={"hoverable"}>
@@ -159,4 +163,6 @@ export default function TransferList(props) {
             <Grid item>{customList('Chosen', right)}</Grid>
         </Grid>
     );
-}
+})
+
+export default TransferList;

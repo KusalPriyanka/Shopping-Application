@@ -31,6 +31,7 @@ const styles = (theme) => ({
 class AddNewDiscount extends Component {
     constructor(props) {
         super(props);
+        this.getSelectedList = React.createRef();
         this.state = {
             isDialogOpen: true,
             offerName: '',
@@ -124,6 +125,11 @@ class AddNewDiscount extends Component {
             .catch((err) => {
                 console.log(err);
             });
+    }
+
+    addOffer = () => {
+        alert("add")
+        this.getSelectedList.current.getSelectedProducts()
     }
 
     render() {
@@ -226,13 +232,13 @@ class AddNewDiscount extends Component {
                             }
 
                         </Grid>
-                        {(this.state.products != '')?<TransferList products={this.state.products}/> : <React.Fragment></React.Fragment>}
+                        {(this.state.products != '')?<TransferList ref={this.getSelectedList} products={this.state.products}/> : <React.Fragment></React.Fragment>}
                     </DialogContent>
                     <DialogActions>
                         <Button onClick={this.handleClose} color="primary">
                             Cancel
                         </Button>
-                        <Button onClick={this.handleClose} color="primary">
+                        <Button onClick={() => this.addOffer()} color="primary">
                             Subscribe
                         </Button>
                     </DialogActions>
