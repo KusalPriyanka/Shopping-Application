@@ -5,6 +5,7 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 const multer = require("multer");
 const path = require("path");
+const fileupload = require("express-fileupload");
 
 const app = express();
 
@@ -44,6 +45,7 @@ mongoose.connect(
 
 // Middlewares
 app.use(express.json());
+app.use(fileupload());
 app.use(cors());
 
 // Config routes
@@ -51,7 +53,7 @@ app.use("/api/users", UserRoutes);
 app.use("/api/feedback", UserFeedbacks);
 app.use("/api/products", ProductRoutes);
 app.use("/api/offers", OfferRoutes);
-app.use("/api/Categories",CategoryRoutes);
+app.use("/api/Categories", CategoryRoutes);
 app.use("/api/shoppingcarts", ShoppingCartRoutes);
 app.use("/api/wishlists", WishListRoutes);
 app.use("/images", express.static("images"));
