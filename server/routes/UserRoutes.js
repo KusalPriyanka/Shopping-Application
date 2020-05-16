@@ -22,6 +22,23 @@ router.post("/register", async (req, res) => {
   const salt = await bcrypt.genSalt(10);
   const hashPassword = await bcrypt.hash(req.body.password, salt);
 
+  //Upload profile picture
+  let imgFile = null;
+  try {
+    imgFile = req.files.photo;
+  } catch (err) {
+    return res.status(404).send("Please upload the image");
+  }
+
+  const imgName = "PP-" + req.body.username + "-" + Date.now() + ".jpg";
+  const uploadFileURL =
+    process.env.STATIC_URL + "UserProfilePictures/" + imgName;
+
+  await imgFile.mv("./images/UserProfilePictures/" + imgName, (err, result) => {
+    if (err)
+      return res.status(400).send("Failed to upload user profile image!");
+  });
+
   // Create new user
   const user = new UserModel({
     userName: req.body.username,
@@ -29,11 +46,13 @@ router.post("/register", async (req, res) => {
     userEmail: req.body.email,
     userMobile: req.body.mobile,
     userPassword: hashPassword,
+    userImage: uploadFileURL,
   });
 
   try {
     const savedUser = await user.save();
-    res.send({ userId: user._id });
+    //res.send({ userId: user._id });
+    res.send(savedUser);
   } catch (err) {
     res.status(400).send(err);
   }
