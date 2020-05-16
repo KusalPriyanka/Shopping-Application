@@ -1,12 +1,6 @@
 import React, {Component} from "react";
 import Grid from "@material-ui/core/Grid";
 import SmallSnackbar from "../../Shared/SnackBar";
-import Dialog from "@material-ui/core/Dialog";
-import DialogTitle from "@material-ui/core/DialogTitle";
-import DialogContent from "@material-ui/core/DialogContent";
-import DialogContentText from "@material-ui/core/DialogContentText";
-import DialogActions from "@material-ui/core/DialogActions";
-import Button from "@material-ui/core/Button";
 import Backdrop from "@material-ui/core/Backdrop";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import MaterialTable from "material-table";
@@ -15,6 +9,7 @@ import {withStyles} from "@material-ui/styles";
 import axios from "axios";
 import Icon from "@material-ui/core/Icon";
 import {green, red} from "@material-ui/core/colors";
+import AddNewDiscount from "./AddNewDiscount";
 
 const styles = (theme) => ({
     backdrop: {
@@ -36,6 +31,7 @@ class AllDiscounts extends Component{
             open: false,
             isShow: false,
             isShowSnackBar: false,
+            isShowAddDialog : false,
             redirect: false,
             path: "",
             id: "",
@@ -48,6 +44,13 @@ class AllDiscounts extends Component{
         { title: "Quantity", field: "quantity", type: "numeric" },
         { title: "Price", field: "price", type: "numeric" },
     ];
+
+    showAddDiscountDialog = () => {
+        this.setState({
+            isShowAddDialog :  !this.state.isShowAddDialog
+        })
+
+    }
 
     handleClickOpen = (id) => {
         this.setState({
@@ -100,7 +103,8 @@ class AllDiscounts extends Component{
         if (icon === "add") return <Icon color="primary">add_circle</Icon>;
         else if (icon === "edit")
             return <Icon style={{ color: green[500] }}>edit</Icon>;
-        else return <Icon style={{ color: red[500] }}>delete</Icon>;
+        else
+            return <Icon style={{ color: red[500] }}>delete</Icon>;
     };
 
     deleteProduct = () => {
@@ -126,6 +130,12 @@ class AllDiscounts extends Component{
             <Container>
                 <Grid container>
                     <Grid item xs={12} className={classes.paper + " hoverable"}>
+
+                        {this.state.isShowAddDialog ? (
+                            <AddNewDiscount showAddDiscountDialog={this.showAddDiscountDialog}/>
+                        ) : (
+                            <React.Fragment></React.Fragment>
+                        )}
                         {this.state.isShowSnackBar ? (
                             <SmallSnackbar setShowSnackBar={this.setShowSnackBar} msg={"Product Deleted Successfully"}/>
                         ) : (
@@ -155,7 +165,7 @@ class AllDiscounts extends Component{
                                     tooltip: "Add New Discount",
                                     isFreeAction: true,
                                     onClick: (event) =>
-                                        this.setRedirect("/storeManager/addProducts"),
+                                        this.showAddDiscountDialog(),
                                 },
                                 {
                                     icon: () => this.getIcon("edit"),
