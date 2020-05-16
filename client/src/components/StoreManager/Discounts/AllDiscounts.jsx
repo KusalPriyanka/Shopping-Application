@@ -11,49 +11,131 @@ import Backdrop from "@material-ui/core/Backdrop";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import MaterialTable from "material-table";
 import Container from "@material-ui/core/Container";
+import {withStyles} from "@material-ui/styles";
+import axios from "axios";
+import Icon from "@material-ui/core/Icon";
+import {green, red} from "@material-ui/core/colors";
 
-export default class AllDiscounts extends Component{
+const styles = (theme) => ({
+    backdrop: {
+        zIndex: 1500,
+        color: "#fff",
+    },
+    paper: {
+        marginTop: "30px",
+        marginBottom: "30px",
+    },
+});
+
+class AllDiscounts extends Component{
+
+    constructor(props) {
+        super(props);
+        this.state = {
+            data: [],
+            open: false,
+            isShow: false,
+            isShowSnackBar: false,
+            redirect: false,
+            path: "",
+            id: "",
+        };
+    }
+
+    columns = [
+        { title: "Size", field: "size" },
+        { title: "Color", field: "color" },
+        { title: "Quantity", field: "quantity", type: "numeric" },
+        { title: "Price", field: "price", type: "numeric" },
+    ];
+
+    handleClickOpen = (id) => {
+        this.setState({
+            isShow: true,
+            id: id,
+        });
+    };
+
+    handleClose = (acceptance) => {
+        if (acceptance) {
+            this.setState({
+                isShow: false,
+            });
+            this.deleteProduct();
+        } else {
+            this.setState({
+                isShow: false,
+            });
+        }
+    };
+
+    getProductsFromDB = () => {
+        axios
+            .get("http://localhost:8080/api/products/")
+            .then((res) => {
+                this.setState({
+                    data: res.data,
+                    open: false,
+                });
+            })
+            .catch((err) => {
+                console.log(err);
+            });
+    };
+
+    componentDidMount() {
+        this.setState({
+            open: true,
+        });
+        this.getProductsFromDB();
+    }
+
+    setShowSnackBar = () => {
+        this.setState({
+            isShowSnackBar: !this.state.isShowSnackBar,
+        });
+    };
+
+    getIcon = (icon) => {
+        if (icon === "add") return <Icon color="primary">add_circle</Icon>;
+        else if (icon === "edit")
+            return <Icon style={{ color: green[500] }}>edit</Icon>;
+        else return <Icon style={{ color: red[500] }}>delete</Icon>;
+    };
+
+    deleteProduct = () => {
+        this.setState({
+            open: true,
+        });
+        axios
+            .delete(
+                `http://localhost:8080/api/products/DeleteProduct/${this.state.id}`
+            )
+            .then((res) => {
+                this.setShowSnackBar();
+                this.getProductsFromDB();
+            })
+            .catch((err) => {
+                console.log(err);
+            });
+    };
+
     render() {
+        const { classes } = this.props;
         return (
             <Container>
                 <Grid container>
                     <Grid item xs={12} className={classes.paper + " hoverable"}>
-                        {this.renderRedirect()}
                         {this.state.isShowSnackBar ? (
                             <SmallSnackbar setShowSnackBar={this.setShowSnackBar} msg={"Product Deleted Successfully"}/>
                         ) : (
                             <React.Fragment></React.Fragment>
                         )}
-                        <Dialog
-                            open={this.state.isShow}
-                            TransitionComponent={Transition}
-                            keepMounted
-                            aria-labelledby="alert-dialog-slide-title"
-                            aria-describedby="alert-dialog-slide-description"
-                        >
-                            <DialogTitle id="alert-dialog-slide-title">
-                                {"Are you want to delete this product?"}
-                            </DialogTitle>
-                            <DialogContent>
-                                <DialogContentText id="alert-dialog-slide-description">
-                                    By confirming this, You give permission to delete this
-                                    product.Note that this process can not be revert!
-                                </DialogContentText>
-                            </DialogContent>
-                            <DialogActions>
-                                <Button onClick={() => this.handleClose(false)} color="primary">
-                                    No, I'm Sorry
-                                </Button>
-                                <Button onClick={() => this.handleClose(true)} color="primary">
-                                    Yes, I'm Sure
-                                </Button>
-                            </DialogActions>
-                        </Dialog>
-                        <Backdrop className={classes.backdrop} open={this.state.open}>
+                        <Backdrop  open={this.state.open}>
                             <CircularProgress color="inherit" />
                         </Backdrop>
                         <MaterialTable
-                            title="All Products"
+                            title="All Discounts"
                             columns={[
                                 { title: "Name", field: "productName" },
                                 { title: "Category", field: "productCategory" },
@@ -118,3 +200,5 @@ export default class AllDiscounts extends Component{
         );
     }
 }
+
+export default withStyles(styles)(AllDiscounts);

@@ -4,6 +4,7 @@ import OpenIconSpeedDial from "./OpenIconSpeedDial";
 import TopSearchAppBar from "./TopSearchAppBar";
 import AllProducts from "./ProductView/AllProducts";
 import AddProduct from "./AddProduct/AddProduct";
+import AllDiscounts from "./Discounts/AllDiscounts";
 
 class StoreManagerDashBoard extends Component{
 
@@ -15,6 +16,7 @@ class StoreManagerDashBoard extends Component{
                     <Switch>
                         <Route path="/storeManager" exact component={AllProducts} />
                         <Route path="/storeManager/addProducts" component={AddProduct} />
+                        <Route path="/storeManager/allDiscounts" component={AllDiscounts} />
                     </Switch>
                     <OpenIconSpeedDial/>
                 </Router>
