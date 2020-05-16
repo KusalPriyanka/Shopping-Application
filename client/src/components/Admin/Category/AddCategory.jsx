@@ -44,7 +44,7 @@ class AddCategory extends Component{
                 <CardContent>
                     <div className={classes.title} ><Typography color='textPrimary' variant="h6" >Add Category</Typography></div>
 
-                    <form Validate autoComplete="off" onSubmit={onSubmitHandler}>
+                    <form  autoComplete="off" onSubmit={onSubmitHandler}>
                         <Grid container spacing={4}>
                             <Grid item xs={12} md={12} lg={12}>
                                 {/*==================Category Name==================*/}
