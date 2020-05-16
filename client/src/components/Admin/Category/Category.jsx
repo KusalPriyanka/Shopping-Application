@@ -6,9 +6,10 @@ import CategoryList from "./CategoryList";
 import AddCategory from "./AddCategory";
 import {withStyles} from "@material-ui/styles";
 import Swal from "sweetalert2";
-
+import Skeleton from '@material-ui/lab/Skeleton';
+import Card from "@material-ui/core/Card";
+import CardContent from "@material-ui/core/CardContent";
 const axios = require('axios').default;
-
 const styles = (theme) => ({
 
     title: {
@@ -47,6 +48,8 @@ class Category extends Component {
         editItem: false,
         data: [],
         validate: false,
+        isLoading: true,
+        isLoading_Add: false,
         //isShow: false,
         //redirect: false,
         //path: "",
@@ -71,10 +74,13 @@ class Category extends Component {
     //handle click save button
     onSubmitHandler = (e) =>{
         e.preventDefault();
+        this.setState({
+            isLoading_Add: true,
+        });
         this.validateAddCategory();
 
         //Check whether new category
-        if(!this.state.editItem && this.state.validate){
+        if(!this.state.editItem ){ //&& this.state.validate
             // Send a POST request to API
             axios.post("http://localhost:8080/api/Categories/AddCategory", {
                 CategoryName: this.state.categoryName.toString(),
@@ -91,13 +97,16 @@ class Category extends Component {
                         showConfirmButton: false,
                         timer: 2000
                     })
+                    this.setState({
+                        isLoading_Add: false,
+                    });
                     this.clearTextFeild();
                     this.getCategoryFromDB();
                 })
                 .catch(err => console.error(err));
         }
         //Update category
-        else if(this.state.editItem && this.state.validate){
+        else if(this.state.editItem ){ //&& this.state.validate
             // Send a POST request to API
             axios.put(`http://localhost:8080/api/Categories/UpdateCategory/${this.state.id}`, {
                 CategoryName: this.state.categoryName.toString(),
@@ -113,7 +122,10 @@ class Category extends Component {
                         html: `Category ID: ( ${result.data._id} )`,
                         showConfirmButton: false,
                         timer: 2000
-                    })
+                    });
+                    this.setState({
+                        isLoading_Add: false,
+                    });
                     this.clearTextFeild();
                     this.getCategoryFromDB();
                 })
@@ -172,6 +184,7 @@ class Category extends Component {
             .then((res) => {
                 this.setState({
                     data: res.data,
+                    isLoading: false,
                 });
                 //console.log(this.state.data)
             })
@@ -182,7 +195,7 @@ class Category extends Component {
 
     componentDidMount() {
         this.getCategoryFromDB()
-        setInterval(this.getCategoryFromDB(), 5000); //Refresh every 5 seconds.
+
     }
 
     //Handle edit category
@@ -238,6 +251,7 @@ class Category extends Component {
 
 
     render() {
+        setInterval(this.getCategoryFromDB(), 5000); //Refresh every 5 seconds.
         const {classes} = this.props;
         return(
             <div>
@@ -245,21 +259,42 @@ class Category extends Component {
                 <Container maxWidth="lg" className={classes.container}>
                     <Grid container spacing={3}>
                         <Grid item xs={12} md={4} lg={4}>
-                            <AddCategory
-                                categoryName={this.state.categoryName}
-                                categoryDescription={this.state.categoryDescription}
-                                onChangeHandlerCategoryName={this.onChangeHandlerCategoryName}
-                                onChangeHandlerCategoryDescription={this.onChangeHandlerCategoryDescription}
-                                onSubmitHandler={this.onSubmitHandler}
-                            />
+                            {this.state.isLoading_Add
+                                ? <Card style={{height:280}}>
+                                    <CardContent>
+                                        <Skeleton />
+                                        <Skeleton animation={false} variant="Please wait..."/>
+                                        <Skeleton animation="wave" />
+
+                                    </CardContent>
+                                </Card>
+                                :   <AddCategory
+                                        categoryName={this.state.categoryName}
+                                        categoryDescription={this.state.categoryDescription}
+                                        onChangeHandlerCategoryName={this.onChangeHandlerCategoryName}
+                                        onChangeHandlerCategoryDescription={this.onChangeHandlerCategoryDescription}
+                                        onSubmitHandler={this.onSubmitHandler}
+                                    />
+                            }
+
                         </Grid>
                         <Grid item xs={12} md={8} lg={8}>
-                            <CategoryList
-                                getCategoryFromDB={this.getCategoryFromDB}
-                                handleEditCategory={this.handleEditCategory}
-                                handleDeleteCategory={this.handleDeleteCategory}
-                                data={this.state.data}
-                            />
+                            {this.state.isLoading
+                                ? <Card style={{height:280}}>
+                                    <CardContent>
+                                        <Skeleton />
+                                        <Skeleton animation={false} style={{height:100}}/>
+                                        <Skeleton animation="wave" />
+                                    </CardContent>
+                                   </Card>
+                                :   <CategoryList
+                                        getCategoryFromDB={this.getCategoryFromDB}
+                                        handleEditCategory={this.handleEditCategory}
+                                        handleDeleteCategory={this.handleDeleteCategory}
+                                        data={this.state.data}
+                                    />
+                            }
+
                         </Grid>
                     </Grid>
                 </Container>
