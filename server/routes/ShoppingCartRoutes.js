@@ -42,7 +42,6 @@ router.delete("/DeleteCartItem/:id", (req, res) => {
 Update a cart item from the cart
 */
 router.put("/UpdateCartItem/:id",(req,res)=>{
-
     ShoppingCarts.findById(req.params.id)
         .then(shoppingcart=>{
             shoppingcart.userId=req.body.userId;
@@ -54,8 +53,6 @@ router.put("/UpdateCartItem/:id",(req,res)=>{
                 .catch(err=>res.status(400).send('Error :' + err))
 
         });
-
-
 });
 
 module.exports=router;
