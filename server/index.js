@@ -31,6 +31,7 @@ const OfferRoutes = require("./routes/OfferRoutes");
 const CategoryRoutes = require("./routes/CategoryRoutes");
 const ShoppingCartRoutes = require("./routes/ShoppingCartRoutes");
 const WishListRoutes = require("./routes/WishListRoutes");
+const StoreManager = require("./routes/StoreManagerRoutes");
 
 dotenv.config();
 
@@ -57,6 +58,7 @@ app.use("/api/Categories", CategoryRoutes);
 app.use("/api/shoppingcarts", ShoppingCartRoutes);
 app.use("/api/wishlists", WishListRoutes);
 app.use("/images", express.static("images"));
+app.use("/api/StoreManager", StoreManager);
 
 app.post("/upload", function (req, res) {
   upload(req, res, function (err) {

@@ -160,6 +160,12 @@ export default function TopSearchAppBar() {
                     </ListItemIcon>
                     <ListItemText>Add Product</ListItemText>
                 </ListItem>
+                <ListItem button component={Link} to="/storeManager/allDiscounts">
+                    <ListItemIcon>
+                        <InboxIcon />
+                    </ListItemIcon>
+                    <ListItemText>All Discounts</ListItemText>
+                </ListItem>
             </List>
             <Divider />
         </div>
