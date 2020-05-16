@@ -131,7 +131,7 @@ class AllDiscounts extends Component{
                         ) : (
                             <React.Fragment></React.Fragment>
                         )}
-                        <Backdrop  open={this.state.open}>
+                        <Backdrop className={classes.backdrop} open={this.state.open}>
                             <CircularProgress color="inherit" />
                         </Backdrop>
                         <MaterialTable
@@ -152,20 +152,20 @@ class AllDiscounts extends Component{
                             actions={[
                                 {
                                     icon: () => this.getIcon("add"),
-                                    tooltip: "Add New Product",
+                                    tooltip: "Add New Discount",
                                     isFreeAction: true,
                                     onClick: (event) =>
                                         this.setRedirect("/storeManager/addProducts"),
                                 },
                                 {
                                     icon: () => this.getIcon("edit"),
-                                    tooltip: "Update Product",
+                                    tooltip: "Update Discount",
                                     onClick: (event, rowData) =>
                                         alert("You saved " + rowData._id),
                                 },
                                 {
                                     icon: () => this.getIcon("delete"),
-                                    tooltip: "Delete Product",
+                                    tooltip: "Delete Discount",
                                     // onClick: (event, rowData) => this.deleteProduct(rowData._id)
                                     onClick: (event, rowData) =>
                                         this.handleClickOpen(rowData._id),
