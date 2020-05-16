@@ -11,6 +11,7 @@ import Home from "./components/Home/Home";
 import ProductByCategory from "./components/StoreManager/ProductByCategory/ProductByCategory";
 import Admin from "./components/Admin/Admin";
 import CartView from "./components/CartItems/CartView";
+import WishList from "./components/Watchlist/WishList";
 
 function App() {
   const [navBarStatus, setNavBarStatus] = useState(true);
@@ -49,9 +50,8 @@ function App() {
           />
           <Route path="/cartItems" component={CartView} />
           <Route path="/admin" component={() => withOutHeader("admin")} />
-{/*
           <Route path="/wishList" component={() => <WishList userID={"123456"} />} />
-*/}
+
         </Switch>
       </Router>
     </div>
