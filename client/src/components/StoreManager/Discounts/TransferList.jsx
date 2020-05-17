@@ -10,6 +10,8 @@ import ListItemIcon from '@material-ui/core/ListItemIcon';
 import Checkbox from '@material-ui/core/Checkbox';
 import Button from '@material-ui/core/Button';
 import Divider from '@material-ui/core/Divider';
+import Avatar from '@material-ui/core/Avatar';
+import ListItemAvatar from '@material-ui/core/ListItemAvatar';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -88,7 +90,6 @@ const TransferList = React.forwardRef((props, ref) => {
 
     useImperativeHandle(ref, () =>({
         getSelectedProducts() {
-            alert("Adddddddddddddddddooododododod")
             return right;
         }
     }));
@@ -112,10 +113,21 @@ const TransferList = React.forwardRef((props, ref) => {
             <Divider />
             <List className={classes.list} dense component="div" role="list">
                 {items.map((value) => {
-                    const labelId = `transfer-list-all-item-${value}-label`;
+                    const labelId = `transfer-list-all-item-${value._id}-label`;
 
                     return (
-                        <ListItem key={value} role="listitem" button onClick={handleToggle(value)}>
+                        <React.Fragment>
+                        <ListItem key={value._id} role="listitem" button onClick={handleToggle(value)}>
+                            <ListItemAvatar>
+                                <Avatar
+                                    src={value.imageURL}
+                                />
+                            </ListItemAvatar>
+
+                            <ListItemText id={labelId}
+                                          primary={value.productName}
+                                          secondary={value._id}
+                            />
                             <ListItemIcon>
                                 <Checkbox
                                     checked={checked.indexOf(value) !== -1}
@@ -124,8 +136,10 @@ const TransferList = React.forwardRef((props, ref) => {
                                     inputProps={{ 'aria-labelledby': labelId }}
                                 />
                             </ListItemIcon>
-                            <ListItemText id={labelId} primary={value} />
+
                         </ListItem>
+                        <Divider variant="inset" component="li" />
+                        </React.Fragment>
                     );
                 })}
                 <ListItem />
