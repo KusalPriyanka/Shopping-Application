@@ -17,6 +17,7 @@ import DialogActions from "@material-ui/core/DialogActions";
 import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
 import Slide from "@material-ui/core/Slide";
+import DiscountListPopUp from "./DiscountListPopUp";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="down" ref={ref} {...props} />;
@@ -45,6 +46,8 @@ class AllDiscounts extends Component {
             isShowSnackBar: false,
             isShowAddDialog: false,
             id: "",
+            showProductList : false,
+            productList : ""
         };
         this.showAddDiscountDialog = this.showAddDiscountDialog.bind(this)
     }
@@ -115,8 +118,6 @@ class AllDiscounts extends Component {
         if (icon === "add") return <Icon color="primary">add_circle</Icon>;
         else if (icon === "edit")
             return <Icon style={{color: green[500]}}>edit</Icon>;
-        else if (icon === "code")
-            return <Icon style={{color: blue[500]}}>code</Icon>;
         else if (icon === "list")
             return <Icon style={{color: purple[500]}}>list</Icon>;
         else
@@ -140,8 +141,17 @@ class AllDiscounts extends Component {
             });
     };
 
-    showOfferProductList = () => {
-        alert("asaaaaaaaaaaaaaaaaaaaa")
+    showOfferProductList = (productList) => {
+        this.setState({
+            productList : productList,
+            showProductList : true
+        })
+    }
+
+    hideOfferProductList = () => {
+        this.setState({
+            showProductList : false
+        })
     }
 
     render() {
@@ -158,6 +168,14 @@ class AllDiscounts extends Component {
                         )}
                         {this.state.isShowSnackBar ? (
                             <SmallSnackbar setShowSnackBar={this.setShowSnackBar} msg={"Offer Deleted Successfully"}/>
+                        ) : (
+                            <React.Fragment></React.Fragment>
+                        )}
+                        {this.state.showProductList ? (
+                            <DiscountListPopUp
+                                items={this.state.productList}
+                                title={"ssdfsdsd"}
+                                hideOfferProductList={this.hideOfferProductList} />
                         ) : (
                             <React.Fragment></React.Fragment>
                         )}
@@ -198,6 +216,7 @@ class AllDiscounts extends Component {
                                 {title: "Type", field: "offerType"},
                                 {title: "Category", field: "productCategory"},
                                 {title: "Amount(%)", field: "offerAmount"},
+                                {title: "Promo Code", field: "offerCode"},
                             ]}
                             data={this.state.data}
                             options={{
@@ -217,13 +236,8 @@ class AllDiscounts extends Component {
                                 },
                                 {
                                     icon: () => this.getIcon("list"),
-                                    tooltip: 'View Promo Code',
-                                    onClick: (event, rowData) => alert(rowData.offerType),
-                                },
-                                {
-                                    icon: () => this.getIcon("code"),
-                                    tooltip: 'View Promo Code',
-                                    onClick: (event, rowData) => alert(rowData.offerType),
+                                    tooltip: 'Product List',
+                                    onClick: (event, rowData) => this.showOfferProductList(rowData.products),
                                 },
                                 {
                                     icon: () => this.getIcon("edit"),

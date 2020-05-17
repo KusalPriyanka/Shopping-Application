@@ -139,19 +139,21 @@ class AddNewDiscount extends Component {
         this.setState({
             open : true
         })
-        let productList = [];
-        this.getSelectedList.current.getSelectedProducts().map(product => {
-            productList.push({
-                productID : product._id
-            })
-        })
+
+        let promoCode;
+        if (this.state.offerType === "Promo Code"){
+            promoCode =  this.state.offerCode
+        }else {
+            promoCode =  "N/A"
+        }
+
         let offer = {
             offerName : this.state.offerName,
             offerType : this.state.offerType,
             offerAmount : this.state.offerAmount,
             productCategory : this.state.productCategory,
-            products : productList,
-            offerCode : this.state.offerCode,
+            products : this.getSelectedList.current.getSelectedProducts(),
+            offerCode : promoCode
         }
 
         axios
