@@ -8,7 +8,7 @@ import Container from "@material-ui/core/Container";
 import {withStyles} from "@material-ui/styles";
 import axios from "axios";
 import Icon from "@material-ui/core/Icon";
-import {green, red} from "@material-ui/core/colors";
+import {blue, green, purple, red} from "@material-ui/core/colors";
 import AddNewDiscount from "./AddNewDiscount";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import DialogContent from "@material-ui/core/DialogContent";
@@ -34,7 +34,7 @@ const styles = (theme) => ({
     },
 });
 
-class AllDiscounts extends Component{
+class AllDiscounts extends Component {
 
     constructor(props) {
         super(props);
@@ -43,23 +43,25 @@ class AllDiscounts extends Component{
             open: false,
             isShow: false,
             isShowSnackBar: false,
-            isShowAddDialog : false,
+            isShowAddDialog: false,
             id: "",
         };
+        this.showAddDiscountDialog = this.showAddDiscountDialog.bind(this)
     }
 
-    columns = [
-        { title: "Size", field: "size" },
-        { title: "Color", field: "color" },
-        { title: "Quantity", field: "quantity", type: "numeric" },
-        { title: "Price", field: "price", type: "numeric" },
-    ];
 
-    showAddDiscountDialog = () => {
-        this.setState({
-            isShowAddDialog :  !this.state.isShowAddDialog
-        })
+    showAddDiscountDialog = (state) => {
+        if (state) {
+            this.setState({
+                open: true
+            })
+            this.getProductsFromDB()
+        } else {
+            this.setState({
+                isShowAddDialog: !this.state.isShowAddDialog
+            })
 
+        }
     }
 
     handleClickOpen = (id) => {
@@ -112,9 +114,13 @@ class AllDiscounts extends Component{
     getIcon = (icon) => {
         if (icon === "add") return <Icon color="primary">add_circle</Icon>;
         else if (icon === "edit")
-            return <Icon style={{ color: green[500] }}>edit</Icon>;
+            return <Icon style={{color: green[500]}}>edit</Icon>;
+        else if (icon === "code")
+            return <Icon style={{color: blue[500]}}>code</Icon>;
+        else if (icon === "list")
+            return <Icon style={{color: purple[500]}}>list</Icon>;
         else
-            return <Icon style={{ color: red[500] }}>delete</Icon>;
+            return <Icon style={{color: red[500]}}>delete</Icon>;
     };
 
     deleteProduct = () => {
@@ -134,8 +140,12 @@ class AllDiscounts extends Component{
             });
     };
 
+    showOfferProductList = () => {
+        alert("asaaaaaaaaaaaaaaaaaaaa")
+    }
+
     render() {
-        const { classes } = this.props;
+        const {classes} = this.props;
         return (
             <Container>
                 <Grid container>
@@ -179,16 +189,15 @@ class AllDiscounts extends Component{
                         </Dialog>
 
                         <Backdrop className={classes.backdrop} open={this.state.open}>
-                            <CircularProgress color="inherit" />
+                            <CircularProgress color="inherit"/>
                         </Backdrop>
                         <MaterialTable
                             title="All Offers"
                             columns={[
-                                { title: "Name", field: "offerName" },
-                                { title: "Type", field: "offerType" },
-                                { title: "Category", field: "productCategory" },
-                                { title: "Amount(%)", field: "offerAmount" },
-                                { title: "Promo Code", field: "offerCode" },
+                                {title: "Name", field: "offerName"},
+                                {title: "Type", field: "offerType"},
+                                {title: "Category", field: "productCategory"},
+                                {title: "Amount(%)", field: "offerAmount"},
                             ]}
                             data={this.state.data}
                             options={{
@@ -204,13 +213,23 @@ class AllDiscounts extends Component{
                                     tooltip: "Add New Discount",
                                     isFreeAction: true,
                                     onClick: (event) =>
-                                        this.showAddDiscountDialog(),
+                                        this.showAddDiscountDialog(false),
+                                },
+                                {
+                                    icon: () => this.getIcon("list"),
+                                    tooltip: 'View Promo Code',
+                                    onClick: (event, rowData) => alert(rowData.offerType),
+                                },
+                                {
+                                    icon: () => this.getIcon("code"),
+                                    tooltip: 'View Promo Code',
+                                    onClick: (event, rowData) => alert(rowData.offerType),
                                 },
                                 {
                                     icon: () => this.getIcon("edit"),
                                     tooltip: "Update Discount",
                                     onClick: (event, rowData) =>
-                                        alert("You saved " + rowData._id),
+                                        console.log(rowData.offerType)
                                 },
                                 {
                                     icon: () => this.getIcon("delete"),
@@ -219,29 +238,10 @@ class AllDiscounts extends Component{
                                     onClick: (event, rowData) =>
                                         this.handleClickOpen(rowData._id),
                                 },
+
                             ]}
-                            onRowClick={(event, rowData, togglePanel) => togglePanel()}
-                            detailPanel={[
-                                {
-                                    tooltip: "Show Name",
-                                    render: (rowData) => {
-                                        return (
-                                            <div
-                                                style={{
-                                                    fontSize: 100,
-                                                    textAlign: "center",
-                                                    color: "white",
-                                                    backgroundColor: "#43A047",
-                                                }}
-                                            >
-                                                <button onClick={() => alert(rowData._id)}>
-                                                    wjfjhwire
-                                                </button>
-                                            </div>
-                                        );
-                                    },
-                                },
-                            ]}
+
+
                         />
                     </Grid>
                 </Grid>
