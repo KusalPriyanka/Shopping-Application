@@ -10,6 +10,18 @@ import axios from "axios";
 import Icon from "@material-ui/core/Icon";
 import {green, red} from "@material-ui/core/colors";
 import AddNewDiscount from "./AddNewDiscount";
+import DialogTitle from "@material-ui/core/DialogTitle";
+import DialogContent from "@material-ui/core/DialogContent";
+import DialogContentText from "@material-ui/core/DialogContentText";
+import DialogActions from "@material-ui/core/DialogActions";
+import Button from "@material-ui/core/Button";
+import Dialog from "@material-ui/core/Dialog";
+import Slide from "@material-ui/core/Slide";
+
+const Transition = React.forwardRef(function Transition(props, ref) {
+    return <Slide direction="down" ref={ref} {...props} />;
+});
+
 
 const styles = (theme) => ({
     backdrop: {
@@ -32,8 +44,6 @@ class AllDiscounts extends Component{
             isShow: false,
             isShowSnackBar: false,
             isShowAddDialog : false,
-            redirect: false,
-            path: "",
             id: "",
         };
     }
@@ -74,7 +84,7 @@ class AllDiscounts extends Component{
 
     getProductsFromDB = () => {
         axios
-            .get("http://localhost:8080/api/products/")
+            .get("http://localhost:8080/api/offers/")
             .then((res) => {
                 this.setState({
                     data: res.data,
@@ -113,7 +123,7 @@ class AllDiscounts extends Component{
         });
         axios
             .delete(
-                `http://localhost:8080/api/products/DeleteProduct/${this.state.id}`
+                `http://localhost:8080/api/offers/DeleteOffer/${this.state.id}`
             )
             .then((res) => {
                 this.setShowSnackBar();
@@ -137,19 +147,48 @@ class AllDiscounts extends Component{
                             <React.Fragment></React.Fragment>
                         )}
                         {this.state.isShowSnackBar ? (
-                            <SmallSnackbar setShowSnackBar={this.setShowSnackBar} msg={"Product Deleted Successfully"}/>
+                            <SmallSnackbar setShowSnackBar={this.setShowSnackBar} msg={"Offer Deleted Successfully"}/>
                         ) : (
                             <React.Fragment></React.Fragment>
                         )}
+
+                        <Dialog
+                            open={this.state.isShow}
+                            TransitionComponent={Transition}
+                            keepMounted
+                            aria-labelledby="alert-dialog-slide-title"
+                            aria-describedby="alert-dialog-slide-description"
+                        >
+                            <DialogTitle id="alert-dialog-slide-title">
+                                {"Do you want to delete this Offer?"}
+                            </DialogTitle>
+                            <DialogContent>
+                                <DialogContentText id="alert-dialog-slide-description">
+                                    By confirming this, You give permission to delete this
+                                    Offer.Note that this process can not be revert!
+                                </DialogContentText>
+                            </DialogContent>
+                            <DialogActions>
+                                <Button onClick={() => this.handleClose(false)} color="primary">
+                                    No, I'm Sorry
+                                </Button>
+                                <Button onClick={() => this.handleClose(true)} color="primary">
+                                    Yes, I'm Sure
+                                </Button>
+                            </DialogActions>
+                        </Dialog>
+
                         <Backdrop className={classes.backdrop} open={this.state.open}>
                             <CircularProgress color="inherit" />
                         </Backdrop>
                         <MaterialTable
-                            title="All Discounts"
+                            title="All Offers"
                             columns={[
-                                { title: "Name", field: "productName" },
+                                { title: "Name", field: "offerName" },
+                                { title: "Type", field: "offerType" },
                                 { title: "Category", field: "productCategory" },
-                                { title: "Watched", field: "productWatchers" },
+                                { title: "Amount(%)", field: "offerAmount" },
+                                { title: "Promo Code", field: "offerCode" },
                             ]}
                             data={this.state.data}
                             options={{
