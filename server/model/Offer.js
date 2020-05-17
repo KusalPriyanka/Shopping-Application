@@ -10,40 +10,31 @@ const OfferSchema = new mongoose.Schema({
     offerType: {
         type: String,
         required: true,
-        min: 6,
+        min: 3,
         max: 255,
     },
     offerAmount: {
         type: Number,
         required: true,
-        min: 6,
-        max: 255,
+        min: 0,
+        max: 100,
     },
     productCategory: {
         type: String,
         required: true,
-        min: 6,
+        min: 3,
         max: 255,
     },
-    products :[
+    products: [
         {
-            productID :  {
-                type : String,
-                required : true,
+            productID: {
+                type: String,
+                required: true,
             }
         }
     ],
-    offerImageURL: {
-        type : String,
-        required : true,
-    },
     offerCode: {
-        type : String,
-        required : true,
-    },
-    offerEndDate: {
-        type : Date,
-        required : true,
+        type: String,
     },
 
 });
