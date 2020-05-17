@@ -49,10 +49,7 @@ class AddNewDiscount extends Component {
     }
 
     handleClose = () => {
-        this.props.showAddDiscountDialog()
-        this.setState({
-            isDialogOpen: false
-        })
+        this.props.showAddDiscountDialog(false)
     };
 
     updateForm = (e) => {
@@ -116,7 +113,7 @@ class AddNewDiscount extends Component {
                     console.log(err)
                 })
         }
-        return productList;
+
     }
 
     componentDidMount() {
@@ -136,6 +133,7 @@ class AddNewDiscount extends Component {
                 console.log(err);
             });
     }
+
 
     addOffer = () => {
         this.setState({
@@ -161,14 +159,17 @@ class AddNewDiscount extends Component {
             .then(res => {
                 this.setState({
                     open : false,
-                    isDialogOpen : false,
-                    isShowSnackBar : true
+                    isShowSnackBar : true,
+                    isDialogOpen : false
                 })
+                this.props.showAddDiscountDialog(true)
             })
             .catch(err => {
                 console.log(err)
             })
+
     }
+
     setShowSnackBar = () => {
         this.setState({
             isShowSnackBar: !this.state.isShowSnackBar,
@@ -287,7 +288,7 @@ class AddNewDiscount extends Component {
                             Cancel
                         </Button>
                         <Button onClick={() => this.addOffer()} color="primary">
-                            Subscribe
+                            Add Offer
                         </Button>
                     </DialogActions>
                 </Dialog>
