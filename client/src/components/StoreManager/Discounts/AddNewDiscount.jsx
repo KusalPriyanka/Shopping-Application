@@ -16,6 +16,7 @@ import axios from 'axios'
 import CircularProgress from "@material-ui/core/CircularProgress";
 import Backdrop from "@material-ui/core/Backdrop";
 import {withStyles} from "@material-ui/styles";
+import SnackBar from "../../Shared/SnackBar";
 
 const styles = (theme) => ({
     backdrop: {
@@ -41,7 +42,8 @@ class AddNewDiscount extends Component {
             offerCode: '',
             offerEndDate: '',
             products: '',
-            allCategories: ''
+            allCategories: '',
+            isShowSnackBar : false
 
         }
     }
@@ -75,7 +77,11 @@ class AddNewDiscount extends Component {
                 .get("http://localhost:8080/api/products/")
                 .then((res) => {
                     res.data.map(product => {
-                        productList.push(product.productName)
+                        productList.push({
+                            productName : product.productName,
+                            imageURL : product.productImageURLS[0].imageURL,
+                            _id : product._id,
+                        })
                     })
                     this.setState({
                             productCategory: category,
@@ -93,7 +99,11 @@ class AddNewDiscount extends Component {
             axios.get(url)
                 .then(res => {
                     res.data.map(product => {
-                        productList.push(product.productName)
+                        productList.push({
+                            productName : product.productName,
+                            imageURL : product.productImageURLS[0].imageURL,
+                            _id : product._id,
+                        })
                     })
                     this.setState({
                             productCategory: category,
@@ -128,9 +138,42 @@ class AddNewDiscount extends Component {
     }
 
     addOffer = () => {
-        alert("add")
-        this.getSelectedList.current.getSelectedProducts()
+        this.setState({
+            open : true
+        })
+        let productList = [];
+        this.getSelectedList.current.getSelectedProducts().map(product => {
+            productList.push({
+                productID : product._id
+            })
+        })
+        let offer = {
+            offerName : this.state.offerName,
+            offerType : this.state.offerType,
+            offerAmount : this.state.offerAmount,
+            productCategory : this.state.productCategory,
+            products : productList,
+            offerCode : this.state.offerCode,
+        }
+
+        axios
+            .post('http://localhost:8080/api/offers/AddOffer', offer)
+            .then(res => {
+                this.setState({
+                    open : false,
+                    isDialogOpen : false,
+                    isShowSnackBar : true
+                })
+            })
+            .catch(err => {
+                console.log(err)
+            })
     }
+    setShowSnackBar = () => {
+        this.setState({
+            isShowSnackBar: !this.state.isShowSnackBar,
+        });
+    };
 
     render() {
         const {classes} = this.props;
@@ -140,6 +183,11 @@ class AddNewDiscount extends Component {
                 <Backdrop className={classes.backdrop} open={this.state.open}>
                     <CircularProgress color="inherit"/>
                 </Backdrop>
+                {this.state.isShowSnackBar ? (
+                    <SnackBar setShowSnackBar={this.setShowSnackBar} msg={"Offer Added Successfully"}/>
+                ) : (
+                    <React.Fragment></React.Fragment>
+                )}
                 <Dialog open={this.state.isDialogOpen}
                         aria-labelledby="form-dialog-title"
                         maxWidth={"md"}
