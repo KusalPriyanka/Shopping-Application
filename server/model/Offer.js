@@ -27,7 +27,15 @@ const OfferSchema = new mongoose.Schema({
     },
     products: [
         {
-            productID: {
+            productName: {
+                type: String,
+                required: true,
+            },
+            imageURL: {
+                type: String,
+                required: true,
+            },
+            _id: {
                 type: String,
                 required: true,
             }
