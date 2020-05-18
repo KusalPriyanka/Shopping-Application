@@ -14,6 +14,7 @@ import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import imgSignIn from "./signin_cover.jpg";
 import Swal from "sweetalert2";
+import { useHistory } from "react-router-dom";
 import { loginUserApiService } from "../../services/ApiUserServices/UserServices";
 
 const useStyles = makeStyles((theme) => ({
@@ -79,7 +80,7 @@ const LoginForm = () => {
           text: res.data.response.data,
         });
       } else {
-        console.log(res.data);
+        localStorage.setItem("user", JSON.stringify(res.data));
       }
     });
 
