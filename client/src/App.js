@@ -12,13 +12,27 @@ import ProductByCategory from "./components/StoreManager/ProductByCategory/Produ
 import Admin from "./components/Admin/Admin";
 import CartView from "./components/CartItems/CartView";
 import WishList from "./components/Watchlist/WishList";
+import axios from "axios"
+
+
 
 function App() {
   const [navBarStatus, setNavBarStatus] = useState(true);
   let [categories, setCategories] = useState([]);
 
+  const getCategoryFromDB = () => {
+    axios
+        .get("http://localhost:8080/api/Categories/")
+        .then((res) => {
+          setCategories(res.data)
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+  };
+
   useEffect(() => {
-    setCategories(["Women Top", "Men Top", "Kids", "Bags", "Shoes"]);
+    getCategoryFromDB()
   }, []);
 
   const withOutHeader = (component) => {

@@ -70,14 +70,15 @@ const Navigation = (props) => {
         {props.categories.map((category) => {
           return (
             <React.Fragment key={category}>
-              <ListItem button component={Link} to={`/category/${category}`}>
+              {console.log(category)}
+              <ListItem button component={Link} to={`/category/${category.CategoryName}`}>
                 <ListItemAvatar>
                   <Avatar
                     alt="Remy Sharp"
-                    src="https://source.unsplash.com/featured/?wedding"
+                    src={`https://source.unsplash.com/featured/?${category.CategoryName}`}
                   />
                 </ListItemAvatar>
-                <ListItemText primary={category} />
+                <ListItemText primary={category.CategoryName} />
               </ListItem>
               <Divider />
             </React.Fragment>
