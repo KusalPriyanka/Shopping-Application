@@ -18,6 +18,7 @@ import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
 import Slide from "@material-ui/core/Slide";
 import DiscountListPopUp from "./DiscountListPopUp";
+import EditDiscount from "./EditDiscount";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="down" ref={ref} {...props} />;
@@ -44,7 +45,8 @@ class AllDiscounts extends Component {
             open: false,
             isShow: false,
             isShowSnackBar: false,
-            isShowAddDialog: false,
+            isShowEditDialog: false,
+            editOffer : '',
             id: "",
             showProductList : false,
             productList : ""
@@ -62,6 +64,22 @@ class AllDiscounts extends Component {
         } else {
             this.setState({
                 isShowAddDialog: !this.state.isShowAddDialog
+            })
+
+        }
+    }
+
+
+    showEditDiscountDialog = (state, offer) => {
+        if (state) {
+            this.setState({
+                open: true
+            })
+            this.getProductsFromDB()
+        } else {
+            this.setState({
+                editOffer : offer,
+                isShowEditDialog: !this.state.isShowEditDialog
             })
 
         }
@@ -166,6 +184,11 @@ class AllDiscounts extends Component {
                         ) : (
                             <React.Fragment></React.Fragment>
                         )}
+                        {this.state.isShowEditDialog ? (
+                            <EditDiscount showEditDiscountDialog={this.showEditDiscountDialog} offer={this.state.editOffer}/>
+                        ) : (
+                            <React.Fragment></React.Fragment>
+                        )}
                         {this.state.isShowSnackBar ? (
                             <SmallSnackbar setShowSnackBar={this.setShowSnackBar} msg={"Offer Deleted Successfully"}/>
                         ) : (
@@ -242,8 +265,8 @@ class AllDiscounts extends Component {
                                 {
                                     icon: () => this.getIcon("edit"),
                                     tooltip: "Update Discount",
-                                    onClick: (event, rowData) =>
-                                        console.log(rowData.offerType)
+                                    onClick: (event, rowData) => this.showEditDiscountDialog(false, rowData)
+
                                 },
                                 {
                                     icon: () => this.getIcon("delete"),

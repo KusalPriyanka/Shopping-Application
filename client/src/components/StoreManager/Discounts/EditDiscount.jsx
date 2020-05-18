@@ -29,28 +29,28 @@ const styles = (theme) => ({
     },
 });
 
-class AddNewDiscount extends Component {
+class EditDiscount extends Component {
     constructor(props) {
         super(props);
         this.getSelectedList = React.createRef();
         this.state = {
             isDialogOpen: true,
-            offerName: '',
-            offerAmount: '',
-            offerType: '',
-            productCategory: '',
-            offerCode: '',
-            offerEndDate: '',
+            offerName: this.props.offer.offerName,
+            offerAmount: this.props.offer.offerAmount,
+            offerType: this.props.offer.offerType,
+            productCategory: this.props.offer.productCategory,
+            offerCode: this.props.offer.offerCode,
             products: null,
+            restProducts: null,
             allCategories: '',
             isShowSnackBar: false,
-            open : false
+            isListChanged: false
 
         }
     }
 
     handleClose = () => {
-        this.props.showAddDiscountDialog(false)
+        this.props.showEditDiscountDialog(false, '')
     };
 
     updateForm = (e) => {
@@ -63,6 +63,7 @@ class AddNewDiscount extends Component {
         this.setState({
             open: true,
             products: null,
+            isListChanged: true
         })
         this.setProductByCategory(e.target.value)
 
@@ -118,7 +119,6 @@ class AddNewDiscount extends Component {
 
     }
 
-
     componentDidMount() {
         this.setState({
             open: true
@@ -126,9 +126,10 @@ class AddNewDiscount extends Component {
         axios
             .get("http://localhost:8080/api/Categories/")
             .then((res) => {
+                this.setProductByCategory(this.state.productCategory)
+                this.setRestProduct(this.state.productCategory)
                 this.setState({
                     allCategories: res.data,
-                    open: false
                 })
 
             })
@@ -137,8 +138,80 @@ class AddNewDiscount extends Component {
             });
     }
 
+    setRestProduct = (category) => {
+        let productList = [];
+        let restProducts = [];
+        let restProductsShow = [];
+        if (category == 'All') {
+            axios
+                .get("http://localhost:8080/api/products/")
+                .then((res) => {
+                    productList = res.data;
+                    restProducts = res.data;
 
-    addOffer = () => {
+                    productList.map(product => {
+                        this.props.offer.products.map(sProduct => {
+                            if (sProduct._id === product._id) {
+                                restProducts = restProducts.filter((p) => p._id != sProduct._id)
+                            }
+                        })
+                    })
+                    restProducts.map(product => {
+                        restProductsShow.push({
+                            productName: product.productName,
+                            imageURL: product.productImageURLS[0].imageURL,
+                            _id: product._id,
+                        })
+                    })
+
+                    this.setState({
+                            restProducts: restProductsShow,
+                            products: this.props.offer.products,
+                            open: false
+                        }
+                    )
+                })
+                .catch((err) => {
+                    console.log(err);
+                });
+        } else {
+
+            let url = `http://localhost:8080/api/products/productByCategory/${category}`
+            axios.get(url)
+                .then(res => {
+                    productList = res.data;
+                    restProducts = res.data;
+
+                    productList.map(product => {
+                        this.props.offer.products.map(sProduct => {
+                            if (sProduct._id === product._id) {
+                                restProducts = restProducts.filter((p) => p._id != sProduct._id)
+                            }
+                        })
+                    })
+                    restProducts.map(product => {
+                        restProductsShow.push({
+                            productName: product.productName,
+                            imageURL: product.productImageURLS[0].imageURL,
+                            _id: product._id,
+                        })
+                    })
+
+                    this.setState({
+                            restProducts: restProductsShow,
+                            products: this.props.offer.products,
+                            open: false
+                        }
+                    )
+                })
+                .catch(err => {
+                    console.log(err)
+                })
+        }
+    }
+
+
+    updateOffer = () => {
         this.setState({
             open: true
         })
@@ -160,14 +233,14 @@ class AddNewDiscount extends Component {
         }
 
         axios
-            .post('http://localhost:8080/api/offers/AddOffer', offer)
+            .put(`http://localhost:8080/api/offers/UpdateOffer/${this.props.offer._id}`, offer)
             .then(res => {
                 this.setState({
                     open: false,
                     isShowSnackBar: true,
                     isDialogOpen: false
                 })
-                this.props.showAddDiscountDialog(true)
+                this.props.showEditDiscountDialog(true, "")
             })
             .catch(err => {
                 console.log(err)
@@ -190,7 +263,7 @@ class AddNewDiscount extends Component {
                     <CircularProgress color="inherit"/>
                 </Backdrop>
                 {this.state.isShowSnackBar ? (
-                    <SnackBar setShowSnackBar={this.setShowSnackBar} msg={"Offer Added Successfully"}/>
+                    <SnackBar setShowSnackBar={this.setShowSnackBar} msg={"Offer Updated Successfully"}/>
                 ) : (
                     <React.Fragment></React.Fragment>
                 )}
@@ -198,7 +271,7 @@ class AddNewDiscount extends Component {
                         aria-labelledby="form-dialog-title"
                         maxWidth={"md"}
                 >
-                    <DialogTitle id="form-dialog-title" style={{color: "blue"}}>Add New Offer</DialogTitle>
+                    <DialogTitle id="form-dialog-title" style={{color: "green"}}>Edit Offer</DialogTitle>
                     <Divider/>
                     <DialogContent>
                         <Grid container spacing={3}>
@@ -286,7 +359,21 @@ class AddNewDiscount extends Component {
                             }
 
                         </Grid>
-                        {(this.state.products !== null) ?
+                        {(this.state.isListChanged === false && this.state.restProducts != null) ?
+                            <TransferList
+                                ref={this.getSelectedList}
+                                left={this.state.restProducts}
+                                right={this.state.products}
+                            /> :
+                            <React.Fragment/>}
+                        {(this.state.isListChanged === false && this.state.restProducts === null) ?
+                            <TransferList
+                                ref={this.getSelectedList}
+                                left={[]}
+                                right={[]}
+                            /> :
+                            <React.Fragment/>}
+                        {(this.state.isListChanged === true && this.state.products !== null) ?
                             <TransferList
                                 ref={this.getSelectedList}
                                 left={this.state.products}
@@ -294,7 +381,7 @@ class AddNewDiscount extends Component {
                             /> :
                             <React.Fragment></React.Fragment>}
 
-                        {(this.state.products === null) ?
+                        {(this.state.isListChanged === true && this.state.products === null) ?
                             <TransferList
                                 ref={this.getSelectedList}
                                 left={[]}
@@ -303,11 +390,11 @@ class AddNewDiscount extends Component {
                             <React.Fragment></React.Fragment>}
                     </DialogContent>
                     <DialogActions>
-                        <Button onClick={this.handleClose} color="primary">
+                        <Button onClick={this.handleClose} style={{color: "green"}}>
                             Cancel
                         </Button>
-                        <Button onClick={() => this.addOffer()} color="primary">
-                            Add Offer
+                        <Button onClick={() => this.updateOffer()} style={{color: "green"}}>
+                            Edit Offer
                         </Button>
                     </DialogActions>
                 </Dialog>
@@ -316,5 +403,5 @@ class AddNewDiscount extends Component {
     }
 }
 
-export default withStyles(styles)(AddNewDiscount);
+export default withStyles(styles)(EditDiscount);
 
