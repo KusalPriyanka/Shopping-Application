@@ -95,7 +95,7 @@ router.post("/upload", (req, res) => {
                     return res.status(400).send("Error : " + err)
             });
             let imageUrl = url + "/images/ProductImages/" + imageName
-            imageUrls.push(imageUrl)
+            imageUrls.push({imageURL : imageUrl})
         }
     } catch (err) {
         return res.status(404).send("Please upload the image");
