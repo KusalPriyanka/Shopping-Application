@@ -11,7 +11,9 @@ import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import imgSignUp from "./signup_cover.jpg";
 import userImg from "./user.png";
-import axios from "axios";
+import Swal from "sweetalert2";
+import { useHistory } from "react-router-dom";
+import { registerUserApiService } from "../../services/ApiUserServices/UserServices";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -54,38 +56,66 @@ const useStyles = makeStyles((theme) => ({
 const RegisterForm = () => {
   const classes = useStyles();
 
-  const [userImage, setuserImage] = useState({ preview: "", raw: "" });
-  const [progressStatus, setProgressStatus] = useState(false);
+  const [regUserObj, setRegUserObj] = useState({
+    userName: "",
+    userAddress: "",
+    userEmail: "",
+    userMobileNo: "",
+    userPassword: "",
+    userImage: {
+      preview: "",
+      raw: "",
+    },
+  });
 
-  const handleChange = (e) => {
+  const [progressStatus, setProgressStatus] = useState(false);
+  const history = useHistory();
+
+  const handleChangeFile = (e) => {
     if (e.target.files.length) {
-      setuserImage({
+      const userImgObj = {
         preview: URL.createObjectURL(e.target.files[0]),
         raw: e.target.files[0],
-      });
+      };
+      setRegUserObj({ ...regUserObj, userImage: userImgObj });
     }
   };
 
-  const onRegisterUser = (e) => {
+  const handleChange = (e) => {
+    e.persist();
+    setRegUserObj((regUserObj) => ({
+      ...regUserObj,
+      [e.target.name]: e.target.value,
+    }));
+  };
+
+  const onRegisterUser = async (e) => {
     e.preventDefault();
     setProgressStatus(true);
-    const formData = new FormData();
-    formData.append("photo", userImage.raw);
-    formData.set("username", "Ashen Senevirathna");
-    formData.set("address", "Kurunegala");
-    formData.set("email", "Ashen123@gmail.com");
-    formData.set("mobile", "0755642587");
-    formData.set("password", "ashen123");
-    axios
-      .post("http://localhost:8080/api/users/register", formData)
-      .then((res) => {
-        setProgressStatus(false);
-        alert("Registered" + res);
-      })
-      .catch((err) => {
-        setProgressStatus(false);
-        console.log(err);
-      });
+
+    await registerUserApiService(regUserObj).then((res) => {
+      if (!res.status) {
+        Swal.fire({
+          icon: "error",
+          title: "Something went wrong in registration!",
+          text: res.data.response.data,
+        });
+      } else {
+        Swal.fire({
+          title: "Sucessfully Registered!",
+          icon: "success",
+          confirmButtonColor: "#3085d6",
+          confirmButtonText: "Sign In Now",
+          allowOutsideClick: false,
+        }).then((result) => {
+          if (result.value) {
+            history.push("/login");
+          }
+        });
+      }
+    });
+
+    setProgressStatus(false);
   };
 
   return (
@@ -102,7 +132,11 @@ const RegisterForm = () => {
           </Typography>
           <Avatar
             alt="user photo"
-            src={userImage.preview ? userImage.preview : userImg}
+            src={
+              regUserObj.userImage.preview
+                ? regUserObj.userImage.preview
+                : userImg
+            }
             className={classes.large}
           />
           <form onSubmit={onRegisterUser} className={classes.form} noValidate>
@@ -114,9 +148,10 @@ const RegisterForm = () => {
               id="userName"
               label="User Name"
               name="userName"
-              autoComplete="userName"
+              autoComplete="off"
               type="text"
               autoFocus
+              onChange={handleChange}
             />
             <TextField
               variant="outlined"
@@ -126,8 +161,9 @@ const RegisterForm = () => {
               id="userAddress"
               label="User Address"
               name="userAddress"
-              autoComplete="userAddress"
+              autoComplete="off"
               type="text"
+              onChange={handleChange}
             />
             <TextField
               variant="outlined"
@@ -137,8 +173,9 @@ const RegisterForm = () => {
               id="userEmail"
               label="User Email Address"
               name="userEmail"
-              autoComplete="userEmail"
+              autoComplete="off"
               type="text"
+              onChange={handleChange}
             />
             <TextField
               variant="outlined"
@@ -150,6 +187,7 @@ const RegisterForm = () => {
               type="password"
               id="userPassword"
               autoComplete="current-password"
+              onChange={handleChange}
             />
             <TextField
               variant="outlined"
@@ -159,8 +197,9 @@ const RegisterForm = () => {
               id="userMobileNo"
               label="User Mobile No"
               name="userMobileNo"
-              autoComplete="userMobileNo"
+              autoComplete="off"
               type="text"
+              onChange={handleChange}
             />
             <input
               accept="image/*"
@@ -169,7 +208,7 @@ const RegisterForm = () => {
               name="userImg"
               multiple
               type="file"
-              onChange={handleChange}
+              onChange={handleChangeFile}
             />
             <Button
               type="submit"
