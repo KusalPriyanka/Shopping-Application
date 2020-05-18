@@ -6,7 +6,7 @@ import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
-import {number} from "prop-types";
+import axios from "axios";
 
 export default class AddProductDetails extends Component {
     constructor(props) {
@@ -52,12 +52,25 @@ export default class AddProductDetails extends Component {
         )
     }
 
-    componentDidMount() {
-        let allCategories = ['Women Top', 'Men Top', 'Kids', 'Bags', 'Shoes']
+    getCategoryFromDB = () => {
+        let categories = [];
+        axios
+            .get("http://localhost:8080/api/Categories/")
+            .then((res) => {
+                res.data.forEach(category =>  {
+                    categories.push(category.CategoryName)
+                })
+                this.setState({
+                    allCategories: categories
+                })
+            })
+            .catch((err) => {
+                console.log(err);
+            });
+    };
 
-        this.setState({
-            allCategories: allCategories
-        })
+    componentDidMount() {
+        this.getCategoryFromDB()
     }
 
     componentWillUnmount() {
