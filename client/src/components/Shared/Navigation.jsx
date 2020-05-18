@@ -16,7 +16,6 @@ import Divider from "@material-ui/core/Divider";
 import { deepPurple } from "@material-ui/core/colors";
 import ListItemAvatar from "@material-ui/core/ListItemAvatar";
 import Avatar from "@material-ui/core/Avatar";
-import axios from "axios";
 
 const useStyles = makeStyles((theme) => ({
   grow: {
@@ -70,7 +69,6 @@ const Navigation = (props) => {
         {props.categories.map((category) => {
           return (
             <React.Fragment key={category}>
-              {console.log(category)}
               <ListItem button component={Link} to={`/category/${category.CategoryName}`}>
                 <ListItemAvatar>
                   <Avatar
