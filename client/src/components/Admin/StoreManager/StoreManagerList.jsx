@@ -35,11 +35,11 @@ class StoreManagerList extends Component {
                             title="Store managers details"  //table title
                             //table column names
                             columns={[
-                                { title: "Name", field: "userName" },
-                                { title: "Address", field: "userAddress" },
-                                { title: "Email", field: "userEmail" },
-                                { title: "Mobile", field: "userMobile" },
-                                //{ title: "Password", field: "userPassword" },
+                                { title: "Name", field: "empName" },
+                                { title: "Address", field: "empAddress" },
+                                { title: "Email", field: "empEmail" },
+                                { title: "Mobile", field: "empContactNo" },
+                                //{ title: "Password", field: "empPassword" },
                             ]}
                             data={data} //table row data
 
