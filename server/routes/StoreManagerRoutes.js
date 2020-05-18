@@ -1,17 +1,17 @@
 const route = require("express").Router();
-const StoreManager = require("../model/StoreManeger");
+const Employee = require("../model/Employee");
 var nodemailer = require('nodemailer');
 
 /*Router to get all store managers from db*/
 route.get("/", (req, res) =>{
-    StoreManager.find()
+    Employee.find()
         .then(StoreManager => res.send(StoreManager))
         .catch(err => res.status(400).send(`Error: ${err}`))
 });
 
 /*Router to get store manager by id from db*/
 route.get("/:id", (req, res) =>{
-    StoreManager.findById(req.params.id)
+    Employee.findById(req.params.id)
         .then(StoreManager => res.send(StoreManager))
         .catch(err => res.status(400).send(`Error: ${err}`))
 });
@@ -19,12 +19,13 @@ route.get("/:id", (req, res) =>{
 /*Router to add store manager to db*/
 route.post("/AddStoreManager", (req, res) =>{
 
-    let sm = new StoreManager({
-        userName: req.body.userName,
-        userAddress: req.body.userAddress,
-        userEmail: req.body.userEmail,
-        userMobile: req.body.userMobile,
-        userPassword: req.body.userPassword,
+    let sm = new Employee({
+        empType: "storeManager",
+        empName: req.body.empName,
+        empAddress: req.body.empAddress,
+        empEmail: req.body.empEmail,
+        empContactNo: req.body.empContactNo,
+        empPassword: req.body.empPassword,
     });
 
     sm.save()
@@ -42,10 +43,10 @@ route.post("/AddStoreManager", (req, res) =>{
             
             var mailOptions = {
                 from: '"IshopPlaza" <IshopPlaza@gmail.com>',
-                to: `${req.body.userEmail}`,
+                to: `${req.body.empEmail}`,
                 subject: 'IshopPlaza',
                 text: 'Your account has been created. Password: abc123+',
-                html: `<b>Welcome to IshopPlaza! </b><br/><br/><br/>Your account has been created.<br/><br/>User name: ${req.body.userName}<br/>Password: abc123+`,
+                html: `<b>Welcome to IshopPlaza! </b><br/><br/><br/>Your account has been created.<br/><br/>User name: ${req.body.empName}<br/>Password: abc123+`,
             };
             
             transporter.sendMail(mailOptions, function(error, info){
@@ -63,20 +64,20 @@ route.post("/AddStoreManager", (req, res) =>{
 
 /*Router to delete store manager from db*/
 route.delete("/DeleteStoreManager/:id", (req, res) =>{
-    StoreManager.findByIdAndDelete(req.params.id)
+    Employee.findByIdAndDelete(req.params.id)
         .then(sm => res.send(`Successfully Deleted!. Store manager ID: ( ${req.params.id} )`))
         .catch(err => res.status(400).send(`Error: ${err}`))
 });
 
 /*Router to Update store manager*/
 route.put("/UpdateStoreManager/:id", (req, res) =>{
-    StoreManager.findById(req.params.id)
+    Employee.findById(req.params.id)
         .then(sm =>{
-            sm.userName = req.body.userName;
-            sm.userAddress = req.body.userAddress;
-            sm.userEmail = req.body.userEmail;
-            sm.userMobile = req.body.userMobile;
-            sm.userPassword = req.body.userPassword;
+            sm.empName = req.body.empName;
+            sm.empAddress = req.body.empAddress;
+            sm.empEmail= req.body.empEmail;
+            sm.empContactNo = req.body.empContactNo;
+            sm.empPassword = req.body.empPassword;
 
             sm.save()
                 .then(() => res.send(sm))
