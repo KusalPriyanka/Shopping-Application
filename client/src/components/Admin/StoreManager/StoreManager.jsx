@@ -71,11 +71,11 @@ class StoreManager extends Component{
            this.setState({ isLoading_add: true})
             // Send a POST request to API
             axios.post("http://localhost:8080/api/StoreManager/AddStoreManager", {
-                userName: this.state.userName.toString(),
-                userAddress: this.state.userAddress.toString(),
-                userEmail: this.state.userEmail.toString(),
-                userMobile: this.state.userMobile.toString(),
-                userPassword: "abc123+"//this.state.userPassword.toString()
+                empName: this.state.userName.toString(),
+                empAddress: this.state.userAddress.toString(),
+                empEmail: this.state.userEmail.toString(),
+                empContactNo: this.state.userMobile.toString(),
+                empPassword: "abc123+"//this.state.userPassword.toString()
             })
                 .then(result => {
                     //console.log(result);
@@ -174,7 +174,7 @@ class StoreManager extends Component{
                 .get("http://localhost:8080/api/StoreManager/")
                 .then((res) => {
                     res.data.map( sm => {
-                        if(sm.userEmail === this.state.userEmail){   //Check whether store manage email is already added
+                        if(sm.empEmail === this.state.userEmail){   //Check whether store manage email is already added
                             this.setState({
                                 validate: false,
                             });
