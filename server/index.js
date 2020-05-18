@@ -47,7 +47,11 @@ mongoose.connect(
 // Middlewares
 app.use(express.json());
 app.use(fileupload());
-app.use(cors());
+app.use(
+  cors({
+    exposedHeaders: "auth-token",
+  })
+);
 
 // Config routes
 app.use("/api/users", UserRoutes);
