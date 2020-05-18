@@ -124,22 +124,14 @@ export default function AddProduct() {
             data.append('file', selectedFile[x])
         }
 
-        axios.post("http://localhost:8080/upload", data, {})
-            .then(res => { // then print response status
-                console.log(res.statusText)
-                console.log(res.data.files)
-                let imageHostUrl = res.data.url;
+        axios.post("http://localhost:8080/api/products/upload", data, {})
+            .then(res => {
 
-                let productImageURLS = [];
-                res.data.files.map(image => {
-                    productImageURLS.push({imageURL: imageHostUrl + '/images/' + image.filename})
-                })
-                console.log(sizeAndPrice)
                 let product = {
                     "productName": productDetails.productName,
                     "productDescription": productDetails.description,
                     "productCategory": productDetails.category,
-                    "productImageURLS": productImageURLS,
+                    "productImageURLS": res.data.files,
                     "productBrand": productDetails.brandName,
                     "productWatchers": 0,
                     "productPrice" : productDetails.productPrice,
