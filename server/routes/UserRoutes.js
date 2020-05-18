@@ -81,9 +81,15 @@ router.post("/login", async (req, res) => {
     expiresIn: "1h",
   });
 
-  res.header("auth-token", token);
+  const userObj = {
+    userName: user.userName,
+    userEmail: user.userEmail,
+    userMobile: user.userMobile,
+    userAddress: user.userAddress,
+    userImage: user.userImage,
+  };
 
-  res.send(token);
+  res.header("auth-token", token).send(userObj);
 });
 
 module.exports = router;
