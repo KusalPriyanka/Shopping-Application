@@ -81,4 +81,30 @@ router.put("/UpdateProductWatchers/:id", (req, res) => {
         .catch(err => res.status(400).send("Error : " + err))
 });
 
+/*Route To ADD Product Images to server*/
+router.post("/upload", (req, res) => {
+    let imageUrls = [];
+    try {
+
+        let url = req.protocol + "://" + req.get("host")
+        for  (let x = 0; x < req.files.file.length; x++){
+            let imageName =  Date.now() +"-"+ req.files.file[x].name;
+            let image = req.files.file[x];
+            image.mv("./images/ProductImages/" + imageName, (err, result) => {
+                if (err)
+                    return res.status(400).send("Error : " + err)
+            });
+            let imageUrl = url + "/images/ProductImages/" + imageName
+            imageUrls.push(imageUrl)
+        }
+    } catch (err) {
+        return res.status(404).send("Please upload the image");
+    }
+
+    return res.status(200).send({
+        files: imageUrls,
+    });
+
+});
+
 module.exports = router;
