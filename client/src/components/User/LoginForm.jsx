@@ -16,6 +16,7 @@ import imgSignIn from "./signin_cover.jpg";
 import Swal from "sweetalert2";
 import { useHistory } from "react-router-dom";
 import { loginUserApiService } from "../../services/ApiUserServices/UserServices";
+import axios from "axios";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -81,6 +82,8 @@ const LoginForm = () => {
         });
       } else {
         localStorage.setItem("user", JSON.stringify(res.data));
+        axios.defaults.headers.common["auth-token"] =
+          res.data.headers["auth-token"];
       }
     });
 
