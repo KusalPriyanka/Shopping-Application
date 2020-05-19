@@ -16,7 +16,6 @@ const useStyles = makeStyles({
 
 export default function CartView() {
     const classes = useStyles();
-
     return (
         <Card className={classes.root}>
             <CardActionArea>

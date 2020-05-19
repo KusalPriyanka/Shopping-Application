@@ -18,6 +18,7 @@ import ShopIcon from '@material-ui/icons/Shop';
 import Chip from '@material-ui/core/Chip';
 import VisibilityIcon from '@material-ui/icons/Visibility';
 import AddShoppingCartIcon from '@material-ui/icons/AddShoppingCart';
+import Swal from "sweetalert2";
 
 
 
@@ -45,12 +46,14 @@ class MainProductView extends Component {
     }
 
     componentDidMount() {
+
         this.setState({
             isShowBackDrop: true,
         })
-        let url = `http://localhost:8080/api/products/${this.props.match.params.id}`
+        let url = `http://localhost:8080/api/products/${this.props.productId}`
         axios.get(url)
             .then(res => {
+
                 let sizes = [];
                 res.data.detailsWithSize.map((size) => {
                     sizes.push(size.productSize);
@@ -192,6 +195,53 @@ class MainProductView extends Component {
 
     }
 
+    ShowMsg = (icon, title, text) => {
+        Swal.fire({
+            icon : icon,
+            title: title,
+            text: text,
+        });
+    }
+
+    checkLoginState = () => {
+        //localStorage.clear();
+        let User;
+        if (localStorage.getItem("user") !== null) {
+            User = JSON.parse(localStorage.getItem("user"));
+
+        }
+        console.log(User)
+        if(User){
+            return true
+        }else {
+            return  false
+        }
+
+    }
+
+    test = () => {
+
+        let status = this.checkLoginState();
+        if (status){
+
+        }else {
+            this.ShowMsg('error', "Unauthorized User", "Please Log In to the System to continue!")
+        }
+
+        /*let token = User.headers
+        let url = 'http://localhost:8080/api/shoppingcarts/test'
+
+        axios.get(url)
+            .then(res => {
+                console.log(res)
+            })
+            .catch(err => {
+                console.log(err)
+            } )*/
+
+
+    }
+
     render() {
         return (
             <React.Fragment>
@@ -315,6 +365,7 @@ class MainProductView extends Component {
                                                         color="secondary"
                                                         size={"large"}
                                                         startIcon={<ShopIcon/>}
+                                                        onClick={() => this.test()}
                                                     >
                                                         Buy Now
                                                     </Button>

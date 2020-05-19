@@ -12,6 +12,7 @@ import ProductByCategory from "./components/StoreManager/ProductByCategory/Produ
 import Admin from "./components/Admin/Admin";
 import CartView from "./components/CartItems/CartView";
 import WishList from "./components/Watchlist/WishList";
+import MainProductViewContainer from "./components/MainProductView/MainProductViewContainer";
 import axios from "axios"
 
 
@@ -67,7 +68,9 @@ function App() {
           <Route
             path="/wishList"
             component={() => <WishList userID={"123456"} />}
+
           />
+            <Route path="/mainProductViewContainer/:id" component={MainProductViewContainer} />
         </Switch>
       </Router>
     </div>
