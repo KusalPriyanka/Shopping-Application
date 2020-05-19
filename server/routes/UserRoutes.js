@@ -87,6 +87,7 @@ router.post("/login", async (req, res) => {
     userMobile: user.userMobile,
     userAddress: user.userAddress,
     userImage: user.userImage,
+    userToken: token,
   };
 
   res.header("auth-token", token).send(userObj);
