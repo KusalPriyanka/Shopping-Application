@@ -14,12 +14,26 @@ import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
 import AddShoppingCartIcon from "@material-ui/icons/AddShoppingCart";
 import Tooltip from "@material-ui/core/Tooltip";
+import Chip from '@material-ui/core/Chip';
 import {Link} from "react-router-dom";
 import PopUpSlider from "../../Shared/PopUpSlider";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import Fab from '@material-ui/core/Fab';
 import ZoomInIcon from '@material-ui/icons/ZoomIn';
+import LocalOfferIcon from '@material-ui/icons/LocalOffer';
+import LoyaltyIcon from '@material-ui/icons/Loyalty';
 import "../../../css/hoverable.css";
+
+import Badge from '@material-ui/core/Badge';
+import { withStyles } from '@material-ui/core/styles';
+
+const StyledBadge = withStyles((theme) => ({
+    badge: {
+        top: 13,
+        border: `1px solid ${theme.palette.background.paper}`,
+        padding: '0 4px',
+    },
+}))(Badge);
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -30,16 +44,19 @@ const useStyles = makeStyles((theme) => ({
         paddingTop: "56.25%", // 16:9
     },
     btn: {
-        marginLeft: "auto",
+        /* marginLeft: "auto",*/
     },
     avatar: {
         backgroundColor: red[500],
+        width: theme.spacing(6),
+        height: theme.spacing(6)
     },
 
     test: {
         marginTop: "-100px"
     }
 }));
+
 
 export default function SmallProductView(props) {
     const classes = useStyles();
@@ -65,40 +82,36 @@ export default function SmallProductView(props) {
                     <CardHeader
                         style={{backgroundColor: "rgba(10,3,3,0.04)"}}
                         avatar={
-                            <Avatar aria-label="sale" className={classes.avatar}>
-                                S
+
+
+                            <Avatar className={classes.avatar}>
+                                <StyledBadge badgeContent={49} color="primary">
+                                    <LoyaltyIcon/>
+                                </StyledBadge>
                             </Avatar>
-                        }
-                        action={
-                            <Tooltip title="Add To Cart">
-                                <IconButton
-                                    aria-label="settings"
-                                    component={Link}
-                                    to={`/mainProductView/${product._id}`}
-                                >
-                                    <AddShoppingCartIcon color={"primary"}/>
-                                </IconButton>
-                            </Tooltip>
+
+
                         }
                         title={product.productName}
                         subheader={product.productBrand}
                     />
-                  <Grid
-                      container
-                      direction="row"
-                      justify="center"
-                      alignItems="center"
-                      style={{backgroundImage:`url(${product.productImageURLS[0].imageURL})`,
-                        height:"300px",
-                        backgroundSize: "contain",
-                        backgroundRepeat:"no-repeat",
-                        backgroundPosition:"center"
-                      }}
-                  >
-                    <Fab aria-label="edit" size="small" color={"default"} onClick={handleClick}>
-                      <ZoomInIcon color={"primary"}/>
-                    </Fab>
-                  </Grid>
+                    <Grid
+                        container
+                        direction="row"
+                        justify="center"
+                        alignItems="center"
+                        style={{
+                            backgroundImage: `url(${product.productImageURLS[0].imageURL})`,
+                            height: "300px",
+                            backgroundSize: "contain",
+                            backgroundRepeat: "no-repeat",
+                            backgroundPosition: "center"
+                        }}
+                    >
+                        <Fab aria-label="edit" size="small" color={"default"} onClick={handleClick}>
+                            <ZoomInIcon color={"primary"}/>
+                        </Fab>
+                    </Grid>
                     <CardContent>
 
                         <Typography variant="body2" color="textSecondary" component="p">
@@ -108,16 +121,21 @@ export default function SmallProductView(props) {
                             type and scrambled it to make a type specimen book.
                         </Typography>
                     </CardContent>
-                    <CardActions>
-                        <Button
-
-                            variant="outlined"
-                            color="primary"
-                            className={classes.btn}
-                            startIcon={<Visibility/>}
+                    <CardActions disableSpacing>
+                        <IconButton aria-label="add to favorites" color={"primary"}>
+                            <Visibility/>
+                        </IconButton>
+                        <IconButton
+                            aria-label="settings"
+                            component={Link}
+                            to={`/mainProductViewContainer/${product._id}`}
                         >
-                            View More
-                        </Button>
+                            <AddShoppingCartIcon color={"secondary"}/>
+                        </IconButton>
+
+                        <Typography variant="h6" color="secondary" component="h4" style={{marginLeft: "auto"}}>
+                            RS - {product.productPrice}/-
+                        </Typography>
                     </CardActions>
                 </Card>
             </Grid>

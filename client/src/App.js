@@ -6,7 +6,6 @@ import Navigation from "./components/Shared/Navigation";
 import LoginForm from "./components/User/LoginForm";
 import RegisterForm from "./components/User/RegisterForm";
 import StoreManagerDashBoard from "./components/StoreManager/StoreManagerDashBoard";
-import MainProductView from "./components/MainProductView/MainProductView";
 import Home from "./components/Home/Home";
 import ProductByCategory from "./components/StoreManager/ProductByCategory/ProductByCategory";
 import Admin from "./components/Admin/Admin";
@@ -56,7 +55,7 @@ function App() {
           <Route path="/login" component={() => withOutHeader("login")} />
           <Route path="/register" component={() => withOutHeader("register")} />
           <Route path="/storeManager" component={StoreManagerDashBoard} />
-          <Route path="/mainProductView/:id" component={MainProductView} />
+          <Route path="/mainProductViewContainer/:id" component={MainProductViewContainer} />
           <Route
             path="/category/:category"
             component={(props) => (
@@ -70,7 +69,7 @@ function App() {
             component={() => <WishList userID={"123456"} />}
 
           />
-            <Route path="/mainProductViewContainer/:id" component={MainProductViewContainer} />
+
         </Switch>
       </Router>
     </div>

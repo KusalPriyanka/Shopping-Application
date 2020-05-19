@@ -18,6 +18,7 @@ import Grid from "@material-ui/core/Grid";
 import Container from "@material-ui/core/Container";
 import "../../../css/hoverable.css";
 import { Redirect } from "react-router-dom";
+import UpdateProduct from "../UpdateProduct/UpdateProduct";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="down" ref={ref} {...props} />;
@@ -43,6 +44,8 @@ class AllProducts extends Component {
       isShow: false,
       isShowSnackBar: false,
       redirect: false,
+      isShowUpdateDialog : false,
+      updateProduct : null,
       path: "",
       id: "",
     };
@@ -54,6 +57,19 @@ class AllProducts extends Component {
     { title: "Quantity", field: "quantity", type: "numeric" },
     { title: "Price", field: "price", type: "numeric" },
   ];
+
+  ShowUpdateDialog = (product) => {
+    this.setState({
+      isShowUpdateDialog : true,
+      updateProduct : product
+    })
+  }
+
+  hideUpdateDialog = () => {
+    this.setState({
+      isShowUpdateDialog : false,
+    })
+  }
 
   handleClickOpen = (id) => {
     this.setState({
@@ -133,7 +149,7 @@ class AllProducts extends Component {
     });
   };
   renderRedirect = () => {
-    if (this.state.redirect) {
+    if (this.state.redirect ) {
       return <Redirect to={this.state.path} />;
     }
   };
@@ -147,6 +163,10 @@ class AllProducts extends Component {
             {this.renderRedirect()}
             {this.state.isShowSnackBar ? (
               <SmallSnackbar setShowSnackBar={this.setShowSnackBar} msg={"Product Deleted Successfully"}/>
+            ) : (
+              <React.Fragment></React.Fragment>
+            )}{(this.state.updateProduct !== null) ? (
+              <UpdateProduct updateProduct={this.state.updateProduct} hideUpdateDialog={this.hideUpdateDialog}/>
             ) : (
               <React.Fragment></React.Fragment>
             )}
@@ -205,7 +225,7 @@ class AllProducts extends Component {
                   icon: () => this.getIcon("edit"),
                   tooltip: "Update Product",
                   onClick: (event, rowData) =>
-                    alert("You saved " + rowData._id),
+                      this.ShowUpdateDialog(rowData)
                 },
                 {
                   icon: () => this.getIcon("delete"),
