@@ -18,11 +18,14 @@ import blueGrey from "@material-ui/core/colors/blueGrey";
 import red from "@material-ui/core/colors/red";
 import blue from "@material-ui/core/colors/blue";
 import Icon from "@material-ui/core/Icon";
+import Swal from "sweetalert2";
+import { useHistory } from "react-router-dom";
 
 import {
   getFeedbacks,
   editFeedback,
   deleteFeedback,
+  addFeedback,
 } from "../../services/ApiFeedbackServices/FeedbackServices";
 
 const useStyles = makeStyles((theme) => ({
@@ -54,7 +57,9 @@ const useStyles = makeStyles((theme) => ({
 
 const Feedback = (props) => {
   const classes = useStyles();
+
   const { productId } = props;
+  const history = useHistory();
 
   const [feedbacks, setFeedbacks] = useState([]);
   const [feedbackStatus, setFeedbackStatus] = useState(false);
@@ -68,11 +73,22 @@ const Feedback = (props) => {
 
   useEffect(() => {
     getFeedbacks(productId).then((res) => {
+      if (!res.status) {
+        Swal.fire({
+          icon: "error",
+          title: "Something went wrong!",
+          text: res.data.response.data,
+        }).then((result) => {
+          if (result.value) {
+            if (res.data.response.status === 401) history.push("/login");
+          }
+        });
+        return;
+      }
       const ownFeedbackIndex = res.data.data.findIndex(
         (feed) => feed.editableMode
       );
-      console.log("index " + ownFeedbackIndex);
-      if (ownFeedbackIndex != -1) setFeedbackStatus(false);
+      if (ownFeedbackIndex !== -1) setFeedbackStatus(false);
       else setFeedbackStatus(true);
       setFeedbacks(res.data.data);
     });
@@ -80,6 +96,23 @@ const Feedback = (props) => {
 
   const addorEditFeedback = () => {
     if (formStatus === "ADD") {
+      const reqObj = {
+        productId: productId,
+        feedback: feedback.feedback,
+        rating: feedback.rating,
+      };
+      addFeedback(reqObj).then((res) => {
+        if (res.data.status === 200) {
+          Swal.fire(
+            "Sucessfully Added Feedback!",
+            "Thank you for your valuable feedback!",
+            "success"
+          );
+          setFormChange(Date.now());
+        } else {
+          // Error Part Handle
+        }
+      });
     } else if (formStatus === "EDIT") {
       const reqObj = {
         feedbackId: feedback._id,
@@ -130,7 +163,10 @@ const Feedback = (props) => {
     return (
       <ListItem alignItems="flex-start" className={classes.active}>
         <ListItemAvatar>
-          <Avatar alt="Remy Sharp" src={face} />
+          <Avatar
+            alt="Remy Sharp"
+            src={JSON.parse(localStorage.getItem("user")).userImage}
+          />
         </ListItemAvatar>
         <ListItemText
           primary={
@@ -180,7 +216,7 @@ const Feedback = (props) => {
         {feedbacks.map((feed) => (
           <ListItem alignItems="flex-start" key={feed.userName}>
             <ListItemAvatar>
-              <Avatar alt="Remy Sharp" src={face} />
+              <Avatar alt="Remy Sharp" src={feed.img ? feed.img : face} />
             </ListItemAvatar>
             <ListItemText
               primary={feed.feedback}
