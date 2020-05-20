@@ -52,6 +52,7 @@ const useStyles = makeStyles((theme) => ({
 
 const LoginForm = () => {
   const classes = useStyles();
+  const history = useHistory();
 
   const [loginUserObj, setLoginUserObj] = useState({
     email: "",
@@ -81,6 +82,7 @@ const LoginForm = () => {
         });
       } else {
         localStorage.setItem("user", JSON.stringify(res.data.data));
+        history.push("/");
       }
     });
 
