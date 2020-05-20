@@ -125,6 +125,11 @@ const Feedback = (props) => {
       };
       editFeedback(reqObj).then((res) => {
         if (res.status) {
+          Swal.fire(
+            "Sucessfully Edited Your Feedback!",
+            "Thank you for your valuable feedback!",
+            "success"
+          );
           setFormChange(Date.now());
         } else {
           Swal.fire({
@@ -133,6 +138,12 @@ const Feedback = (props) => {
             text: res.data.response.data,
           });
         }
+        setFeedback((feedback) => ({
+          ...feedback,
+          _id: "",
+          feedback: "",
+          rating: 0,
+        }));
       });
     }
   };
@@ -160,6 +171,7 @@ const Feedback = (props) => {
 
     deleteFeedback(reqObj).then((res) => {
       if (res.status) {
+        Swal.fire("Sucessfully Deleted Your Feedback!", "", "success");
         setFormChange(Date.now());
       } else {
         Swal.fire({
