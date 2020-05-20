@@ -1,5 +1,6 @@
 const router = require("express").Router();
 const WishLists = require('../model/WishList');
+const verifyToken = require("./Authentication/VerifyToken");
 /*
 get all the data from the database
 */
@@ -11,21 +12,22 @@ router.get("/", (req, res) => {
 /*
 get the wishListItem by userId
 */
-router.get("/:id", (req, res) => {
-    WishLists.find({"userId": req.params.id})
-        .then((wishlist) => res.send(wishlist[0]))
+router.get("/getWishListByUserID", verifyToken, async (req, res) => {
+    console.log(req.user._id)
+    await WishLists.find({"userId": req.user._id})
+        .then((wishlist) => res.status(200).send(wishlist[0]))
         .catch(err => res.status(400).send("Error : " + err))
 });
 
 /*
 Add wishListItem to the database
 */
-router.post('/AddToWishList', (req, res) => {
+router.post('/AddToWishList', verifyToken, async (req, res) => {
     let wishlist = new WishLists({
-        userId: req.body.userId,
+        userId: req.user._id,
         watchingProducts: req.body.watchingProducts,
     });
-    wishlist.save()
+    await wishlist.save()
         .then(() => res.send({wishListItemID: wishlist._id}))
         .catch(err => res.status(400).send('Error :' + err))
 });
@@ -33,8 +35,8 @@ router.post('/AddToWishList', (req, res) => {
 /*
 Add wishListItem to the database
 */
-router.put('/UpdateWishList/:userId', (req, res) => {
-    WishLists.find({"userId": req.params.userId})
+router.put('/UpdateWishList', verifyToken, (req, res) => {
+    WishLists.find({"userId": req.user._id})
         .then(wishlist => {
             WishLists.findById(wishlist[0]._id)
                 .then(wishlist => {
@@ -50,8 +52,8 @@ router.put('/UpdateWishList/:userId', (req, res) => {
 /*
 Delete a wishListItem from the cart
 */
-router.delete("/DeleteWishListItem/:id", (req, res) => {
-    WishLists.findByIdAndDelete(req.params.id)
+router.delete("/DeleteWishListItem/:id", async (req, res) => {
+    await WishLists.findByIdAndDelete(req.params.id)
         .then(() => res.send(req.params.id + " Deleted Successfully!"))
         .catch(err => res.status(400).send("Error : " + err))
 });
