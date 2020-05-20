@@ -4,44 +4,86 @@ import CircularProgress from "@material-ui/core/CircularProgress";
 import Backdrop from "@material-ui/core/Backdrop";
 import WatchListItem from "./WatchListItem";
 import LoadingView from "../StoreManager/LoadingView/LoadingView";
+import Swal from "sweetalert2";
 
 export default class WishList extends Component{
     constructor(props) {
         super(props);
         this.state = {
-            userID : this.props.userID,
-            watchList : [],
+            watchList : null,
             isShowBackDrop : false,
-            productList : null
+            productList : null,
+            state : true
         }
     }
 
-    componentDidMount() {
-        let userID = 33;
-        let watchList, productList;
+    updateState = () => {
         this.setState({
-            isShowBackDrop : true,
+            state : !this.state.state
         })
-        axios.get(`http://localhost:8080/api/wishlists/${userID}`)
-            .then(res => {
-                watchList = res.data;
-                axios.get('http://localhost:8080/api/products/')
-                    .then(response => {
-                        productList = response.data
-                        this.setState({
-                            watchList :watchList,
-                            productList : productList,
-                            isShowBackDrop : false
-                        })
-                    })
-                    .catch(err => {
-                        console.log(err)
-                    })
-            })
-            .catch(err => {
-                console.log(err)
-            })
+    }
 
+    ShowMsg = (icon, title, text) => {
+        Swal.fire({
+            icon: icon,
+            title: title,
+            text: text,
+        });
+    }
+
+    checkLoginState = () => {
+       /* localStorage.clear();*/
+        let User;
+        if (localStorage.getItem("user") !== null) {
+            User = JSON.parse(localStorage.getItem("user"));
+            axios.defaults.headers.common["auth-token"] = JSON.parse(
+                localStorage.getItem("user")
+            ).userToken;
+        }
+        if (User) {
+            return true
+        } else {
+            return false
+        }
+
+    }
+
+    componentDidMount() {
+
+        let status = this.checkLoginState();
+        if(status){
+            let watchList, productList;
+            this.setState({
+                isShowBackDrop : true,
+            })
+            axios.get("http://localhost:8080/api/wishlists/getWishListByUserID")
+                .then(res => {
+                    watchList = res.data;
+                    axios.get('http://localhost:8080/api/products/')
+                        .then(response => {
+                            productList = response.data
+                            this.setState({
+                                watchList :watchList,
+                                productList : productList,
+                                isShowBackDrop : false
+                            })
+                        })
+                        .catch(err => {
+                            this.setState({
+                                isShowBackDrop : false,
+                            })
+                            this.ShowMsg('error', "Error Occurred", err)
+                        })
+                })
+                .catch(err => {
+                    this.setState({
+                        isShowBackDrop : false,
+                    })
+                    this.ShowMsg('error', "Error Occurred", err)
+                })
+            }else{
+                this.ShowMsg('error', "Unauthorized User", "Please Log In to the System to continue!")
+            }
     }
 
     render() {
@@ -50,12 +92,22 @@ export default class WishList extends Component{
                 <Backdrop style={{zIndex: '10000', color: '#fff',}} open={this.state.isShowBackDrop}>
                     <CircularProgress color="inherit"/>
                 </Backdrop>
-                {(this.state.watchList.length === 0)?
+                {(this.state.watchList === null)?
                     <React.Fragment>
                         <LoadingView/> <LoadingView/>
                     </React.Fragment>:
+                    (this.state.watchList.length === 0)?
+                        <React.Fragment>
+                            <h1>Currently Your cart is empty</h1>
+                        </React.Fragment>:
                     this.state.watchList.watchingProducts.map(wItem => {
-                        return <WatchListItem key={wItem._id} watchItemId={wItem.productID} productList={this.state.productList}/>
+                        return <WatchListItem
+                            key={wItem._id}
+                            wId={this.state.watchList._id}
+                            watchItemId={wItem.productID}
+                            productList={this.state.productList}
+                            updateState={this.updateState}
+                        />
                     })
                 }
 
