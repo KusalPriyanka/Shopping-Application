@@ -196,17 +196,17 @@ class MainProductView extends Component {
                     } else {
                         let alreadyAdded = false;
                         res.data.watchingProducts.map(product => {
-                            if(product.productID === this.state.product._id){
+                            if (product.productID === this.state.product._id) {
                                 alreadyAdded = true
                             }
 
                         })
-                        if(alreadyAdded){
+                        if (alreadyAdded) {
                             this.setState({
                                 isShowBackDrop: false
                             })
                             this.ShowMsg('error', "Error Occurred", "This product is already in your wish list")
-                        }else{
+                        } else {
                             userWishList.watchingProducts.push({productID: this.state.product._id})
                             let url = "http://localhost:8080/api/wishlists/UpdateWishList"
                             let updateWishList = {
@@ -243,7 +243,128 @@ class MainProductView extends Component {
 
     }
 
-   
+    validate = () => {
+        if (this.state.size === null) {
+            return {
+                state : false,
+                icon : "error",
+                title : "Please Select a size",
+                text : "You can not add product to cart without a size!"
+            }
+        }if (this.state.color === null) {
+            return {
+                state : false,
+                icon : "error",
+                title : "Please Select a color",
+                text : "You can not add product to cart without a color!"
+            }
+        }else if (this.state.error === true) {
+            return {
+                state : false,
+                icon : "error",
+                title : "Please Select a valid quantity",
+                text : this.state.errorText
+            }
+        }
+    }
+
+    addToCart = () => {
+
+        let status = this.checkLoginState();
+        if (status) {
+            this.setState({
+                isShowBackDrop: true
+            })
+            let cart = null;
+            axios.get("http://localhost:8080/api/shoppingcarts/getShoppingCartByUserID")
+                .then(res => {
+                    cart = res.data
+                    if (res.data.length === 0) {
+                        let validate = this.validate()
+                        if (validate.state) {
+                            let url = "http://localhost:8080/api/shoppingcarts/AddToCart"
+                            let cartItem = {
+                                "cartItems": [
+                                    {
+                                        "productID": this.state.product._id,
+                                        "productSize": this.state.size,
+                                        "productColor": this.state.color,
+                                        "quantity": this.state.quantity,
+                                        "offerID": this.state.product._id
+                                    }
+                                ]
+                            }
+                            axios.post(url, cartItem)
+                                .then(res => {
+                                        this.setState({
+                                            isShowBackDrop: false
+                                        })
+                                        this.ShowMsg('success',
+                                            "Success",
+                                            `${this.state.product.productName} added to your watch list successfully`)
+                                    }
+                                )
+                                .catch(err => {
+                                    this.setState({
+                                        isShowBackDrop: false
+                                    })
+                                    this.ShowMsg('error', "Error Occurred", err)
+                                })
+                        } else {
+                            this.setState({
+                                isShowBackDrop: false
+                            })
+                            this.ShowMsg(validate.icon, validate.title, validate.text)
+                        }
+                    } else {
+                        /*let alreadyAdded = false;
+                        res.data.watchingProducts.map(product => {
+                            if(product.productID === this.state.product._id){
+                                alreadyAdded = true
+                            }
+
+                        })
+                        if(alreadyAdded){
+                            this.setState({
+                                isShowBackDrop: false
+                            })
+                            this.ShowMsg('error', "Error Occurred", "This product is already in your wish list")
+                        }else{
+                            userWishList.watchingProducts.push({productID: this.state.product._id})
+                            let url = "http://localhost:8080/api/wishlists/UpdateWishList"
+                            let updateWishList = {
+                                "watchingProducts": userWishList.watchingProducts
+                            }
+
+                            axios.put(url, updateWishList)
+                                .then(res => {
+                                        this.setState({
+                                            isShowBackDrop: false
+                                        })
+                                        this.ShowMsg('success',
+                                            "Success",
+                                            `${this.state.product.productName} added to your watch list successfully`)
+                                    }
+                                )
+                                .catch(err => {
+                                    this.setState({
+                                        isShowBackDrop: false
+                                    })
+                                    this.ShowMsg('error', "Error Occurred", err)
+                                })
+                        }*/
+                    }
+                })
+                .catch(err => {
+                    this.ShowMsg('error', "Error Occurred", err)
+                })
+
+
+        } else {
+            this.ShowMsg('error', "Unauthorized User", "Please Log In to the System to continue!")
+        }
+
+    }
 
     render() {
         return (
@@ -379,6 +500,7 @@ class MainProductView extends Component {
                                                         size={"large"}
                                                         startIcon={<AddShoppingCartIcon/>}
                                                         style={{marginTop: "10px"}}
+                                                        onClick={() => this.addToCart()}
                                                     >
                                                         Add To Cart
                                                     </Button>
