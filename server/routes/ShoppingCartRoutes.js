@@ -21,13 +21,12 @@ router.get("/getShoppingCartByUserID", verifyToken, async (req, res) => {
 /*
 Add product to the database
 */
-router.post("/AddToCart", (req, res) => {
+router.post("/AddToCart", verifyToken, async (req, res) => {
   let shoppingcart = new ShoppingCarts({
-    userId: req.body.userId,
+    userId: req.user._id,
     cartItems: req.body.cartItems,
-    totalPrice: req.body.totalPrice,
   });
-  shoppingcart
+  await shoppingcart
     .save()
     .then(() => res.send({ cartItemID: shoppingcart._id }))
     .catch((err) => res.status(400).send("Error :" + err));
