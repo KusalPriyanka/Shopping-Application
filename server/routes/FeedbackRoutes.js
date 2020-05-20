@@ -5,15 +5,15 @@ const {
 } = require("../model/Validation/FeedbackModel.Validation");
 const verifyToken = require("./Authentication/VerifyToken");
 
-router.get("/", verifyToken, async (req, res) => {
-  const feedbacks = await FeedbackModel.find();
+router.get("/:id", verifyToken, async (req, res) => {
+  const feedbacks = await FeedbackModel.find({ productId: req.params.id });
   const feedbackList = [];
   feedbacks.map((feedbackObj) => {
     const obj = {
       _id: feedbackObj._id,
       rating: feedbackObj.rating,
       feedback: feedbackObj.feedback,
-      editable: feedbackObj.userId === req.user._id ? true : false,
+      editableMode: feedbackObj.userId === req.user._id ? true : false,
     };
     feedbackList.push(obj);
   });
