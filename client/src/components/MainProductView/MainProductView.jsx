@@ -20,8 +20,6 @@ import VisibilityIcon from '@material-ui/icons/Visibility';
 import AddShoppingCartIcon from '@material-ui/icons/AddShoppingCart';
 import Swal from "sweetalert2";
 
-
-
 class MainProductView extends Component {
     constructor(props) {
         super(props);
@@ -46,6 +44,7 @@ class MainProductView extends Component {
     }
 
     componentDidMount() {
+
 
         this.setState({
             isShowBackDrop: true,
@@ -133,71 +132,9 @@ class MainProductView extends Component {
         }
     }
 
-    addToWatchList(){
-        let userID = 33;
-        this.setState({
-            isShowBackDrop : true
-        })
-        let userWishList = null;
-        axios.get(`http://localhost:8080/api/wishlists/${userID}`)
-            .then(res => {
-                userWishList = res.data
-                console.log(res.data)
-
-
-                if(res.data.length === 0){
-                    let url = "http://localhost:8080/api/wishlists/AddToWishList"
-                    let wishList = {
-                        "userId": userID,
-                        "watchingProducts": [
-                            {
-                                "productID": this.state.product._id
-                            }
-                        ]
-                    }
-                    axios.post(url, wishList)
-                        .then( res => {
-                                this.setState({
-                                    isShowBackDrop  : false
-                                })
-                                alert("Added added")
-                            }
-                        )
-                        .catch(err => {
-                            console.log(err)
-                        })
-                }else {
-                    userWishList.watchingProducts.push({productID : this.state.product._id})
-                    let url = `http://localhost:8080/api/wishlists/UpdateWishList/${userID}`
-                    let updateWishList = {
-                        "watchingProducts": userWishList.watchingProducts
-                    }
-
-                    console.log(userWishList.watchingProducts)
-                    axios.put(url, updateWishList)
-                        .then( res => {
-                                this.setState({
-                                    isShowBackDrop  : false
-                                })
-                                alert("Update added")
-                            }
-                        )
-                        .catch(err => {
-                            console.log(err)
-                        })
-                }
-            })
-            .catch(err => {
-                console.log(err)
-            })
-
-
-
-    }
-
     ShowMsg = (icon, title, text) => {
         Swal.fire({
-            icon : icon,
+            icon: icon,
             title: title,
             text: text,
         });
@@ -208,39 +145,105 @@ class MainProductView extends Component {
         let User;
         if (localStorage.getItem("user") !== null) {
             User = JSON.parse(localStorage.getItem("user"));
-
+            axios.defaults.headers.common["auth-token"] = JSON.parse(
+                localStorage.getItem("user")
+            ).userToken;
         }
-        console.log(User)
-        if(User){
+        if (User) {
             return true
-        }else {
-            return  false
+        } else {
+            return false
         }
 
     }
 
-    test = () => {
+    addToWatchList = () => {
 
         let status = this.checkLoginState();
-        if (status){
+        if (status) {
+            this.setState({
+                isShowBackDrop: true
+            })
+            let userWishList = null;
+            axios.get("http://localhost:8080/api/wishlists/getWishListByUserID")
+                .then(res => {
+                    userWishList = res.data
+                    if (res.data.length === 0) {
+                        let url = "http://localhost:8080/api/wishlists/AddToWishList"
+                        let wishList = {
+                            "watchingProducts": [
+                                {
+                                    "productID": this.state.product._id
+                                }
+                            ]
+                        }
+                        axios.post(url, wishList)
+                            .then(res => {
+                                    this.setState({
+                                        isShowBackDrop: false
+                                    })
+                                    this.ShowMsg('success',
+                                        "Success",
+                                        `${this.state.product.productName} added to your watch list successfully`)
+                                }
+                            )
+                            .catch(err => {
+                                this.setState({
+                                    isShowBackDrop: false
+                                })
+                                this.ShowMsg('error', "Error Occurred", err)
+                            })
+                    } else {
+                        let alreadyAdded = false;
+                        res.data.watchingProducts.map(product => {
+                            if(product.productID === this.state.product._id){
+                                alreadyAdded = true
+                            }
 
-        }else {
+                        })
+                        if(alreadyAdded){
+                            this.setState({
+                                isShowBackDrop: false
+                            })
+                            this.ShowMsg('error', "Error Occurred", "This product is already in your wish list")
+                        }else{
+                            userWishList.watchingProducts.push({productID: this.state.product._id})
+                            let url = "http://localhost:8080/api/wishlists/UpdateWishList"
+                            let updateWishList = {
+                                "watchingProducts": userWishList.watchingProducts
+                            }
+
+                            axios.put(url, updateWishList)
+                                .then(res => {
+                                        this.setState({
+                                            isShowBackDrop: false
+                                        })
+                                        this.ShowMsg('success',
+                                            "Success",
+                                            `${this.state.product.productName} added to your watch list successfully`)
+                                    }
+                                )
+                                .catch(err => {
+                                    this.setState({
+                                        isShowBackDrop: false
+                                    })
+                                    this.ShowMsg('error', "Error Occurred", err)
+                                })
+                        }
+                    }
+                })
+                .catch(err => {
+                    this.ShowMsg('error', "Error Occurred", err)
+                })
+
+
+        } else {
             this.ShowMsg('error', "Unauthorized User", "Please Log In to the System to continue!")
         }
 
-        /*let token = User.headers
-        let url = 'http://localhost:8080/api/shoppingcarts/test'
-
-        axios.get(url)
-            .then(res => {
-                console.log(res)
-            })
-            .catch(err => {
-                console.log(err)
-            } )*/
-
-
     }
+
+   
 
     render() {
         return (
