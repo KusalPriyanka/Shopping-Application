@@ -9,7 +9,7 @@ import StoreManagerDashBoard from "./components/StoreManager/StoreManagerDashBoa
 import Home from "./components/Home/Home";
 import ProductByCategory from "./components/StoreManager/ProductByCategory/ProductByCategory";
 import Admin from "./components/Admin/Admin";
-import CartView from "./components/CartItems/CartView";
+import ShoppingCartContainer from "./components/ShoppingCart/ShoppingCartContainer";
 import WishList from "./components/Watchlist/WishList";
 import MainProductViewContainer from "./components/MainProductView/MainProductViewContainer";
 import axios from "axios"
@@ -62,7 +62,7 @@ function App() {
               <ProductByCategory {...props} key={window.location.pathname} />
             )}
           />
-          <Route path="/cartItems" component={CartView} />
+          <Route path="/shoppingCart" component={ShoppingCartContainer} />
           <Route path="/admin" component={() => withOutHeader("admin")} />
           <Route
             path="/wishList"
