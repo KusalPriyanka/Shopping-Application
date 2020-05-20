@@ -14,23 +14,26 @@ const shoppingCartSchema = new mongoose.Schema({
         type: String,
         required: true,
       },
+      productSize: {
+        type: String,
+        required: true,
+      },
+      productColor: {
+        type: String,
+        required: true,
+      },
       quantity: {
         type: Number,
         required: true,
         min: 1,
         max: 255,
       },
-      productPrice: {
-        type: Number,
+      offerID: {
+        type: String,
         required: true,
       },
     },
   ],
-
-  totalPrice: {
-    type: Number,
-    required: true,
-  },
 });
 
 module.exports = mongoose.model("ShoppingCart", shoppingCartSchema);
