@@ -1,5 +1,6 @@
 const router = require("express").Router();
 const FeedbackModel = require("../model/FeedbackModel");
+const UserModel = require("../model/UserModel");
 const {
   feedbackValidation,
 } = require("../model/Validation/FeedbackModel.Validation");
@@ -7,18 +8,27 @@ const verifyToken = require("./Authentication/VerifyToken");
 
 router.get("/:id", verifyToken, async (req, res) => {
   const feedbacks = await FeedbackModel.find({ productId: req.params.id });
-  const feedbackList = [];
-  feedbacks.map((feedbackObj) => {
-    const obj = {
-      _id: feedbackObj._id,
-      rating: feedbackObj.rating,
-      feedback: feedbackObj.feedback,
-      editableMode: feedbackObj.userId === req.user._id ? true : false,
-    };
-    feedbackList.push(obj);
-  });
-  res.send(feedbackList);
+
+  const asyncRes = await Promise.all(
+    feedbacks.map(async (feedbackObj) => {
+      const obj = {
+        _id: feedbackObj._id,
+        rating: feedbackObj.rating,
+        feedback: feedbackObj.feedback,
+        userImage: getUserImage(feedbackObj.userId),
+        editableMode: feedbackObj.userId === req.user._id ? true : false,
+        img: await getUserImage(feedbackObj.userId),
+      };
+      return obj;
+    })
+  );
+  res.send(asyncRes);
 });
+
+const getUserImage = async (userId) => {
+  let user = await UserModel.findOne({ _id: userId }, "userImage");
+  return user.userImage;
+};
 
 router.post("/add", verifyToken, async (req, res) => {
   // Validation
