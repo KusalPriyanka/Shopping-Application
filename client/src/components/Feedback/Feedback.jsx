@@ -102,7 +102,7 @@ const Feedback = (props) => {
         rating: feedback.rating,
       };
       addFeedback(reqObj).then((res) => {
-        if (res.data.status === 200) {
+        if (res.status) {
           Swal.fire(
             "Sucessfully Added Feedback!",
             "Thank you for your valuable feedback!",
@@ -110,7 +110,11 @@ const Feedback = (props) => {
           );
           setFormChange(Date.now());
         } else {
-          // Error Part Handle
+          Swal.fire({
+            icon: "error",
+            title: "Something went wrong in login!",
+            text: res.data.response.data,
+          });
         }
       });
     } else if (formStatus === "EDIT") {
@@ -120,10 +124,14 @@ const Feedback = (props) => {
         rating: feedback.rating,
       };
       editFeedback(reqObj).then((res) => {
-        if (res.data.status === 200) {
+        if (res.status) {
           setFormChange(Date.now());
         } else {
-          // Error Part Handle
+          Swal.fire({
+            icon: "error",
+            title: "Something went wrong in login!",
+            text: res.data.response.data,
+          });
         }
       });
     }
@@ -151,10 +159,14 @@ const Feedback = (props) => {
     };
 
     deleteFeedback(reqObj).then((res) => {
-      if (res.data.status === 200) {
+      if (res.status) {
         setFormChange(Date.now());
       } else {
-        // Error Part Handle
+        Swal.fire({
+          icon: "error",
+          title: "Something went wrong in login!",
+          text: res.data.response.data,
+        });
       }
     });
   };
