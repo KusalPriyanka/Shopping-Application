@@ -20,6 +20,7 @@ const CategoryRoutes = require("./routes/CategoryRoutes");
 const ShoppingCartRoutes = require("./routes/ShoppingCartRoutes");
 const WishListRoutes = require("./routes/WishListRoutes");
 const StoreManager = require("./routes/StoreManagerRoutes");
+const EmployeeLogin = require("./routes/EmployeeLoginRoutes");
 
 dotenv.config();
 
@@ -51,6 +52,7 @@ app.use("/api/shoppingcarts", ShoppingCartRoutes);
 app.use("/api/wishlists", WishListRoutes);
 app.use("/images", express.static("images"));
 app.use("/api/StoreManager", StoreManager);
+app.use("/api/EmployeeLogin", EmployeeLogin);
 
 // Return view if production environment
 if (process.env.NODE_ENV === "production") {
