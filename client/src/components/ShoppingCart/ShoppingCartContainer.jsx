@@ -9,6 +9,7 @@ import LoadingView from "../StoreManager/LoadingView/LoadingView";
 import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
 import Paper from "@material-ui/core/Paper";
+import HomeNavigator from "../Shared/HomeNavigator";
 
 export default class ShoppingCartContainer extends Component {
     constructor(props) {
@@ -189,6 +190,7 @@ export default class ShoppingCartContainer extends Component {
                 <Backdrop style={{zIndex: '10000', color: '#fff',}} open={this.state.isShowBackDrop}>
                     <CircularProgress color="inherit"/>
                 </Backdrop>
+                <HomeNavigator/>
                 {(this.state.isLoading)
                     ? <LoadingView/>
                     : (this.state.isCartEmpty) ? <h1>Your cart Is empty</h1>

@@ -6,6 +6,7 @@ import SmallProductView from "../ProductView/SmallProductView";
 import Grid from '@material-ui/core/Grid';
 import CategoryImage from "./CategoryImage";
 import Container from '@material-ui/core/Container';
+import HomeNavigator from "../../Shared/HomeNavigator";
 
 
 export default class ProductByCategory extends Component {
@@ -51,6 +52,7 @@ export default class ProductByCategory extends Component {
                     <CircularProgress color="inherit"/>
                 </Backdrop>
                 <CategoryImage category={this.state.category}/>
+                <HomeNavigator/>
                 <Container>
                     <Grid container direction={"row"}>
 

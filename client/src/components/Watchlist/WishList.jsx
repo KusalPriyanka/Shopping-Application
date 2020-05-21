@@ -6,8 +6,7 @@ import WatchListItem from "./WatchListItem";
 import LoadingView from "../StoreManager/LoadingView/LoadingView";
 import Swal from "sweetalert2";
 import SingleLineGridList from "./GridList";
-import Container from "@material-ui/core/Container";
-
+import HomeNavigator from "../Shared/HomeNavigator";
 
 export default class WishList extends Component{
     constructor(props) {
@@ -99,6 +98,7 @@ export default class WishList extends Component{
                     <h1 style={{marginLeft:"90px"}}>Collect Your Dream Wear</h1>
                 </container>
                 <SingleLineGridList/>
+                <HomeNavigator/>
 
                 <Backdrop style={{zIndex: '10000', color: '#fff',}} open={this.state.isShowBackDrop}>
                     <CircularProgress color="inherit"/>

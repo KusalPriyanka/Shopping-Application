@@ -68,7 +68,7 @@ function App() {
           <Route path="/admin" component={() => withOutHeader("admin")} />
           <Route
             path="/wishList"
-            component={() => <WishList userID={"123456"} />}
+            component={() => <WishList  />}
 
           />
 
