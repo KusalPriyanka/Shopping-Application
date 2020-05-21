@@ -14,6 +14,7 @@ import axios from "axios";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import Backdrop from "@material-ui/core/Backdrop";
 
+
 class WatchListItem extends Component {
     constructor(props) {
         super(props);
@@ -43,7 +44,7 @@ class WatchListItem extends Component {
     }
 
     checkLoginState = () => {
-         /*localStorage.clear();*/
+        /*localStorage.clear();*/
         let User;
         if (localStorage.getItem("user") !== null) {
             User = JSON.parse(localStorage.getItem("user"));
@@ -70,7 +71,6 @@ class WatchListItem extends Component {
                 .then(res => {
                     userWishList = res.data
                     if (res.data.watchingProducts.length === 1) {
-                        alert("1")
                         axios.delete(`http://localhost:8080/api/wishlists/DeleteWishListItem/${this.state.wID}`)
                             .then(res => {
                                     this.setState({
@@ -80,7 +80,7 @@ class WatchListItem extends Component {
                                         "Success",
                                         `${this.state.product.productName} deleted from your watch list successfully`)
 
-                                this.props.updateState()
+                                    this.props.updateState()
                                 }
                             )
                             .catch(err => {
@@ -90,13 +90,9 @@ class WatchListItem extends Component {
                                 this.ShowMsg('error', "Error Occurred", err)
                             })
                     } else {
-                        alert("2")
-                        console.log(userWishList.watchingProducts.length)
-                        console.log(this.state.product._id)
                         userWishList.watchingProducts = userWishList.watchingProducts.filter(wItem =>
                             wItem.productID !== this.state.product._id
                         )
-                        console.log(userWishList.watchingProducts.length)
                         let url = "http://localhost:8080/api/wishlists/UpdateWishList/"
                         let updateWishList = {
                             "watchingProducts": userWishList.watchingProducts
@@ -110,6 +106,7 @@ class WatchListItem extends Component {
                                     this.ShowMsg('success',
                                         "Success",
                                         `${this.state.product.productName} deleted from your watch list successfully`)
+                                    this.props.updateState()
                                 }
                             )
                             .catch(err => {
