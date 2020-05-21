@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import { withRouter, Switch, Route, Link } from "react-router-dom";
 
 import Navigation from "./components/Shared/Navigation";
 
@@ -15,9 +15,9 @@ import MainProductViewContainer from "./components/MainProductView/MainProductVi
 import EmployeeLogin from "./components/EmployeeLogin/EmployeeLogin";
 import axios from "axios";
 
-function App() {
-  const [navBarStatus, setNavBarStatus] = useState(true);
+function App({ location }) {
   let [categories, setCategories] = useState([]);
+  const [currentPath, setCurrentPath] = useState(location.pathname);
 
   const getCategoryFromDB = () => {
     axios
@@ -32,50 +32,49 @@ function App() {
 
   useEffect(() => {
     getCategoryFromDB();
-  }, []);
+    setCurrentPath(location.pathname);
+  }, [location.pathname]);
 
-  const withOutHeader = (component) => {
-    setNavBarStatus(false);
-    if (component === "login") {
-      return <LoginForm />;
-    } else if (component === "register") {
-      return <RegisterForm />;
-    } else if (component === "admin") {
-      return <Admin />;
-    } else if (component === "employee") {
-      return <EmployeeLogin />;
+  const navBarVisibility = () => {
+    if (
+      currentPath === "/login" ||
+      currentPath === "/register" ||
+      currentPath === "/employee" ||
+      currentPath === "/admin"
+    ) {
+      return false;
     }
+    return true;
   };
 
   return (
     <div>
-      <Router>
-        {navBarStatus ? <Navigation categories={categories} /> : null}
-        <Switch>
-          <Route path="/" exact component={Home} />
-          <Route path="/login" component={() => withOutHeader("login")} />
-          <Route path="/register" component={() => withOutHeader("register")} />
-          <Route path="/employee" component={() => withOutHeader("employee")} />
-          <Route path="/storeManager" component={StoreManagerDashBoard} />
-          <Route
-            path="/mainProductViewContainer/:id"
-            component={MainProductViewContainer}
-          />
-          <Route
-            path="/category/:category"
-            component={(props) => (
-              <ProductByCategory {...props} key={window.location.pathname} />
-            )}
-          />
-          <Route path="/shoppingCart" component={ShoppingCartContainer} />
-          <Route path="/admin" component={() => withOutHeader("admin")} />
-          <Route
-            path="/wishList"
-            component={() => <WishList userID={"123456"} />}
-          />
-        </Switch>
-      </Router>
+      <Navigation categories={categories} visibility={navBarVisibility()} />
+      <Switch>
+        <Route path="/" exact component={Home} />
+        <Route path="/login" component={LoginForm} />
+        <Route path="/register" component={RegisterForm} />
+        <Route path="/employee" component={EmployeeLogin} />
+        <Route path="/storeManager" component={StoreManagerDashBoard} />
+        <Route
+          path="/mainProductViewContainer/:id"
+          component={MainProductViewContainer}
+        />
+        <Route
+          path="/category/:category"
+          component={(props) => (
+            <ProductByCategory {...props} key={window.location.pathname} />
+          )}
+        />
+        <Route path="/shoppingCart" component={ShoppingCartContainer} />
+        <Route path="/admin" component={Admin} />
+        <Route
+          path="/wishList"
+          component={() => <WishList userID={"123456"} />}
+        />
+      </Switch>
     </div>
   );
 }
-export default App;
+
+export default withRouter(App);
