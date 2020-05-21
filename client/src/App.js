@@ -43,6 +43,8 @@ function App() {
       return <RegisterForm />;
     } else if (component === "admin") {
       return <Admin />;
+    }else if (component === "storeManager") {
+      return <StoreManagerDashBoard />;
     }
   };
 
@@ -54,7 +56,7 @@ function App() {
           <Route path="/" exact component={Home} />
           <Route path="/login" component={() => withOutHeader("login")} />
           <Route path="/register" component={() => withOutHeader("register")} />
-          <Route path="/storeManager" component={StoreManagerDashBoard} />
+          <Route path="/storeManager" component={() => withOutHeader("storeManager")} />
           <Route path="/mainProductViewContainer/:id" component={MainProductViewContainer} />
           <Route
             path="/category/:category"
