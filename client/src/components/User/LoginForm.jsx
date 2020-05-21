@@ -6,7 +6,7 @@ import CssBaseline from "@material-ui/core/CssBaseline";
 import Backdrop from "@material-ui/core/Backdrop";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import TextField from "@material-ui/core/TextField";
-import Link from "@material-ui/core/Link";
+import { Link } from "react-router-dom";
 import Paper from "@material-ui/core/Paper";
 import Grid from "@material-ui/core/Grid";
 import AccountCircleIcon from "@material-ui/icons/AccountCircle";
@@ -139,7 +139,7 @@ const LoginForm = () => {
             >
               Sign In
             </Button>
-            <Link href="/register" variant="body2">
+            <Link to="/register" variant="body2">
               {"Don't have an account? Sign Up"}
             </Link>
           </form>
