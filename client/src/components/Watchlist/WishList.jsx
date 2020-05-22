@@ -6,7 +6,9 @@ import WatchListItem from "./WatchListItem";
 import LoadingView from "../StoreManager/LoadingView/LoadingView";
 import Swal from "sweetalert2";
 import SingleLineGridList from "./GridList";
-import HomeNavigator from "../Shared/HomeNavigator";
+import Container from "@material-ui/core/Container";
+import SimplePaperempty from "../EmptyPage/DisplayEmpty";
+
 
 export default class WishList extends Component{
     constructor(props) {
@@ -95,10 +97,9 @@ export default class WishList extends Component{
             <React.Fragment>
 
                 <container>
-                    <h1 style={{marginLeft:"90px"}}>Collect Your Dream Wear</h1>
+                    <h1 style={{marginLeft:"90px", color:"#283593"}}>Collect Your Dream Wear</h1>
                 </container>
                 <SingleLineGridList/>
-                <HomeNavigator/>
 
                 <Backdrop style={{zIndex: '10000', color: '#fff',}} open={this.state.isShowBackDrop}>
                     <CircularProgress color="inherit"/>
@@ -109,7 +110,8 @@ export default class WishList extends Component{
                     </React.Fragment>:
                     (this.state.watchList.length === 0)?
                         <React.Fragment>
-                            <h1>Currently Your cart is empty</h1>
+                            <SimplePaperempty/>
+                            <div className={"wishlist_show"}></div>
 
                         </React.Fragment>:
                         this.state.watchList.watchingProducts.map(wItem => {
