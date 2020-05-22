@@ -1,6 +1,7 @@
 import React, {Component} from "react";
 import ShoppingCartItem from "./ShopingCartItem";
 
+
 export default class ShoppingCartList extends Component {
 
     getProduct = (cartItem, productList) => {
@@ -29,6 +30,7 @@ export default class ShoppingCartList extends Component {
 
         return (
             <React.Fragment>
+
                 {shoppingCart.cartItems.map(cartItem => {
                     return <ShoppingCartItem
                         forceUpdateByChild={forceUpdateByChild}
