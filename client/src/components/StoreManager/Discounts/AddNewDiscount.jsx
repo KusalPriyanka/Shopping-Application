@@ -18,6 +18,8 @@ import Backdrop from "@material-ui/core/Backdrop";
 import {withStyles} from "@material-ui/styles";
 import SnackBar from "../../Shared/SnackBar";
 
+import {OfferValidations, alertMsg} from "../../../Validations/OfferValidations"
+
 const styles = (theme) => ({
     backdrop: {
         zIndex: 1500,
@@ -35,12 +37,11 @@ class AddNewDiscount extends Component {
         this.getSelectedList = React.createRef();
         this.state = {
             isDialogOpen: true,
-            offerName: '',
-            offerAmount: '',
-            offerType: '',
-            productCategory: '',
-            offerCode: '',
-            offerEndDate: '',
+            offerName: null,
+            offerAmount: null,
+            offerType: null,
+            productCategory: null,
+            offerCode: null,
             products: null,
             allCategories: '',
             isShowSnackBar: false,
@@ -90,7 +91,7 @@ class AddNewDiscount extends Component {
                     )
                 })
                 .catch((err) => {
-                    console.log(err);
+                    alertMsg("error", "Oooooopz! Some thing went wrong" , err)
                 });
         } else {
 
@@ -112,7 +113,7 @@ class AddNewDiscount extends Component {
                     )
                 })
                 .catch(err => {
-                    console.log(err)
+                    alertMsg("error", "Oooooopz! Some thing went wrong" , err)
                 })
         }
 
@@ -133,9 +134,10 @@ class AddNewDiscount extends Component {
 
             })
             .catch((err) => {
-                console.log(err);
+                alertMsg("error", "Oooooopz! Some thing went wrong" , err)
             });
     }
+
 
 
     addOffer = () => {
@@ -143,7 +145,7 @@ class AddNewDiscount extends Component {
             open: true
         })
 
-        let promoCode;
+        let promoCode = null;
         if (this.state.offerType === "Promo Code") {
             promoCode = this.state.offerCode
         } else {
@@ -159,20 +161,27 @@ class AddNewDiscount extends Component {
             offerCode: promoCode
         }
 
-        axios
-            .post('http://localhost:8080/api/offers/AddOffer', offer)
-            .then(res => {
-                this.setState({
-                    open: false,
-                    isShowSnackBar: true,
-                    isDialogOpen: false
-                })
-                this.props.showAddDiscountDialog(true)
-            })
-            .catch(err => {
-                console.log(err)
-            })
+        let validate = OfferValidations(offer)
 
+        if(validate){
+            axios
+                .post('http://localhost:8080/api/offers/AddOffer', offer)
+                .then(res => {
+                    this.setState({
+                        open: false,
+                        isShowSnackBar: true,
+                        isDialogOpen: false
+                    })
+                    this.props.showAddDiscountDialog(true)
+                })
+                .catch(err => {
+                    alertMsg("error", "Oooooopz! Some thing went wrong" , err)
+                })
+        }else {
+            this.setState({
+                open: false
+            })
+        }
     }
 
     setShowSnackBar = () => {

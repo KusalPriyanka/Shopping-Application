@@ -18,6 +18,8 @@ import Backdrop from "@material-ui/core/Backdrop";
 import {withStyles} from "@material-ui/styles";
 import SnackBar from "../../Shared/SnackBar";
 
+import {OfferValidations, alertMsg} from "../../../Validations/OfferValidations"
+
 const styles = (theme) => ({
     backdrop: {
         zIndex: 1500,
@@ -222,6 +224,7 @@ class EditDiscount extends Component {
         } else {
             promoCode = "N/A"
         }
+        console.log(this.state.offerName)
 
         let offer = {
             offerName: this.state.offerName,
@@ -232,19 +235,26 @@ class EditDiscount extends Component {
             offerCode: promoCode
         }
 
-        axios
-            .put(`http://localhost:8080/api/offers/UpdateOffer/${this.props.offer._id}`, offer)
-            .then(res => {
-                this.setState({
-                    open: false,
-                    isShowSnackBar: true,
-                    isDialogOpen: false
+        let validate = OfferValidations(offer)
+        if(validate){
+            axios
+                .put(`http://localhost:8080/api/offers/UpdateOffer/${this.props.offer._id}`, offer)
+                .then(res => {
+                    this.setState({
+                        open: false,
+                        isShowSnackBar: true,
+                        isDialogOpen: false
+                    })
+                    this.props.showEditDiscountDialog(true, "")
                 })
-                this.props.showEditDiscountDialog(true, "")
+                .catch(err => {
+                    console.log(err)
+                })
+        }else {
+            this.setState({
+                open: false
             })
-            .catch(err => {
-                console.log(err)
-            })
+        }
 
     }
 

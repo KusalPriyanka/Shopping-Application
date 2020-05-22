@@ -27,7 +27,6 @@ import LocalOfferIcon from '@material-ui/icons/LocalOffer'
 import CodeIcon from '@material-ui/icons/Code';
 import Tooltip from '@material-ui/core/Tooltip';
 import PostAddIcon from '@material-ui/icons/PostAdd';
-import {blue} from '@material-ui/core/colors';
 import Swal from "sweetalert2";
 
 class MainProductView extends Component {
