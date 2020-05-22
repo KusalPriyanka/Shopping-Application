@@ -13,6 +13,7 @@ import ShoppingCartContainer from "./components/ShoppingCart/ShoppingCartContain
 import WishList from "./components/Watchlist/WishList";
 import MainProductViewContainer from "./components/MainProductView/MainProductViewContainer";
 import EmployeeLogin from "./components/EmployeeLogin/EmployeeLogin";
+import CheckoutTable from "./components/Checkout/CheckoutTable";
 import axios from "axios";
 
 function App({ location }) {
@@ -72,6 +73,7 @@ function App({ location }) {
           path="/wishList"
           component={() => <WishList userID={"123456"} />}
         />
+        <Route path="/checkout" component={CheckoutTable} />
       </Switch>
     </div>
   );
