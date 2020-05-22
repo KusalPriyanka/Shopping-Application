@@ -9,7 +9,10 @@ import LoadingView from "../StoreManager/LoadingView/LoadingView";
 import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
 import Paper from "@material-ui/core/Paper";
-import HomeNavigator from "../Shared/HomeNavigator";
+import SimplePaperempty from "../EmptyPage/DisplayEmpty";
+import SingleLineGridListcart from "./GridListCart";
+
+
 
 export default class ShoppingCartContainer extends Component {
     constructor(props) {
@@ -187,13 +190,16 @@ export default class ShoppingCartContainer extends Component {
         }
         return (
             <React.Fragment>
+                <h1 style={{marginLeft:"60px",color:"#283593"}}>Your Shopping Cart for your dreams...</h1>
+                <SingleLineGridListcart/>
+
                 <Backdrop style={{zIndex: '10000', color: '#fff',}} open={this.state.isShowBackDrop}>
                     <CircularProgress color="inherit"/>
                 </Backdrop>
-                <HomeNavigator/>
                 {(this.state.isLoading)
                     ? <LoadingView/>
-                    : (this.state.isCartEmpty) ? <h1>Your cart Is empty</h1>
+                    : (this.state.isCartEmpty) ?
+                        <SimplePaperempty/>
                         : <React.Fragment>
                             <Container>
                                 <Paper className={'hoverable'} elevation={3} style={{marginTop: '40px'}}>
