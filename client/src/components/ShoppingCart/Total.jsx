@@ -17,7 +17,7 @@ export default class Total extends Component {
                     size={"large"}
                     startIcon={<AddShoppingCartIcon/>}
                 >
-                    Add To Cart
+                    Add To Checkout
                 </Button>
                 <Divider light style={{marginTop: '10px'}}/>
                 <Grid container item>
