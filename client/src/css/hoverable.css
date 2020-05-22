@@ -30,3 +30,8 @@
     text-transform: capitalize;
 }
 
+.swal2-container {
+    z-index: 1000000;
+}
+
+
