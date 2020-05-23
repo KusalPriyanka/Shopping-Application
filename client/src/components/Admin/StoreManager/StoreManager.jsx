@@ -137,7 +137,18 @@ class StoreManager extends Component{
                 //console.log(this.state.data)
             })
             .catch((err) => {
-                console.log(err);
+                //console.log(err.response)
+                if(err.response.data === "Access Denied!"){
+                    Swal.fire({
+                        icon: "error",
+                        title: "Something went wrong!",
+                        text: err.response.data
+                    }).then((result) => {
+                        this.setState({
+                            redirect: "/employee"
+                        })
+                    });
+                }
             });
     };
 
