@@ -56,7 +56,6 @@ class StoreManager extends Component{
         this.setState({
             [name]: value
         });
-        //console.log(this.state);
         //alert(JSON.stringify(this.state))
     };
 
@@ -94,8 +93,21 @@ class StoreManager extends Component{
                     this.fnClearTextFeild();
                     this.fnGetStoreManagersFromDB();
                 })
-                .catch(err => console.error(err));
-
+                .catch(err => {
+                    //console.log(err.response);
+                    if(err.response.data === "Already published this employee email!"){
+                        Swal.fire({
+                            icon: "error",
+                            title: "Something went wrong!",
+                            text: err.response.data
+                        }).then((result) => {
+                            this.setState({
+                                isLoading_add: false,
+                            })
+                            document.getElementById("email").focus();    //focus to category name
+                        });
+                    }
+                });
         }
 
     }
