@@ -139,7 +139,11 @@ const LoginForm = () => {
             >
               Sign In
             </Button>
-            <Link to="/register" variant="body2">
+            <Link
+              to="/register"
+              variant="body2"
+              style={{ textDecoration: "none" }}
+            >
               {"Don't have an account? Sign Up"}
             </Link>
           </form>
