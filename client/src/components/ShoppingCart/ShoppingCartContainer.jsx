@@ -11,6 +11,7 @@ import Grid from "@material-ui/core/Grid";
 import Paper from "@material-ui/core/Paper";
 import SimplePaperempty from "../EmptyPage/DisplayEmpty";
 import SingleLineGridListcart from "./GridListCart";
+import HomeNavigator from "../Shared/HomeNavigator";
 
 
 
@@ -192,7 +193,7 @@ export default class ShoppingCartContainer extends Component {
             <React.Fragment>
                 <h1 style={{marginLeft:"60px",color:"#283593"}}>Your Shopping Cart for your dreams...</h1>
                 <SingleLineGridListcart/>
-
+                <HomeNavigator/>
                 <Backdrop style={{zIndex: '10000', color: '#fff',}} open={this.state.isShowBackDrop}>
                     <CircularProgress color="inherit"/>
                 </Backdrop>
@@ -212,7 +213,7 @@ export default class ShoppingCartContainer extends Component {
                                             <Grid item xs={12} sm={3} container>
                                                 <Grid item xs={12} >
                                                     <Paper elevation={6} variant="elevation" square
-                                                           style={{padding : "5px", borderColor: "#e7d2bd", borderWidth :"1px"}}>
+                                                           style={{marginTop:"20px" ,padding : "5px", borderColor: "#e7d2bd", borderWidth :"1px"}}>
                                                         {total}
                                                     </Paper>
                                                 </Grid>
