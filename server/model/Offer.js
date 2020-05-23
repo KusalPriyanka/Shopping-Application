@@ -4,7 +4,7 @@ const OfferSchema = new mongoose.Schema({
     offerName: {
         type: String,
         required: true,
-        min: 6,
+        min: 3,
         max: 255,
     },
     offerType: {
