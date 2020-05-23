@@ -1,13 +1,9 @@
-import React,{Component} from "react";
+import React, {Component, useState} from "react";
 import {makeStyles} from "@material-ui/core/styles";
-import clsx from 'clsx';
 import Container from '@material-ui/core/Container';
 import Grid from '@material-ui/core/Grid';
-import Paper from '@material-ui/core/Paper';
-import Chart from './Chart';
-import Deposits from './Deposit';
-import Orders from './Orders';
-
+import StoreManager from "../StoreManager/StoreManager";
+import Category from "../Category/Category";
 
 const useStyles = makeStyles((theme) => ({
 
@@ -31,33 +27,29 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function Dashboard(){
+
     const classes = useStyles();
-    const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
+    const [isDashboard, setIsDashboard] = useState({
+        isDashboard:true
+    })
     return(
         <div>
             <div className={classes.appBarSpacer} />
-                <Container maxWidth="lg" className={classes.container}>
-                    <Grid container spacing={3}>
-
-                        <Grid item xs={12} md={8} lg={9}>
-                            <Paper className={fixedHeightPaper}>
-                                <Chart />
-                            </Paper>
-                        </Grid>
-
-                        <Grid item xs={12} md={4} lg={3}>
-                            <Paper className={fixedHeightPaper}>
-                                <Deposits />
-                            </Paper>
-                        </Grid>
-
-                        <Grid item xs={12}>
-                            <Paper className={classes.paper}>
-                                <Orders />
-                            </Paper>
-                        </Grid>
+            <Container maxWidth="lg" className={classes.container}>
+                <Grid container spacing={3}>
+                    <Grid item xs={12}>
+                        <StoreManager className={classes.paper}
+                                      isDashboard={isDashboard}
+                        />
                     </Grid>
-                </Container>
+
+                    <Grid item xs={12}>
+                        <Category className={classes.paper}
+                                  isDashboard={isDashboard}
+                        />
+                    </Grid>
+                </Grid>
+            </Container>
         </div>
     );
 }
