@@ -19,6 +19,7 @@ import Container from "@material-ui/core/Container";
 import "../../../css/hoverable.css";
 import { Redirect } from "react-router-dom";
 import UpdateProduct from "../UpdateProduct/UpdateProduct";
+import ViewMore from "./ViewMore";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="down" ref={ref} {...props} />;
@@ -201,9 +202,11 @@ class AllProducts extends Component {
             <MaterialTable
               title="All Products"
               columns={[
+                { title: "ID", field: "_id" },
                 { title: "Name", field: "productName" },
+                { title: "Brand", field: "productBrand" },
                 { title: "Category", field: "productCategory" },
-                { title: "Watched", field: "productWatchers" },
+                { title: "Price", field: "productPrice" },
               ]}
               data={this.state.data}
               options={{
@@ -243,15 +246,10 @@ class AllProducts extends Component {
                     return (
                       <div
                         style={{
-                          fontSize: 100,
-                          textAlign: "center",
-                          color: "white",
-                          backgroundColor: "#43A047",
+                          marginTop :"0px",
                         }}
                       >
-                        <button onClick={() => alert(rowData._id)}>
-                          wjfjhwire
-                        </button>
+                        <ViewMore product={rowData}/>
                       </div>
                     );
                   },

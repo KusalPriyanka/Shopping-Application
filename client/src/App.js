@@ -41,7 +41,8 @@ function App({ location }) {
       currentPath === "/login" ||
       currentPath === "/register" ||
       currentPath === "/employee" ||
-      currentPath === "/admin"
+      currentPath === "/admin" ||
+      currentPath === "/storeManager"
     ) {
       return false;
     }
