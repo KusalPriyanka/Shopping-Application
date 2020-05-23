@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useRef} from 'react';
 import {makeStyles} from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import Stepper from '@material-ui/core/Stepper';
@@ -10,12 +10,12 @@ import AddProductDetails from './AddProductDetails';
 import AddProductSizeAndPrice from "./AddProductSize.jsx";
 import AddProductImages from "./AddProductImages";
 import LoadingView from "../LoadingView/LoadingView";
-import ProductView from "../ProductView/SmallProductView";
 import Backdrop from '@material-ui/core/Backdrop';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import axios from "axios";
 import Grid from "@material-ui/core/Grid";
 import '../../../css/hoverable.css'
+import ViewMore from "../ProductView/ViewMore";
 
 const useStyles = makeStyles((theme) => ({
 
@@ -71,11 +71,12 @@ export default function AddProduct() {
     const [sizes, setSizes] = React.useState([]);
     const [selectedFile, setSelectedFile] = React.useState([]);
 
+    const refProductDetails = useRef();
+    const refProductSize = useRef();
+    const refProductImages = useRef();
+
     const handleClose = () => {
         setOpen(false);
-    };
-    const handleBack = () => {
-        setActiveStep(activeStep - 1);
     };
 
     const updateProductDetails = (productDetails) => {
@@ -107,10 +108,10 @@ export default function AddProduct() {
             });
 
             sizeAndPrice.map(item => {
-                if(item.productSize === size){
+                if (item.productSize === size) {
                     b.productDetails.push({
                         productColour: item.productColour,
-                        productQuantity : item.productQuantity
+                        productQuantity: item.productQuantity
                     })
                 }
             })
@@ -134,7 +135,7 @@ export default function AddProduct() {
                     "productImageURLS": res.data.files,
                     "productBrand": productDetails.brandName,
                     "productWatchers": 0,
-                    "productPrice" : productDetails.productPrice,
+                    "productPrice": productDetails.productPrice,
                     "detailsWithSize": detailsWithSize
 
                 }
@@ -152,12 +153,29 @@ export default function AddProduct() {
         })
     }
 
+
     const handleNext = () => {
-        setActiveStep(activeStep + 1);
-        if (activeStep === 2) {
-            setOpen(true);
-            onClickHandler();
+        let state = true;
+        if (activeStep === 0) {
+            state = refProductDetails.current.validate()
         }
+        if(activeStep === 1){
+            state = refProductSize.current.checkSize()
+        }
+        if (activeStep === 2) {
+            state = refProductImages.current.checkImageSize()
+        }
+        if (state) {
+            setActiveStep(activeStep + 1);
+            if (activeStep === 2) {
+                setOpen(true);
+                onClickHandler();
+            }
+        }
+    };
+
+    const handleBack = () => {
+        setActiveStep(activeStep - 1);
     };
 
     const updateSelectedFile = (selectedFile) => {
@@ -169,11 +187,13 @@ export default function AddProduct() {
     function getStepContent(step) {
         switch (step) {
             case 0:
-                return <AddProductDetails product={productDetails} updateProductDetails={updateProductDetails}/>;
+                return <AddProductDetails ref={refProductDetails} product={productDetails}
+                                          updateProductDetails={updateProductDetails}/>;
             case 1:
-                return <AddProductSizeAndPrice sizeAndPrice={sizeAndPrice} sizes={sizes} updateSizeAndPrice={updateSizeAndPrice}/>;
+                return <AddProductSizeAndPrice ref={refProductSize} sizeAndPrice={sizeAndPrice} sizes={sizes}
+                                               updateSizeAndPrice={updateSizeAndPrice}/>;
             case 2:
-                return <AddProductImages selectedFile={selectedFile} updateSelectedFile={updateSelectedFile}/>;
+                return <AddProductImages ref={refProductImages} selectedFile={selectedFile} updateSelectedFile={updateSelectedFile}/>;
             default:
                 throw new Error('Unknown step');
         }
@@ -206,8 +226,8 @@ export default function AddProduct() {
                                     <Grid container direction="row"
                                           justify="center"
                                           alignItems="center" spacing={5}>
-                                        <Grid item xs={12} sm={6}>
-                                            <ProductView product={addedProduct} />
+                                        <Grid item xs={12}>
+                                            <ViewMore product={addedProduct}/>
                                         </Grid>
                                     </Grid>
                                 </React.Fragment>}
