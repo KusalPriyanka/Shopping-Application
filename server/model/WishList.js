@@ -12,6 +12,14 @@ const wishListSchema = new mongoose.Schema({
         type: String,
         required: true,
       },
+      productSize: {
+        type: String,
+        required: true,
+      },
+      productColor: {
+        type: String,
+        required: true,
+      },
     },
   ],
 });
