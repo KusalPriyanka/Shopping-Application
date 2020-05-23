@@ -23,6 +23,14 @@ route.get("/:id", verifyToken, async (req, res) =>{
 /*Router to add store manager to db*/
 route.post("/AddStoreManager", verifyToken, async (req, res) =>{
 
+    //Validate
+    let employeeExist = await Employee.findOne({
+        empEmail: req.body.empEmail,
+      });
+    
+      if (employeeExist)
+        return res.status(404).send("Already published this employee email!");
+
     let sm = new Employee({
         empType: "storeManager",
         empName: req.body.empName,
