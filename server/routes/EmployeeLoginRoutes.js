@@ -27,6 +27,7 @@ router.post("/", async (req, res) => {
     empEmail: employee.empEmail,
     empContactNo: employee.empContactNo,
     empToken: token,
+    path: employee.empType,
   };
 
   res.send(empObj);
