@@ -66,7 +66,7 @@ const EmployeeLogin = () => {
           text: res.data.response.data,
         });
       } else {
-        localStorage.setItem("user", JSON.stringify(res.data.data));
+        localStorage.setItem("emp", JSON.stringify(res.data.data));
         history.push("/" + res.data.data.path);
       }
     });
