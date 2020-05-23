@@ -142,7 +142,12 @@ class StoreManager extends Component{
     };
 
     componentDidMount() {
-        this.fnGetStoreManagersFromDB();
+        if (localStorage.getItem("emp")) {
+            axios.defaults.headers.common["auth-token"] = JSON.parse(
+                localStorage.getItem("emp")
+            ).empToken;
+        }
+        //this.fnGetStoreManagersFromDB();
     }
 
     //handle delete store manager
