@@ -67,7 +67,7 @@ const EmployeeLogin = () => {
         });
       } else {
         localStorage.setItem("user", JSON.stringify(res.data.data));
-        history.push("/");
+        history.push("/" + res.data.data.path);
       }
     });
   };
