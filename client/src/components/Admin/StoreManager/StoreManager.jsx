@@ -1,9 +1,7 @@
 import React,{Component} from "react";
-import {makeStyles} from "@material-ui/core/styles";
 import clsx from 'clsx';
 import Container from '@material-ui/core/Container';
 import Grid from '@material-ui/core/Grid';
-import Paper from '@material-ui/core/Paper';
 import AddStoreManager from "./AddStoreManager";
 import StoreManagerList from "./StoreManagerList";
 import {withStyles} from "@material-ui/styles";
@@ -11,7 +9,7 @@ import Swal from "sweetalert2";
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 import Skeleton from "@material-ui/lab/Skeleton";
-import CategoryList from "../Category/CategoryList";
+import { Redirect } from "react-router-dom";
 const axios = require('axios').default;
 
 const styles = (theme) => ({
@@ -45,7 +43,8 @@ class StoreManager extends Component{
         userEmail: '',
         userMobile: '',
         userPassword: '',
-        validate: false
+        validate: false,
+        redirect: null,
     };
 
     //=============================== Add Store Manager functions ===============================
@@ -56,7 +55,6 @@ class StoreManager extends Component{
         this.setState({
             [name]: value
         });
-        //console.log(this.state);
         //alert(JSON.stringify(this.state))
     };
 
@@ -94,8 +92,21 @@ class StoreManager extends Component{
                     this.fnClearTextFeild();
                     this.fnGetStoreManagersFromDB();
                 })
-                .catch(err => console.error(err));
-
+                .catch(err => {
+                    //console.log(err.response);
+                    if(err.response.data === "Already published this employee email!"){
+                        Swal.fire({
+                            icon: "error",
+                            title: "Something went wrong!",
+                            text: err.response.data
+                        }).then((result) => {
+                            this.setState({
+                                isLoading_add: false,
+                            })
+                            document.getElementById("email").focus();    //focus to category name
+                        });
+                    }
+                });
         }
 
     }
@@ -125,12 +136,28 @@ class StoreManager extends Component{
                 //console.log(this.state.data)
             })
             .catch((err) => {
-                console.log(err);
+                //console.log(err.response)
+                if(err.response.data === "Access Denied!"){
+                    Swal.fire({
+                        icon: "error",
+                        title: "Something went wrong!",
+                        text: err.response.data
+                    }).then((result) => {
+                        this.setState({
+                            redirect: "/employee"
+                        })
+                    });
+                }
             });
     };
 
     componentDidMount() {
-        this.fnGetStoreManagersFromDB();
+        if (localStorage.getItem("emp")) {
+            axios.defaults.headers.common["auth-token"] = JSON.parse(
+                localStorage.getItem("emp")
+            ).empToken;
+        }
+        //this.fnGetStoreManagersFromDB();
     }
 
     //handle delete store manager
@@ -170,36 +197,6 @@ class StoreManager extends Component{
     fnValidateAddStoreManager = () => {
         let mobileNo = document.getElementById('mobileNo').value;
         if (mobileNo.length === 10) {
-/*            axios
-                .get("http://localhost:8080/api/StoreManager/")
-                .then((res) => {
-                    res.data.map( sm => {
-                        if(sm.empEmail === this.state.userEmail){   //Check whether store manage email is already added
-                            this.setState({
-                                validate: false,
-                            });
-                            Swal.fire({
-                                icon: 'error',
-                                title: 'Oops...',
-                                text: 'This email is already added!',
-                            })
-                            setTimeout(function(){
-                                document.getElementById("email").focus();    //focus to email
-                            }, 2000);
-                        }
-                        else{
-                            this.setState({
-                                validate: true
-                            });
-                        }
-                        this.setState({ isLoading_add: false})
-                    })
-                    //console.log(this.state.data)
-                })
-                .catch((err) => {
-                    console.log(err);
-                });*/
-
             this.setState({
                 validate: true,
                 isLoading_add: false
@@ -215,33 +212,32 @@ class StoreManager extends Component{
                 title: 'Oops...',
                 text: 'Invalid phone number!',
             })
-
         }
-
-
     };
-
 
     render() {
         setInterval(this.fnGetStoreManagersFromDB(), 5000); //Refresh every 5 seconds.
-        const {classes} = this.props;
+        const {classes, isDashboard} = this.props;
         const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
+        if (this.state.redirect) {
+            return <Redirect to={this.state.redirect} />
+        }
         return(
             <div>
                 <div className={classes.appBarSpacer} />
                 <Container maxWidth="lg" className={classes.container}>
-                    <Grid container spacing={3} justify="center" style={{marginButton:100}}>
-
-                        <Grid item xs={12} md={10} lg={6} >
-                            {this.state.isLoading_add
-                                ? <Card style={{height:280}}>
+                    {isDashboard ? null :
+                        <Grid container spacing={3} justify="center">
+                            <Grid item xs={12} md={10} lg={6} >
+                                {this.state.isLoading_add
+                                    ? <Card style={{height:280}}>
                                         <CardContent>
                                             <Skeleton />
                                             <Skeleton animation={false} style={{height:100}}/>
                                             <Skeleton animation="wave" />
                                         </CardContent>
                                     </Card>
-                                :   <AddStoreManager
+                                    :   <AddStoreManager
                                         fnOnChangeHandler={this.fnOnChangeHandler}
                                         userName={this.state.userName}
                                         userAddress={this.state.userAddress}
@@ -250,11 +246,12 @@ class StoreManager extends Component{
                                         userPassword={this.state.userPassword}
                                         fnHandleSubmit={this.fnHandleSubmit}
                                     />
-                            }
+                                }
 
-                        </Grid>
-                    </Grid>
-                    <Grid container spacing={3} justify="center" style={{marginTop:100}}>
+                            </Grid>
+                        </Grid >
+                    }
+                    <Grid container spacing={3} justify="center">
                         <Grid item xs={12} md={12} lg={12}>
                             {this.state.isLoading_list
                                 ?
@@ -271,9 +268,7 @@ class StoreManager extends Component{
                                     fnHandleDeleteStoreManager={this.fnHandleDeleteStoreManager}
                                 />
                             }
-
                         </Grid>
-
                     </Grid>
                 </Container>
             </div>

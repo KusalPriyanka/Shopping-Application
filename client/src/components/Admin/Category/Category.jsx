@@ -2,14 +2,15 @@ import React, {Component} from "react";
 import Container from '@material-ui/core/Container';
 import Grid from '@material-ui/core/Grid';
 import CategoryList from "./CategoryList";
-
 import AddCategory from "./AddCategory";
 import {withStyles} from "@material-ui/styles";
 import Swal from "sweetalert2";
 import Skeleton from '@material-ui/lab/Skeleton';
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
+import { Redirect } from "react-router-dom";
 const axios = require('axios').default;
+
 const styles = (theme) => ({
 
     title: {
@@ -42,6 +43,7 @@ const styles = (theme) => ({
 });
 
 class Category extends Component {
+
     state = {
         categoryName : '',
         categoryDescription: '',
@@ -50,10 +52,8 @@ class Category extends Component {
         validate: false,
         isLoading: true,
         isLoading_Add: false,
-        //isShow: false,
-        //redirect: false,
-        //path: "",
         id: "",
+        redirect: null,
     };
 
     //=============================== Add Category functions ===============================
@@ -77,10 +77,9 @@ class Category extends Component {
         this.setState({
             isLoading_Add: true,
         });
-        this.validateAddCategory();
 
         //Check whether new category
-        if(!this.state.editItem ){ //&& this.state.validate
+        if(!this.state.editItem ){
             // Send a POST request to API
             axios.post("http://localhost:8080/api/Categories/AddCategory", {
                 CategoryName: this.state.categoryName.toString(),
@@ -103,10 +102,24 @@ class Category extends Component {
                     this.clearTextFeild();
                     this.getCategoryFromDB();
                 })
-                .catch(err => console.error(err));
+                .catch(err => {
+                    //console.log(err.response);
+                    if(err.response.data === "Already published the category!"){
+                        Swal.fire({
+                            icon: "error",
+                            title: "Something went wrong!",
+                            text: err.response.data
+                        }).then((result) => {
+                            this.setState({
+                                isLoading_Add: false,
+                            })
+                            document.getElementById("CategoryName").focus();    //focus to category name
+                        });
+                    }
+                });
         }
         //Update category
-        else if(this.state.editItem ){ //&& this.state.validate
+        else if(this.state.editItem ){
             // Send a POST request to API
             axios.put(`http://localhost:8080/api/Categories/UpdateCategory/${this.state.id}`, {
                 CategoryName: this.state.categoryName.toString(),
@@ -129,7 +142,21 @@ class Category extends Component {
                     this.clearTextFeild();
                     this.getCategoryFromDB();
                 })
-                .catch(err => console.error(err));
+                .catch(err => {
+                    //console.log(err.response);
+                    if(err.response.data === "Already published the category!"){
+                        Swal.fire({
+                            icon: "error",
+                            title: "Something went wrong!",
+                            text: err.response.data
+                        }).then((result) => {
+                            this.setState({
+                                isLoading_Add: false,
+                            })
+                            document.getElementById("CategoryName").focus();    //focus to category name
+                        });
+                    }
+                });
         }
 
     };
@@ -144,37 +171,6 @@ class Category extends Component {
             validate: false,
         });
     }
-    //validate add category form
-    validateAddCategory = () => {
-        axios
-            .get("http://localhost:8080/api/Categories/")
-            .then((res) => {
-                res.data.map( cat => {
-                    if(cat.CategoryName === this.state.categoryName){   //Check whether category name is already added
-                        this.setState({
-                            validate: false
-                        });
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Oops...',
-                            text: 'This category name is already added!',
-                        })
-                        setTimeout(function(){
-                            document.getElementById("CategoryName").focus();    //focus to category name
-                        }, 2000);
-                    }
-                    else{
-                        this.setState({
-                            validate: true
-                        });
-                    }
-                })
-                //console.log(this.state.data)
-            })
-            .catch((err) => {
-                console.log(err);
-            });
-    };
 
     //=============================== CategoryList ===============================
     //Get all categories
@@ -186,15 +182,33 @@ class Category extends Component {
                     data: res.data,
                     isLoading: false,
                 });
+
                 //console.log(this.state.data)
             })
             .catch((err) => {
-                console.log(err);
+                if(err.response.data === "Access Denied!"){
+                    Swal.fire({
+                        icon: "error",
+                        title: "Something went wrong!",
+                        text: err.response.data
+                    }).then((result) => {
+                        this.setState({
+                            redirect: "/employee"
+                        })
+                    });
+                }
             });
     };
 
     componentDidMount() {
-        this.getCategoryFromDB()
+        //const history = useHistory();
+       if (localStorage.getItem("emp")) {
+            axios.defaults.headers.common["auth-token"] = JSON.parse(
+                localStorage.getItem("emp")
+            ).empToken;
+        }
+
+       // this.getCategoryFromDB()
 
     }
 
@@ -252,32 +266,37 @@ class Category extends Component {
 
     render() {
         setInterval(this.getCategoryFromDB(), 5000); //Refresh every 5 seconds.
-        const {classes} = this.props;
+        const {classes, isDashboard} = this.props;
+        if (this.state.redirect) {
+            return <Redirect to={this.state.redirect} />
+        }
         return(
             <div>
                 <div className={classes.appBarSpacer} />
                 <Container maxWidth="lg" className={classes.container}>
                     <Grid container spacing={3}>
-                        <Grid item xs={12} md={4} lg={4}>
-                            {this.state.isLoading_Add
-                                ? <Card style={{height:280}}>
-                                    <CardContent>
-                                        <Skeleton />
-                                        <Skeleton animation={false} variant="Please wait..."/>
-                                        <Skeleton animation="wave" />
+                        {isDashboard ? null :
+                            <Grid item xs={12} md={4} lg={4}>
+                                {this.state.isLoading_Add
+                                    ? <Card style={{height:280}}>
+                                        <CardContent>
+                                            <Skeleton />
+                                            <Skeleton animation={false} variant="Please wait..."/>
+                                            <Skeleton animation="wave" />
 
-                                    </CardContent>
-                                </Card>
-                                :   <AddCategory
+                                        </CardContent>
+                                    </Card>
+                                    :   <AddCategory
                                         categoryName={this.state.categoryName}
                                         categoryDescription={this.state.categoryDescription}
                                         onChangeHandlerCategoryName={this.onChangeHandlerCategoryName}
                                         onChangeHandlerCategoryDescription={this.onChangeHandlerCategoryDescription}
                                         onSubmitHandler={this.onSubmitHandler}
                                     />
-                            }
+                                }
 
-                        </Grid>
+                            </Grid>
+                        }
                         <Grid item xs={12} md={8} lg={8}>
                             {this.state.isLoading
                                 ? <Card style={{height:280}}>
@@ -286,13 +305,14 @@ class Category extends Component {
                                         <Skeleton animation={false} style={{height:100}}/>
                                         <Skeleton animation="wave" />
                                     </CardContent>
-                                   </Card>
+                                </Card>
                                 :   <CategoryList
-                                        getCategoryFromDB={this.getCategoryFromDB}
-                                        handleEditCategory={this.handleEditCategory}
-                                        handleDeleteCategory={this.handleDeleteCategory}
-                                        data={this.state.data}
-                                    />
+                                    getCategoryFromDB={this.getCategoryFromDB}
+                                    handleEditCategory={this.handleEditCategory}
+                                    handleDeleteCategory={this.handleDeleteCategory}
+                                    data={this.state.data}
+                                    isDashboard={isDashboard}
+                                />
                             }
 
                         </Grid>

@@ -1,23 +1,35 @@
 const route = require("express").Router();
 const Employee = require("../model/Employee");
 var nodemailer = require('nodemailer');
+const verifyToken=require("./Authentication/VerifyToken");
 
 /*Router to get all store managers from db*/
-route.get("/", (req, res) =>{
-    Employee.find()
+route.get("/", verifyToken, async (req, res) =>{
+    if(!req.user.userRole === 'admin')
+        return res.status(401).send("Access Denied!");
+
+        await Employee.find()
         .then(StoreManager => res.send(StoreManager))
         .catch(err => res.status(400).send(`Error: ${err}`))
 });
 
 /*Router to get store manager by id from db*/
-route.get("/:id", (req, res) =>{
-    Employee.findById(req.params.id)
+route.get("/:id", verifyToken, async (req, res) =>{
+    await Employee.findById(req.params.id)
         .then(StoreManager => res.send(StoreManager))
         .catch(err => res.status(400).send(`Error: ${err}`))
 });
 
 /*Router to add store manager to db*/
-route.post("/AddStoreManager", (req, res) =>{
+route.post("/AddStoreManager", verifyToken, async (req, res) =>{
+
+    //Validate
+    let employeeExist = await Employee.findOne({
+        empEmail: req.body.empEmail,
+      });
+    
+      if (employeeExist)
+        return res.status(404).send("Already published this employee email!");
 
     let sm = new Employee({
         empType: "storeManager",
@@ -28,7 +40,7 @@ route.post("/AddStoreManager", (req, res) =>{
         empPassword: req.body.empPassword,
     });
 
-    sm.save()
+    await sm.save()
         .then((sm) => {
             res.send(sm);
             
@@ -63,15 +75,15 @@ route.post("/AddStoreManager", (req, res) =>{
 });
 
 /*Router to delete store manager from db*/
-route.delete("/DeleteStoreManager/:id", (req, res) =>{
-    Employee.findByIdAndDelete(req.params.id)
+route.delete("/DeleteStoreManager/:id", verifyToken, async (req, res) =>{
+    await Employee.findByIdAndDelete(req.params.id)
         .then(sm => res.send(`Successfully Deleted!. Store manager ID: ( ${req.params.id} )`))
         .catch(err => res.status(400).send(`Error: ${err}`))
 });
 
 /*Router to Update store manager*/
-route.put("/UpdateStoreManager/:id", (req, res) =>{
-    Employee.findById(req.params.id)
+route.put("/UpdateStoreManager/:id",verifyToken, async (req, res) =>{
+    await Employee.findById(req.params.id)
         .then(sm =>{
             sm.empName = req.body.empName;
             sm.empAddress = req.body.empAddress;
