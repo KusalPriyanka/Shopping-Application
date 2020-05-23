@@ -23,6 +23,12 @@ router.get("/:id", verifyToken, async (req, res) => {
 
 /*Router to add Categories to db*/
 router.post('/AddCategory',verifyToken, async (req, res) => {
+    let categoryExist = await Categories.findOne({
+        CategoryName: req.body.CategoryName,
+      });
+    
+      if (categoryExist)
+        return res.status(404).send("Already published the category!");
 
     let Category = new Categories({
         CategoryName: req.body.CategoryName,
