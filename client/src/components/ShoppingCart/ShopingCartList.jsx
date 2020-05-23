@@ -1,5 +1,6 @@
 import React, {Component} from "react";
 import ShoppingCartItem from "./ShopingCartItem";
+import {getRemainingQuantity} from "../../Validations/CartItemValidation"
 
 
 export default class ShoppingCartList extends Component {
@@ -25,12 +26,11 @@ export default class ShoppingCartList extends Component {
     }
 
 
+
     render() {
         const {shoppingCart, productList, offers, forceUpdateByChild} = this.props
-
         return (
             <React.Fragment>
-
                 {shoppingCart.cartItems.map(cartItem => {
                     return <ShoppingCartItem
                         forceUpdateByChild={forceUpdateByChild}
@@ -39,6 +39,12 @@ export default class ShoppingCartList extends Component {
                         cartItem={cartItem}
                         product={this.getProduct(cartItem, productList)}
                         offer={this.getOffer(cartItem, offers)}
+                        totalQuantity={getRemainingQuantity(this.getProduct(cartItem, productList),
+                            {
+                                productSize: cartItem.productSize,
+                                productColor: cartItem.productColor,
+                            }
+                        )}
                     />
                 })}
             </React.Fragment>
