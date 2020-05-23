@@ -89,7 +89,7 @@ router.post("/upload", (req, res) => {
   try {
     let url = req.protocol + "://" + req.get("host");
     for (let x = 0; x < req.files.file.length; x++) {
-      let imageName = Date.now() + "-" + req.files.file[x].name;
+      let imageName = Date.now() + "-" + req.files.file[x].name + ".jpg";
       let image = req.files.file[x];
       image.mv("./images/ProductImages/" + imageName, (err, result) => {
         if (err) return res.status(400).send("Error : " + err);

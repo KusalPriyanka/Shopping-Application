@@ -89,20 +89,14 @@ export default function SmallProductView(props) {
             />
 
             <Grid item xs={12} sm={12} md={6} lg={4} xl={4} container justify={"center"}>
-                <Card className={classes.root + " hoverable"}>
+                <Card className={classes.root + " hoverable"} style={{width:"100%"}}>
 
                     <CardHeader
                         style={{backgroundColor: "rgba(10,3,3,0.04)"}}
                         avatar={
-
-
-                            <Avatar className={classes.avatar}>
-                                <StyledBadge badgeContent={49} color="primary">
-                                    <LoyaltyIcon/>
-                                </StyledBadge>
+                            <Avatar aria-label="recipe" className={classes.avatar}>
+                                Ip
                             </Avatar>
-
-
                         }
                         title={product.productName}
                         subheader={product.productBrand}
@@ -126,11 +120,8 @@ export default function SmallProductView(props) {
                     </Grid>
                     <CardContent>
 
-                        <Typography variant="body2" color="textSecondary" component="p">
-                            Lorem Ipsum is simply dummy text of the printing and typesetting
-                            industry. Lorem Ipsum has been the industry's standard dummy text
-                            ever since the 1500s, when an unknown printer took a galley of
-                            type and scrambled it to make a type specimen book.
+                        <Typography variant="body2" color="textSecondary" style={{textAlign: 'justify', textJustify: "inter-word"}} component="p">
+                            {product.productDescription}
                         </Typography>
                     </CardContent>
                     <CardActions disableSpacing>

@@ -16,7 +16,7 @@ const productSchema = new mongoose.Schema({
     productCategory: {
         type: String,
         required: true,
-        min: 6,
+        min: 3,
         max: 255,
     },
     productImageURLS: [
@@ -64,7 +64,7 @@ const productSchema = new mongoose.Schema({
                 type: String,
                 required: true,
                 min: 3,
-                max: 100
+                max: 255
             },
         }]
     }],
