@@ -202,9 +202,11 @@ class AllProducts extends Component {
             <MaterialTable
               title="All Products"
               columns={[
+                { title: "ID", field: "_id" },
                 { title: "Name", field: "productName" },
+                { title: "Brand", field: "productBrand" },
                 { title: "Category", field: "productCategory" },
-                { title: "Watched", field: "productWatchers" },
+                { title: "Price", field: "productPrice" },
               ]}
               data={this.state.data}
               options={{
