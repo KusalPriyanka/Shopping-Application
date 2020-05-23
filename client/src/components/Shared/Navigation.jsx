@@ -15,6 +15,9 @@ import ListItemText from "@material-ui/core/ListItemText";
 import Divider from "@material-ui/core/Divider";
 import ListItemAvatar from "@material-ui/core/ListItemAvatar";
 import Avatar from "@material-ui/core/Avatar";
+import MenuItem from "@material-ui/core/MenuItem";
+import Menu from "@material-ui/core/Menu";
+import { useHistory } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
   menuButton: {
@@ -39,8 +42,25 @@ const useStyles = makeStyles((theme) => ({
 
 const Navigation = (props) => {
   const classes = useStyles();
+  const history = useHistory();
 
   const [state, setState] = React.useState(false);
+  const [anchorEl, setAnchorEl] = React.useState(null);
+
+  const openUserImg = Boolean(anchorEl);
+
+  const handleClose = (nav) => {
+    if (nav === "cart") history.push("/shoppingCart");
+    else if (nav === "logout") {
+      localStorage.removeItem("user");
+      history.push("/");
+    }
+    setAnchorEl(null);
+  };
+
+  const handleMenu = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
 
   const toggleDrawer = (open) => (event) => {
     if (
@@ -88,6 +108,49 @@ const Navigation = (props) => {
     </div>
   );
 
+  const loginOrRegister = () => {
+    if (localStorage.getItem("user") != null) {
+      return (
+        <div>
+          <Avatar
+            alt="Remy Sharp"
+            src={JSON.parse(localStorage.getItem("user")).userImage}
+            onClick={handleMenu}
+          />
+          <Menu
+            id="menu-appbar"
+            anchorEl={anchorEl}
+            anchorOrigin={{
+              vertical: "top",
+              horizontal: "right",
+            }}
+            keepMounted
+            transformOrigin={{
+              vertical: "top",
+              horizontal: "right",
+            }}
+            open={openUserImg}
+            onClose={() => handleClose()}
+          >
+            <MenuItem onClick={() => handleClose("cart")}>My Cart</MenuItem>
+            <MenuItem onClick={() => handleClose("logout")}>Logout</MenuItem>
+          </Menu>
+        </div>
+      );
+    } else {
+      return (
+        <div>
+          <Button component={Link} to="/login" color="inherit">
+            Login
+          </Button>
+          <Button component={Link} to="/register" color="inherit">
+            Register
+          </Button>
+        </div>
+      );
+    }
+  };
+
   return (
     <React.Fragment>
       <AppBar
@@ -106,21 +169,17 @@ const Navigation = (props) => {
           >
             <MenuIcon />
           </IconButton>
-          <Typography variant="h6" color="inherit" className={classes.title}>
+          <Typography
+            variant="h6"
+            color="inherit"
+            className={classes.title}
+            component={Link}
+            to="/"
+            style={{ textDecoration: "none" }}
+          >
             IShop Plaza
           </Typography>
-          <Button component={Link} to="/" color="inherit">
-            Home
-          </Button>
-          <Button component={Link} to="/login" color="inherit">
-            Login
-          </Button>
-          <Button component={Link} to="/register" color="inherit">
-            Register
-          </Button>
-          <Button component={Link} to="/storeManager" color="inherit">
-            Store Manager
-          </Button>
+          {loginOrRegister()}
         </Toolbar>
       </AppBar>
       <Drawer anchor={"left"} open={state} onClose={toggleDrawer(false)}>
