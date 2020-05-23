@@ -54,6 +54,13 @@ router.delete("/DeleteCategory/:id",verifyToken, async (req, res) => {
 
 /*Router to Update Categories*/
 router.put("/UpdateCategory/:id", verifyToken, async (req, res) => {
+    let categoryExist = await Categories.findOne({
+        CategoryName: req.body.CategoryName,
+      });
+    
+      if (categoryExist)
+        return res.status(404).send("Already published the category!");
+
     await Categories.findById(req.params.id)
         .then(Category => {
             Category.CategoryName = req.body.CategoryName;
