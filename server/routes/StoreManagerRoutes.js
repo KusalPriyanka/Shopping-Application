@@ -22,7 +22,9 @@ route.get("/:id", verifyToken, async (req, res) =>{
 
 /*Router to add store manager to db*/
 route.post("/AddStoreManager", verifyToken, async (req, res) =>{
-
+    if(!req.user.userRole === 'admin')
+        return res.status(401).send("Access Denied!");
+        
     //Validate
     let employeeExist = await Employee.findOne({
         empEmail: req.body.empEmail,
@@ -76,6 +78,9 @@ route.post("/AddStoreManager", verifyToken, async (req, res) =>{
 
 /*Router to delete store manager from db*/
 route.delete("/DeleteStoreManager/:id", verifyToken, async (req, res) =>{
+    if(!req.user.userRole === 'admin')
+    return res.status(401).send("Access Denied!");
+    
     await Employee.findByIdAndDelete(req.params.id)
         .then(sm => res.send(`Successfully Deleted!. Store manager ID: ( ${req.params.id} )`))
         .catch(err => res.status(400).send(`Error: ${err}`))
