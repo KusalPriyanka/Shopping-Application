@@ -15,7 +15,9 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import axios from "axios";
 import Grid from "@material-ui/core/Grid";
 import '../../../css/hoverable.css'
-import ViewMore from "../ProductView/ViewMore";
+import AddedSmallProductView from "./AddedSmallProductView";
+import Swal from "sweetalert2";
+import {useHistory} from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
 
@@ -55,8 +57,9 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export default function AddProduct() {
+export default function AddProduct(props) {
     const classes = useStyles();
+    const history = useHistory();
     const [activeStep, setActiveStep] = React.useState(0);
     const [open, setOpen] = React.useState(false);
     const [addedProduct, setAddedProduct] = React.useState({});
@@ -87,6 +90,15 @@ export default function AddProduct() {
         setSizeAndPrice(sizeAndPrice);
         setSizes(sizes);
     }
+
+    const alertMsg = (icon, title, text) => {
+        Swal.fire({
+            icon: icon,
+            title: title,
+            text: text,
+        });
+    }
+
 
     const onClickHandler = () => {
         let detailsWithSize = [];
@@ -125,7 +137,8 @@ export default function AddProduct() {
             data.append('file', selectedFile[x])
         }
 
-        axios.post("http://localhost:8080/api/products/upload", data, {})
+        const uploadImages = process.env.apiURL || "http://localhost:8080/" + "api/products/upload";
+        axios.post(uploadImages, data, {})
             .then(res => {
 
                 let product = {
@@ -139,17 +152,44 @@ export default function AddProduct() {
                     "detailsWithSize": detailsWithSize
 
                 }
-
-                axios.post('http://localhost:8080/api/products/AddProduct', product)
+                const addProduct = process.env.apiURL || "http://localhost:8080/" + "api/products/AddProduct";
+                axios.post(addProduct, product)
                     .then(res => {
                         setAddedProduct(res.data)
                         setOpen(false);
+                        redirectToAllProduct();
                     }).catch(err => {
-                    console.log(err)
+                    setOpen(false);
+                    handleError(err);
                 })
 
             }).catch(err => {
-            console.log(err)
+            setOpen(false);
+            handleError(err);
+        })
+    }
+
+    const handleError = (err) => {
+        if (err.response.status === 401){
+            alertMsg("error", "Something Went Wrong ", err.response.data)
+            props.removeUser()
+        }else {
+            alertMsg("error", "Something Went Wrong ", err)
+        }
+    }
+
+    const redirectToAllProduct = () => {
+        Swal.fire({
+            icon : "success",
+            title: 'Done!',
+            text : "Product Added to the Store Successfully.",
+
+            confirmButtonText: 'OK',
+            showLoaderOnConfirm: true,
+            preConfirm: (code) => {
+                history.push("/storeManager")
+
+            },
         })
     }
 
@@ -159,7 +199,7 @@ export default function AddProduct() {
         if (activeStep === 0) {
             state = refProductDetails.current.validate()
         }
-        if(activeStep === 1){
+        if (activeStep === 1) {
             state = refProductSize.current.checkSize()
         }
         if (activeStep === 2) {
@@ -193,7 +233,8 @@ export default function AddProduct() {
                 return <AddProductSizeAndPrice ref={refProductSize} sizeAndPrice={sizeAndPrice} sizes={sizes}
                                                updateSizeAndPrice={updateSizeAndPrice}/>;
             case 2:
-                return <AddProductImages ref={refProductImages} selectedFile={selectedFile} updateSelectedFile={updateSelectedFile}/>;
+                return <AddProductImages ref={refProductImages} selectedFile={selectedFile}
+                                         updateSelectedFile={updateSelectedFile}/>;
             default:
                 throw new Error('Unknown step');
         }
@@ -216,7 +257,7 @@ export default function AddProduct() {
                     <React.Fragment>
                         {activeStep === steps.length ?
                             <React.Fragment>
-                                <Backdrop className={classes.backdrop} open={open} onClick={handleClose}>
+                                <Backdrop className={classes.backdrop} open={open} >
                                     <CircularProgress color="inherit"/>
                                 </Backdrop>
 
@@ -227,7 +268,7 @@ export default function AddProduct() {
                                           justify="center"
                                           alignItems="center" spacing={5}>
                                         <Grid item xs={12}>
-                                            <ViewMore product={addedProduct}/>
+                                            <AddedSmallProductView product={addedProduct}/>
                                         </Grid>
                                     </Grid>
                                 </React.Fragment>}
