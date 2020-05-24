@@ -21,10 +21,8 @@ function App({ location }) {
   const [currentPath, setCurrentPath] = useState(location.pathname);
 
   const getCategoryFromDB = () => {
-    const apiURL =
-      process.env.apiURL || "http://localhost:8080/" + "api/Categories/";
     axios
-      .get(apiURL)
+      .get("api/Categories/")
       .then((res) => {
         setCategories(res.data);
       })
