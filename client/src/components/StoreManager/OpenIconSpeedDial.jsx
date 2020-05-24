@@ -2,14 +2,15 @@ import React from 'react';
 import { Link } from "react-router-dom";
 import { makeStyles } from '@material-ui/core/styles';
 import SpeedDial from '@material-ui/lab/SpeedDial';
-import SpeedDialIcon from '@material-ui/lab/SpeedDialIcon';
+import PostAddIcon from '@material-ui/icons/PostAdd';
 import SpeedDialAction from '@material-ui/lab/SpeedDialAction';
-import FileCopyIcon from '@material-ui/icons/FileCopyOutlined';
+import InsertInvitationIcon from '@material-ui/icons/InsertInvitation';
 import SaveIcon from '@material-ui/icons/Save';
-import PrintIcon from '@material-ui/icons/Print';
-import ShareIcon from '@material-ui/icons/Share';
-import FavoriteIcon from '@material-ui/icons/Favorite';
+import AssignmentIcon from '@material-ui/icons/Assignment';
+import SupervisorAccountIcon from '@material-ui/icons/SupervisorAccount';
 import EditIcon from '@material-ui/icons/Edit';
+import HomeIcon from "@material-ui/icons/Home";
+import LocalOfferIcon from '@material-ui/icons/LocalOffer';
 
 const useStyles = makeStyles((theme) => ({
 
@@ -21,11 +22,11 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const actions = [
-    { icon: <FileCopyIcon />, name: 'All Products', to : '/' },
-    { icon: <SaveIcon />, name: 'Add New Product', to : '/addProducts'  },
-    { icon: <PrintIcon />, name: 'All Offers', to : ''  },
-    { icon: <ShareIcon />, name: 'Add Offers', to : ''  },
-    { icon: <FavoriteIcon />, name: 'View Shop', to : ''  },
+    { icon: <AssignmentIcon style={{color : "green"}} />, name: 'All Products', to : '/storeManager' },
+    { icon: <PostAddIcon style={{color : "orange"}} />, name: 'Add New Product', to : '/storeManager/addProducts'  },
+    { icon: <LocalOfferIcon style={{color : "purple"}}/>, name: 'All Offers', to : '/storeManager/allDiscounts'  },
+    { icon: <InsertInvitationIcon color={"error"} />, name: 'Dashboard', to : ''  },
+    { icon: <HomeIcon style={{color : "yellow"}} />, name: 'Home', to : ''  },
 ];
 
 export default function OpenIconSpeedDial() {
@@ -47,7 +48,7 @@ export default function OpenIconSpeedDial() {
                 ariaLabel="SpeedDial openIcon example"
                 className={classes.speedDial}
                 hidden={false}
-                icon={<SpeedDialIcon openIcon={<EditIcon />} />}
+                icon={<SupervisorAccountIcon openIcon={<EditIcon />} />}
                 onClose={handleClose}
                 onOpen={handleOpen}
                 open={open}

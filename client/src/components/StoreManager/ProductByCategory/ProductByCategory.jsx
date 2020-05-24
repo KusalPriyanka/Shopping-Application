@@ -16,7 +16,7 @@ export default class ProductByCategory extends Component {
             category: {
                 CategoryName: this.props.match.params.category,
                 categoryImageURL : "",
-                categoryDescription  : 'lArem dfgdfg dfgdf gdfg df gdfgdf gd fg dfgd fg df gd fgdfg'
+                categoryDescription  : ''
             },
             productList: [],
             open: false
@@ -24,8 +24,10 @@ export default class ProductByCategory extends Component {
     }
 
     getProductsByCategory = () => {
-        let url = `http://localhost:8080/api/products/productByCategory/${this.props.match.params.category}`
-        axios.get(url)
+
+        const getProductsByCat = process.env.apiURL || "http://localhost:8080/" + `api/products/productByCategory/${this.props.match.params.category}`;
+        let url = `http://localhost:8080/api/products/`
+        axios.get(getProductsByCat)
             .then(res => {
                 this.setState({
                     productList: res.data,

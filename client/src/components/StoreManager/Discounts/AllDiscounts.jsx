@@ -19,6 +19,7 @@ import Dialog from "@material-ui/core/Dialog";
 import Slide from "@material-ui/core/Slide";
 import DiscountListPopUp from "./DiscountListPopUp";
 import EditDiscount from "./EditDiscount";
+import Swal from "sweetalert2";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="down" ref={ref} {...props} />;
@@ -60,7 +61,7 @@ class AllDiscounts extends Component {
             this.setState({
                 open: true
             })
-            this.getProductsFromDB()
+            this.getOffersFromDB()
         } else {
             this.setState({
                 isShowAddDialog: !this.state.isShowAddDialog
@@ -75,7 +76,7 @@ class AllDiscounts extends Component {
             this.setState({
                 open: true
             })
-            this.getProductsFromDB()
+            this.getOffersFromDB()
         } else {
             this.setState({
                 editOffer : offer,
@@ -97,7 +98,7 @@ class AllDiscounts extends Component {
             this.setState({
                 isShow: false,
             });
-            this.deleteProduct();
+            this.deleteOffer();
         } else {
             this.setState({
                 isShow: false,
@@ -105,7 +106,7 @@ class AllDiscounts extends Component {
         }
     };
 
-    getProductsFromDB = () => {
+    getOffersFromDB = () => {
         axios
             .get("http://localhost:8080/api/offers/")
             .then((res) => {
@@ -115,7 +116,7 @@ class AllDiscounts extends Component {
                 });
             })
             .catch((err) => {
-                console.log(err);
+                this.alertMsg("error", "Something Went Wrong ", err);
             });
     };
 
@@ -123,7 +124,7 @@ class AllDiscounts extends Component {
         this.setState({
             open: true,
         });
-        this.getProductsFromDB();
+        this.getOffersFromDB();
     }
 
     setShowSnackBar = () => {
@@ -142,22 +143,49 @@ class AllDiscounts extends Component {
             return <Icon style={{color: red[500]}}>delete</Icon>;
     };
 
-    deleteProduct = () => {
+    deleteOffer = () => {
         this.setState({
             open: true,
         });
+        const deleteOffer = process.env.apiURL || "http://localhost:8080/" + `api/offers/DeleteOffer/${this.state.id}`;
         axios
             .delete(
-                `http://localhost:8080/api/offers/DeleteOffer/${this.state.id}`
+                deleteOffer
             )
             .then((res) => {
                 this.setShowSnackBar();
-                this.getProductsFromDB();
+                this.getOffersFromDB();
             })
             .catch((err) => {
-                console.log(err);
+                this.setState({
+                    open: false,
+                });
+                this.handleError()
             });
     };
+
+    handleError = (err) => {
+        if(err){
+            if (err.response){
+                if (err.response.status === 401){
+                    this.alertMsg("error", "Something Went Wrong ", err.response.data)
+                    this.props.removeUser()
+                }
+            }else {
+                this.alertMsg("error", "Something Went Wrong ", err)
+            }
+        }
+    }
+
+
+
+    alertMsg = (icon, title, text) => {
+        Swal.fire({
+            icon: icon,
+            title: title,
+            text: text,
+        });
+    }
 
     showOfferProductList = (productList) => {
         this.setState({
@@ -180,12 +208,12 @@ class AllDiscounts extends Component {
                     <Grid item xs={12} className={classes.paper + " hoverable"}>
 
                         {this.state.isShowAddDialog ? (
-                            <AddNewDiscount showAddDiscountDialog={this.showAddDiscountDialog}/>
+                            <AddNewDiscount removeUser={this.props.removeUser} showAddDiscountDialog={this.showAddDiscountDialog}/>
                         ) : (
                             <React.Fragment></React.Fragment>
                         )}
                         {this.state.isShowEditDialog ? (
-                            <EditDiscount showEditDiscountDialog={this.showEditDiscountDialog} offer={this.state.editOffer}/>
+                            <EditDiscount removeUser={this.props.removeUser} showEditDiscountDialog={this.showEditDiscountDialog} offer={this.state.editOffer}/>
                         ) : (
                             <React.Fragment></React.Fragment>
                         )}

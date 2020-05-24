@@ -27,6 +27,9 @@ import Avatar from '@material-ui/core/Avatar';
 import {  deepPurple } from '@material-ui/core/colors';
 import Grid from '@material-ui/core/Grid';
 import Container from '@material-ui/core/Container';
+import AssignmentIcon from "@material-ui/icons/Assignment";
+import PostAddIcon from "@material-ui/icons/PostAdd";
+import LocalOfferIcon from "@material-ui/icons/LocalOffer";
 
 const useStyles = makeStyles((theme) => ({
     grow: {
@@ -150,19 +153,19 @@ export default function TopSearchAppBar(props) {
             <List>
                 <ListItem button component={Link} to="/storeManager">
                     <ListItemIcon>
-                        <InboxIcon />
+                        <AssignmentIcon style={{color : "green"}} />
                     </ListItemIcon>
                     <ListItemText>All Products</ListItemText>
                 </ListItem>
                 <ListItem button component={Link} to="/storeManager/addProducts">
                     <ListItemIcon>
-                        <InboxIcon />
+                        <PostAddIcon style={{color : "orange"}} />
                     </ListItemIcon>
                     <ListItemText>Add Product</ListItemText>
                 </ListItem>
                 <ListItem button component={Link} to="/storeManager/allDiscounts">
                     <ListItemIcon>
-                        <InboxIcon />
+                        <LocalOfferIcon style={{color : "purple"}}/>
                     </ListItemIcon>
                     <ListItemText>All Discounts</ListItemText>
                 </ListItem>
