@@ -10,7 +10,7 @@ import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 import Skeleton from "@material-ui/lab/Skeleton";
 import { Redirect } from "react-router-dom";
-const axios = require('axios').default;
+const axios = require('axios');
 
 const styles = (theme) => ({
 
@@ -62,7 +62,6 @@ class StoreManager extends Component{
     fnHandleSubmit = (e) => {
         this.setState({ isLoading_add: true})
         e.preventDefault();
-        //alert(JSON.stringify(this.state))
         this.fnValidateAddStoreManager();
         if(this.state.validate)
         {
@@ -92,9 +91,19 @@ class StoreManager extends Component{
                     this.fnClearTextFeild();
                     this.fnGetStoreManagersFromDB();
                 })
-                .catch(err => {
-                    //console.log(err.response);
-                    if(err.response.data === "Already published this employee email!"){
+                .catch((err) => {
+                    if(err.response.status === 401){
+                        Swal.fire({
+                            icon: "error",
+                            title: "Something went wrong!",
+                            text: err.response.data
+                        }).then((result) => {
+                            this.setState({
+                                redirect: "/employee"
+                            })
+                        });
+                    }
+                    if(err.response.status === 404){
                         Swal.fire({
                             icon: "error",
                             title: "Something went wrong!",
@@ -104,6 +113,13 @@ class StoreManager extends Component{
                                 isLoading_add: false,
                             })
                             document.getElementById("email").focus();    //focus to category name
+                        });
+                    }
+                    if(err.response.status === 400){
+                        Swal.fire({
+                            icon: "error",
+                            title: "Something went wrong!",
+                            text: err.response.data
                         });
                     }
                 });
@@ -126,29 +142,46 @@ class StoreManager extends Component{
     //=============================== Store Manager List functions ===============================
     //Get all categories
     fnGetStoreManagersFromDB = () => {
-        axios
-            .get("http://localhost:8080/api/StoreManager/")
-            .then((res) => {
-                this.setState({
-                    data: res.data,
-                    isLoading_list: false,
-                });
-                //console.log(this.state.data)
+        if(JSON.parse(localStorage.getItem("emp")) === null){
+            this.setState({
+                redirect: "/employee"
             })
-            .catch((err) => {
-                //console.log(err.response)
-                if(err.response.data === "Access Denied!"){
-                    Swal.fire({
-                        icon: "error",
-                        title: "Something went wrong!",
-                        text: err.response.data
-                    }).then((result) => {
-                        this.setState({
-                            redirect: "/employee"
-                        })
+        }else{
+            axios
+                .get("http://localhost:8080/api/StoreManager/", {
+                    headers: {
+                        "auth-token": JSON.parse(localStorage.getItem("emp")).empToken,
+                    },
+                })
+                .then((res) => {
+                    this.setState({
+                        data: res.data,
+                        isLoading_list: false,
                     });
-                }
-            });
+                    //console.log(this.state.data)
+                })
+                .catch((err) => {
+                    if(err.response.status === 401){
+                        Swal.fire({
+                            icon: "error",
+                            title: "Something went wrong!",
+                            text: err.response.data
+                        }).then((result) => {
+                            this.setState({
+                                redirect: "/employee"
+                            })
+                        });
+                    }
+                    if(err.response.status === 400){
+                        Swal.fire({
+                            icon: "error",
+                            title: "Something went wrong!",
+                            text: err.response.data
+                        });
+                    }
+                });
+        }
+
     };
 
     componentDidMount() {
@@ -157,7 +190,7 @@ class StoreManager extends Component{
                 localStorage.getItem("emp")
             ).empToken;
         }
-        //this.fnGetStoreManagersFromDB();
+        this.fnGetStoreManagersFromDB();
     }
 
     //handle delete store manager
@@ -187,7 +220,17 @@ class StoreManager extends Component{
                         this.fnGetStoreManagersFromDB();
                     })
                     .catch((err) => {
-                        console.log(err);
+                        if(err.response.status === 401){
+                            Swal.fire({
+                                icon: "error",
+                                title: "Something went wrong!",
+                                text: err.response.data
+                            }).then((result) => {
+                                this.setState({
+                                    redirect: "/employee"
+                                })
+                            });
+                        }
                     });
             }
         })
@@ -216,7 +259,7 @@ class StoreManager extends Component{
     };
 
     render() {
-        setInterval(this.fnGetStoreManagersFromDB(), 5000); //Refresh every 5 seconds.
+        //setInterval(this.fnGetStoreManagersFromDB(), 5000); //Refresh every 5 seconds.
         const {classes, isDashboard} = this.props;
         const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
         if (this.state.redirect) {

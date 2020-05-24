@@ -22,6 +22,8 @@ import LayersIcon from "@material-ui/icons/Layers";
 import Dashboard from "./Dashboard/Dashboard";
 import Category from "./Category/Category";
 import StoreManager from "./StoreManager/StoreManager";
+import { useHistory } from "react-router-dom";
+const axios = require('axios');
 
 function Copyright() {
     return (
@@ -121,6 +123,14 @@ export default function Admin() {
     const [dashboard, setDashboard] = useState(true);
     const [storeManager, setStoreManager] = useState(false);
     const [categories, setCategories] = useState(false);
+    const history = useHistory();
+
+    useEffect(() => {
+        if (!localStorage.getItem("emp")) return  history.push("/employee");
+        axios.defaults.headers.common["auth-token"] = JSON.parse(
+            localStorage.getItem("emp")
+        ).empToken;
+    });
 
     const handleDashboard = () => {
         setDashboard( true);

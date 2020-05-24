@@ -8,7 +8,8 @@ if (localStorage.getItem("user")) {
 
 export const getFeedbacks = (productId) => {
   const apiURL =
-    process.env.apiURL || "http://localhost:8080/api/feedback/" + productId;
+    process.env.apiURL ||
+    "http://localhost:8080/" + "api/feedback/" + productId;
 
   return axios
     .get(apiURL)
@@ -27,7 +28,8 @@ export const getFeedbacks = (productId) => {
 };
 
 export const addFeedback = (feedback) => {
-  const apiURL = process.env.apiURL || "http://localhost:8080/api/feedback/add";
+  const apiURL =
+    process.env.apiURL || "http://localhost:8080/" + "api/feedback/add";
 
   return axios
     .post(apiURL, feedback)
@@ -47,7 +49,7 @@ export const addFeedback = (feedback) => {
 
 export const editFeedback = (feedback) => {
   const apiURL =
-    process.env.apiURL || "http://localhost:8080/api/feedback/edit";
+    process.env.apiURL || "http://localhost:8080/" + "api/feedback/edit";
 
   return axios
     .put(apiURL, feedback)
@@ -67,7 +69,7 @@ export const editFeedback = (feedback) => {
 
 export const deleteFeedback = (feedback) => {
   const apiURL =
-    process.env.apiURL || "http://localhost:8080/api/feedback/delete";
+    process.env.apiURL || "http://localhost:8080/" + "api/feedback/delete";
 
   return axios
     .delete(apiURL, { data: feedback })
