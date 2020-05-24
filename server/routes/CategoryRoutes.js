@@ -4,6 +4,7 @@ const verifyToken=require("./Authentication/VerifyToken");
 
 /*Router to get all Categories from db*/
 router.get("/", async (req, res) => {
+
         await Categories.find()
         .then(Categories => res.send(Categories))
         .catch(err => res.status(400).send('Error: ' + err))
@@ -12,6 +13,7 @@ router.get("/", async (req, res) => {
 
 /*Router to get Category by id from db*/
 router.get("/:id", verifyToken, async (req, res) => {
+
     await Categories.findById(req.params.id)
         .then((Category) => res.send(Category))
         .catch(err => res.status(400).send("Error : " + err))
@@ -20,7 +22,7 @@ router.get("/:id", verifyToken, async (req, res) => {
 /*Router to add Categories to db*/
 router.post('/AddCategory',verifyToken, async (req, res) => {
     if(!req.user.userRole === 'admin')
-    return res.status(401).send("Access Denied!");
+        return res.status(401).send("Access Denied!");
 
     let categoryExist = await Categories.findOne({
         CategoryName: req.body.CategoryName,
@@ -57,7 +59,7 @@ router.delete("/DeleteCategory/:id",verifyToken, async (req, res) => {
 /*Router to Update Categories*/
 router.put("/UpdateCategory/:id", verifyToken, async (req, res) => {
     if(!req.user.userRole === 'admin')
-    return res.status(401).send("Access Denied!");
+        return res.status(401).send("Access Denied!");
 
     let categoryExist = await Categories.findOne({
         CategoryName: req.body.CategoryName,
