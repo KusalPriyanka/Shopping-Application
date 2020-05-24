@@ -59,24 +59,29 @@ router.delete("/DeleteProduct/:id", verifyToken, async (req, res) => {
 });
 
 /*Router to Update Products*/
-router.put("/UpdateProduct/:id", (req, res) => {
-  Products.findById(req.params.id)
-    .then((product) => {
-      product.productName = req.body.productName;
-      product.productDescription = req.body.productDescription;
-      product.productCategory = req.body.productCategory;
-      product.productImageURLS = req.body.productImageURLS;
-      product.productBrand = req.body.productBrand;
-      product.productWatchers = req.body.productWatchers;
-      product.productPrice = req.body.productPrice;
-      product.detailsWithSize = req.body.detailsWithSize;
+router.put("/UpdateProduct/:id", verifyToken, async (req, res) => {
+    if(req.user.userRole === 'storeManager'){
+        Products.findById(req.params.id)
+            .then((product) => {
+                product.productName = req.body.productName;
+                product.productDescription = req.body.productDescription;
+                product.productCategory = req.body.productCategory;
+                product.productImageURLS = req.body.productImageURLS;
+                product.productBrand = req.body.productBrand;
+                product.productWatchers = req.body.productWatchers;
+                product.productPrice = req.body.productPrice;
+                product.detailsWithSize = req.body.detailsWithSize;
 
-      product
-        .save()
-        .then(() => res.send({ productID: product._id }))
-        .catch((err) => res.status(400).send("Error: " + err));
-    })
-    .catch((err) => res.status(400).send("Error : " + err));
+                product
+                    .save()
+                    .then(() => res.send({ productID: product._id }))
+                    .catch((err) => res.status(400).send("Error: " + err));
+            })
+            .catch((err) => res.status(400).send("Error : " + err));
+    }else {
+        return res.status(401).send("Access Denied!")
+    }
+
 });
 
 /*Route To update the Product View count*/
