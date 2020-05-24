@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import Avatar from "@material-ui/core/Avatar";
-import Alert from "@material-ui/lab/Alert";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import Backdrop from "@material-ui/core/Backdrop";
@@ -73,20 +72,42 @@ const LoginForm = () => {
     e.preventDefault();
     setProgressStatus(true);
 
-    await loginUserApiService(loginUserObj).then((res) => {
-      if (!res.status) {
-        Swal.fire({
-          icon: "error",
-          title: "Something went wrong in login!",
-          text: res.data.response.data,
-        });
-      } else {
-        localStorage.setItem("user", JSON.stringify(res.data.data));
-        history.push("/");
-      }
-    });
+    if (validateUserInputs()) {
+      await loginUserApiService(loginUserObj).then((res) => {
+        if (!res.status) {
+          Swal.fire({
+            icon: "error",
+            title: "Something went wrong in login !",
+            text: res.data.response.data,
+          });
+        } else {
+          localStorage.setItem("user", JSON.stringify(res.data.data));
+          history.push("/");
+        }
+      });
+    }
 
     setProgressStatus(false);
+  };
+
+  const validateUserInputs = () => {
+    if (loginUserObj.email === "") {
+      showValidationError("Please enter user email !");
+      return false;
+    }
+    if (loginUserObj.password === "") {
+      showValidationError("Please enter user password !");
+      return false;
+    }
+    return true;
+  };
+
+  const showValidationError = (errMsg) => {
+    return Swal.fire({
+      icon: "error",
+      title: "Something went wrong in login!",
+      text: errMsg,
+    });
   };
 
   return (
