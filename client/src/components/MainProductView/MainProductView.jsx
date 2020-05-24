@@ -30,6 +30,7 @@ import PostAddIcon from '@material-ui/icons/PostAdd';
 import Swal from "sweetalert2";
 import {validateWishList} from "../../Validations/WatchListValidations"
 import HomeNavigator from "../Shared/HomeNavigator";
+import {withRouter} from "react-router-dom"
 
 class MainProductView extends Component {
     constructor(props) {
@@ -298,6 +299,7 @@ class MainProductView extends Component {
 
         } else {
             this.ShowMsg('error', "Unauthorized User", "Please Log In to the System to continue!")
+            this.props.history.push("/login")
         }
     }
 /*Validations for inputs*/
@@ -439,6 +441,7 @@ class MainProductView extends Component {
 
         } else {
             this.ShowMsg('error', "Unauthorized User", "Please Log In to the System to continue!")
+            this.props.history.push("/login")
         }
     }
 
@@ -676,4 +679,4 @@ class MainProductView extends Component {
     }
 }
 
-export default MainProductView;
+export default withRouter(MainProductView)

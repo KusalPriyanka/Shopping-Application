@@ -18,10 +18,11 @@ import InputLabel from "@material-ui/core/InputLabel";
 import Select from "@material-ui/core/Select";
 import MenuItem from "@material-ui/core/MenuItem";
 import FormControl from "@material-ui/core/FormControl";
+import {withRouter} from "react-router-dom"
 
 
 
-export default class ShoppingCartItem extends Component {
+class ShoppingCartItem extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -183,6 +184,7 @@ export default class ShoppingCartItem extends Component {
 
         } else {
             this.ShowMsg('error', "Unauthorized User", "Please Log In to the System to continue!")
+            this.props.history.push("/login")
         }
     }
 /*Getting the total quantity for an array*/
@@ -292,3 +294,5 @@ export default class ShoppingCartItem extends Component {
         );
     }
 }
+
+export default withRouter(ShoppingCartItem)

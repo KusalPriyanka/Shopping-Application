@@ -9,9 +9,9 @@ import SingleLineGridList from "./GridList";
 import Container from "@material-ui/core/Container";
 import SimplePaperempty from "../EmptyPage/DisplayEmpty";
 import HomeNavigator from "../Shared/HomeNavigator";
+import {withRouter} from "react-router-dom"
 
-
-export default class WishList extends Component{
+ class WishList extends Component{
     constructor(props) {
         super(props);
         this.state = {
@@ -89,6 +89,7 @@ export default class WishList extends Component{
                 })
         }else{
             this.ShowMsg('error', "Unauthorized User", "Please Log In to the System to continue!")
+            this.props.history.push("/login")
         }
     }
 
@@ -134,3 +135,5 @@ export default class WishList extends Component{
         );
     }
 }
+
+export default withRouter(WishList)

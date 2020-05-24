@@ -12,11 +12,12 @@ import Paper from "@material-ui/core/Paper";
 import SimplePaperempty from "../EmptyPage/DisplayEmpty";
 import SingleLineGridListcart from "./GridListCart";
 import HomeNavigator from "../Shared/HomeNavigator";
+import {withRouter} from "react-router-dom"
 
 
 
 
-export default class ShoppingCartContainer extends Component {
+class ShoppingCartContainer extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -118,6 +119,7 @@ export default class ShoppingCartContainer extends Component {
                 })
         } else {
             this.ShowMsg('error', "Unauthorized User", "Please Log In to the System to continue!")
+            this.props.history.push("/login")
         }
     }
 
@@ -238,3 +240,5 @@ export default class ShoppingCartContainer extends Component {
         );
     }
 }
+
+export default withRouter(ShoppingCartContainer)
