@@ -143,8 +143,6 @@ class AddNewDiscount extends Component {
             });
     }
 
-
-
     addOffer = () => {
         this.setState({
             open: true
