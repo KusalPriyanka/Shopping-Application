@@ -18,7 +18,7 @@ import InputLabel from "@material-ui/core/InputLabel";
 import Select from "@material-ui/core/Select";
 import MenuItem from "@material-ui/core/MenuItem";
 import FormControl from "@material-ui/core/FormControl";
-import {hostUrl} from "../../Constannts/Constants";
+
 
 
 export default class ShoppingCartItem extends Component {
@@ -34,14 +34,15 @@ export default class ShoppingCartItem extends Component {
 
         }
     }
-
+/*Function for update details*/
     updateForm = (e) => {
         this.setState({
             isShowBackDrop: true
         })
         let quantity = e.target.value
         let cart = null;
-        axios.get(`${hostUrl}shoppingcarts/getShoppingCartByUserID`)
+        const getshoppingcartbyid = process.env.apiURL || "http://localhost:8080/" + "api/shoppingcarts/getShoppingCartByUserID";
+        axios.get(getshoppingcartbyid)
             .then(res => {
                 cart = res.data;
                 cart.cartItems.map(item => {
@@ -52,8 +53,8 @@ export default class ShoppingCartItem extends Component {
                 let cartData = {
                     "cartItems": cart.cartItems
                 }
-
-                let url = "http://localhost:8080/api/shoppingcarts/UpdateCartItem"
+                const updatecartItem = process.env.apiURL || "http://localhost:8080/" + "api/shoppingcarts/UpdateCartItem";
+                let url = updatecartItem;
                 axios.put(url, cartData)
                     .then(response => {
                             this.setState({
@@ -82,11 +83,11 @@ export default class ShoppingCartItem extends Component {
                 this.ShowMsg('error', "Error Occurred", err)
             })
     }
-
+/*Updates the cart*/
     updateCart = () => {
         this.props.forceUpdateByChild()
     }
-
+/*showing the sweet alert*/
     ShowMsg = (icon, title, text) => {
         Swal.fire({
             icon: icon,
@@ -94,7 +95,7 @@ export default class ShoppingCartItem extends Component {
             text: text,
         });
     }
-
+/*Checking the login status of the user*/
     checkLoginState = () => {
         //localStorage.clear();
         let User;
@@ -111,7 +112,7 @@ export default class ShoppingCartItem extends Component {
         }
 
     }
-
+/*Function to remove an item from the cart*/
     removeShoppingCartItem = () => {
         let status = this.checkLoginState();
         if (status) {
@@ -119,11 +120,14 @@ export default class ShoppingCartItem extends Component {
                 isShowBackDrop: true
             })
             let cart = null;
-            axios.get("http://localhost:8080/api/shoppingcarts/getShoppingCartByUserID")
+            const getshoppingcartbyUserId = process.env.apiURL || "http://localhost:8080/" + "api/shoppingcarts/getShoppingCartByUserID";
+            axios.get(getshoppingcartbyUserId)
                 .then(res => {
                     cart = res.data
                     if (cart.cartItems.length === 1) {
-                        axios.delete(`http://localhost:8080/api/shoppingcarts/DeleteCartItem/${this.props.id}`)
+                        const deletecartItem = process.env.apiURL || `http://localhost:8080/` + `api/shoppingcarts/DeleteCartItem/${this.props.id}`;
+
+                        axios.delete(deletecartItem)
                             .then(res => {
                                     this.setState({
                                         isShowBackDrop: false
@@ -141,12 +145,14 @@ export default class ShoppingCartItem extends Component {
                                 this.ShowMsg('error', "Error Occurred", err)
                             })
                     } else {
-                        console.log(cart.cartItems)
+                        // console.log(cart.cartItems)
                         cart.cartItems = cart.cartItems.filter(cItem =>
                             cItem.productID !== this.state.cartItem.productID
                         )
-                        console.log(cart.cartItems)
-                        let url = "http://localhost:8080/api/shoppingcarts/UpdateCartItem"
+                        // console.log(cart.cartItems)
+                        const updateCartItems = process.env.apiURL || `http://localhost:8080/` + `api/shoppingcarts/UpdateCartItem`;
+
+                        let url = updateCartItems
                         let updatedCartItem = {
                             "cartItems": cart.cartItems
                         }
@@ -179,7 +185,7 @@ export default class ShoppingCartItem extends Component {
             this.ShowMsg('error', "Unauthorized User", "Please Log In to the System to continue!")
         }
     }
-
+/*Getting the total quantity for an array*/
     totalQuantityToArray = (quantity) => {
         let totalQuantity = []
         for (let a = 1; a <= quantity; a++) {
