@@ -38,7 +38,7 @@ const useStyles = makeStyles((theme) => ({
 
 
 
-/*Taking images for the grid list*/
+/*Taking images for the grid list display*/
 const tileData = [
     {
         img: carthree,
