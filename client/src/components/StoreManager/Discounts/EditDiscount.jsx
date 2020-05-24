@@ -77,7 +77,7 @@ class EditDiscount extends Component {
         let productList = [];
         if (category == 'All') {
             axios
-                .get("http://localhost:8080/api/products/")
+                .get("https://ishoppingplaza.herokuapp.com/api/products/")
                 .then((res) => {
                     res.data.map(product => {
                         productList.push({
@@ -98,7 +98,7 @@ class EditDiscount extends Component {
                 });
         } else {
 
-            let url = `http://localhost:8080/api/products/productByCategory/${category}`
+            let url = `https://ishoppingplaza.herokuapp.com/api/products/productByCategory/${category}`
             axios.get(url)
                 .then(res => {
                     res.data.map(product => {
@@ -127,7 +127,7 @@ class EditDiscount extends Component {
             open: true
         })
         axios
-            .get("http://localhost:8080/api/Categories/")
+            .get("https://ishoppingplaza.herokuapp.com/api/Categories/")
             .then((res) => {
                 this.setProductByCategory(this.state.productCategory)
                 this.setRestProduct(this.state.productCategory)
@@ -147,7 +147,7 @@ class EditDiscount extends Component {
         let restProductsShow = [];
         if (category == 'All') {
             axios
-                .get("http://localhost:8080/api/products/")
+                .get("https://ishoppingplaza.herokuapp.com/api/products/")
                 .then((res) => {
                     productList = res.data;
                     restProducts = res.data;
@@ -179,7 +179,7 @@ class EditDiscount extends Component {
                 });
         } else {
 
-            let url = `http://localhost:8080/api/products/productByCategory/${category}`
+            let url = `https://ishoppingplaza.herokuapp.com/api/products/productByCategory/${category}`
             axios.get(url)
                 .then(res => {
                     productList = res.data;
@@ -239,7 +239,7 @@ class EditDiscount extends Component {
         let validate = OfferValidations(offer)
         if(validate){
             axios
-                .put(`http://localhost:8080/api/offers/UpdateOffer/${this.props.offer._id}`, offer)
+                .put(`https://ishoppingplaza.herokuapp.com/api/offers/UpdateOffer/${this.props.offer._id}`, offer)
                 .then(res => {
                     this.setState({
                         open: false,

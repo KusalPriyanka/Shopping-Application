@@ -25,8 +25,7 @@ export default class ProductByCategory extends Component {
 
     getProductsByCategory = () => {
 
-        const getProductsByCat = process.env.apiURL || "http://localhost:8080/" + `api/products/productByCategory/${this.props.match.params.category}`;
-        let url = `http://localhost:8080/api/products/`
+        const getProductsByCat = `https://ishoppingplaza.herokuapp.com/api/products/productByCategory/${this.props.match.params.category}`;
         axios.get(getProductsByCat)
             .then(res => {
                 this.setState({

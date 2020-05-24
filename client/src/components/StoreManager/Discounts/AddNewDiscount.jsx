@@ -75,7 +75,7 @@ class AddNewDiscount extends Component {
         let productList = [];
         if (category == 'All') {
             axios
-                .get("http://localhost:8080/api/products/")
+                .get("https://ishoppingplaza.herokuapp.com/api/products/")
                 .then((res) => {
                     res.data.map(product => {
                         productList.push({
@@ -96,7 +96,7 @@ class AddNewDiscount extends Component {
                 });
         } else {
 
-            let url = `http://localhost:8080/api/products/productByCategory/${category}`
+            let url = `https://ishoppingplaza.herokuapp.com/api/products/productByCategory/${category}`
             axios.get(url)
                 .then(res => {
                     res.data.map(product => {
@@ -125,7 +125,7 @@ class AddNewDiscount extends Component {
         this.setState({
             open: true
         })
-        const getAllCategories = process.env.apiURL || "http://localhost:8080/" + "api/Categories/";
+        const getAllCategories =  "https://ishoppingplaza.herokuapp.com/api/Categories/";
         axios
             .get(getAllCategories)
             .then((res) => {
@@ -169,7 +169,7 @@ class AddNewDiscount extends Component {
         let validate = OfferValidations(offer)
 
         if(validate){
-            const addOffer = process.env.apiURL || "http://localhost:8080/" + "api/offers/AddOffer";
+            const addOffer =  "https://ishoppingplaza.herokuapp.com/api/offers/AddOffer";
             axios
                 .post(addOffer, offer)
                 .then(res => {

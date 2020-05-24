@@ -216,7 +216,7 @@ export default function UpdateProduct(props) {
 
         console.log(product)
 
-        const updateProduct = process.env.apiURL || "http://localhost:8080/" + `api/products/UpdateProduct/${props.updateProduct._id}`;
+        const updateProduct =  `https://ishoppingplaza.herokuapp.com/api/products/UpdateProduct/${props.updateProduct._id}`;
         axios.put(updateProduct, product)
             .then(res => {
                 setOpen(false);

@@ -83,6 +83,7 @@ const Navigation = (props) => {
       onKeyDown={toggleDrawer(false)}
     >
       <Divider />
+
       <List>
         {props.categories.map((category) => {
           return (

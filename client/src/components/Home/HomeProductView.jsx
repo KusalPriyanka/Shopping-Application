@@ -11,7 +11,7 @@ const HomeProductView = () => {
 
   useEffect(() => {
     axios
-      .get("api/Categories/")
+      .get("https://ishoppingplaza.herokuapp.com/api/Categories/")
       .then((res) => {
         setCategories(res.data);
         getProducts();
@@ -23,7 +23,7 @@ const HomeProductView = () => {
 
   const getProducts = (categories) => {
     axios
-      .get("api/products/")
+      .get("https://ishoppingplaza.herokuapp.com/api/products/")
       .then((res) => {
         setProductList(res.data);
       })

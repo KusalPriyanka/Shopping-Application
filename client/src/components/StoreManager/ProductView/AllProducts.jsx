@@ -111,7 +111,7 @@ class AllProducts extends Component {
         this.setState({
             open: true,
         });
-        const getAllProducts = process.env.apiURL || "http://localhost:8080/" + "api/products/";
+        const getAllProducts =  "https://ishoppingplaza.herokuapp.com/api/products/";
         axios
             .get(getAllProducts)
             .then((res) => {
@@ -151,7 +151,7 @@ class AllProducts extends Component {
         this.setState({
             open: true,
         });
-        const deleteProduct = process.env.apiURL || "http://localhost:8080/" + `api/products/DeleteProduct/${this.state.id}`;
+        const deleteProduct =  `https://ishoppingplaza.herokuapp.com/api/products/DeleteProduct/${this.state.id}`;
         axios
             .delete(deleteProduct)
             .then((res) => {

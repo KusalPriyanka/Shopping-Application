@@ -137,7 +137,7 @@ export default function AddProduct(props) {
             data.append('file', selectedFile[x])
         }
 
-        const uploadImages = process.env.apiURL || "http://localhost:8080/" + "api/products/upload";
+        const uploadImages = "https://ishoppingplaza.herokuapp.com/api/products/upload";
         axios.post(uploadImages, data, {})
             .then(res => {
 
@@ -152,7 +152,7 @@ export default function AddProduct(props) {
                     "detailsWithSize": detailsWithSize
 
                 }
-                const addProduct = process.env.apiURL || "http://localhost:8080/" + "api/products/AddProduct";
+                const addProduct = "https://ishoppingplaza.herokuapp.com/api/products/AddProduct";
                 axios.post(addProduct, product)
                     .then(res => {
                         setAddedProduct(res.data)

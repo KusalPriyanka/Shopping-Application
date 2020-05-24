@@ -8,6 +8,7 @@ import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import axios from "axios";
 import {productDetailsValidation} from "../../../Validations/ProductValidation";
+import Swal from "sweetalert2";
 
 export default class AddProductDetails extends Component {
     constructor(props) {
@@ -56,9 +57,9 @@ export default class AddProductDetails extends Component {
     getCategoryFromDB = () => {
         let categories = [];
         axios
-            .get("http://localhost:8080/api/Categories/")
+            .get("https://ishoppingplaza.herokuapp.com/api/Categories/")
             .then((res) => {
-                res.data.forEach(category => {
+                res.data.map(category => {
                     categories.push(category.CategoryName)
                 })
                 this.setState({
@@ -66,9 +67,17 @@ export default class AddProductDetails extends Component {
                 })
             })
             .catch((err) => {
-                console.log(err);
+                this.alertMsg("error", "Something Went Wrong ", err)
             });
     };
+
+    alertMsg = (icon, title, text) => {
+        Swal.fire({
+            icon: icon,
+            title: title,
+            text: text,
+        });
+    }
 
     componentDidMount() {
         this.getCategoryFromDB()
