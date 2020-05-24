@@ -4,18 +4,40 @@ import AddShoppingCartIcon from "@material-ui/icons/AddShoppingCart";
 import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
 import Divider from "@material-ui/core/Divider";
+import CheckoutTable from "../Checkout/CheckoutTable";
 
 
 export default class Total extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            isShowCheckout : false
+        }
+    }
+
+
+    showAddDiscountDialog = () => {
+        this.setState({
+            isShowCheckout: !this.state.isShowCheckout
+        })
+    }
+
     render() {
         return (
             <React.Fragment>
+
+                {this.state.isShowCheckout ? (
+                    <CheckoutTable forceUpdateByChild={this.props.forceUpdateByChild}  showAddDiscountDialog={this.showAddDiscountDialog}/>
+                ) : (
+                    <React.Fragment></React.Fragment>
+                )}
                 <Button
                     fullWidth
                     variant="contained"
                     color="primary"
                     size={"large"}
                     startIcon={<AddShoppingCartIcon/>}
+                    onClick={() => this.showAddDiscountDialog()}
                 >
                     Add To Checkout
                 </Button>
