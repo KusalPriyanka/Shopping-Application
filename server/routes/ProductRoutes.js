@@ -103,14 +103,14 @@ router.post("/upload", verifyToken, (req, res) => {
   if(req.user.userRole === 'storeManager'){
       let imageUrls = [];
       try {
-          let url = req.protocol + "://" + req.get("host");
+          let url = process.env.STATIC_URL || req.protocol + "://" + req.get("host") +"/images";
           for (let x = 0; x < req.files.file.length; x++) {
               let imageName = Date.now() + "-" + req.files.file[x].name;
               let image = req.files.file[x];
               image.mv("./images/ProductImages/" + imageName, (err, result) => {
                   if (err) return res.status(400).send("Error : " + err);
               });
-              let imageUrl = url + "/images/ProductImages/" + imageName;
+              let imageUrl = url + "/ProductImages/" + imageName;
               imageUrls.push({ imageURL: imageUrl });
           }
       } catch (err) {
