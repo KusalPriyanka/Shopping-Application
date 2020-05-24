@@ -102,7 +102,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export default function TopSearchAppBar() {
+export default function TopSearchAppBar(props) {
     const classes = useStyles();
     const [anchorEl, setAnchorEl] = React.useState(null);
     const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
@@ -201,6 +201,7 @@ export default function TopSearchAppBar() {
         >
             <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
             <MenuItem onClick={handleMenuClose}>My account</MenuItem>
+            <MenuItem onClick={() => props.removeUser()}>Log Out</MenuItem>
         </Menu>
     );
 
