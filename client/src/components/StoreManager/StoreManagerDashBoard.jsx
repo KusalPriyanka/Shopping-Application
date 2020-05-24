@@ -7,15 +7,33 @@ import AddProduct from "./AddProduct/AddProduct";
 import AllDiscounts from "./Discounts/AllDiscounts";
 import UpdateProduct from "./UpdateProduct/UpdateProduct";
 import axios from "axios"
+import Swal from "sweetalert2";
 
 const StoreManagerDashBoard = ({location}) => {
 
     const history = useHistory();
     const [currentPath, setCurrentPath] = useState(location.pathname);
+
+    const alertMsg = (icon, title, text) => {
+        Swal.fire({
+            icon: icon,
+            title: title,
+            text: text,
+        });
+    }
+
     const checkAuthentication = () => {
         if (!localStorage.getItem("emp")) {
-            history.push("/employee")
+            alertMsg("error", "Unauthorized User!", "Please Login To the System");
+            history.push("/employee");
         } else {
+            let role = JSON.parse(localStorage.getItem("emp")).path;
+
+            if(role !== "storeManager"){
+                alertMsg("error", "Unauthorized User!", "Please Login To the System");
+                history.push("/employee")
+            }
+
             axios.defaults.headers.common["auth-token"] = JSON.parse(
                 localStorage.getItem("emp")
             ).empToken;
