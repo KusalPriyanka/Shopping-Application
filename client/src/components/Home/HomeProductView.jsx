@@ -57,7 +57,7 @@ const HomeProductView = () => {
             style={{ marginTop: "25px", marginBottom: "25px" }}
           >
             <Typography variant="h3" align="center" color="textSecondary">
-              {proCategory.category}
+              {proCategory.data.length > 0 ? proCategory.category : null}
             </Typography>
           </Grid>
           <Grid container direction={"row"}>
