@@ -103,7 +103,7 @@ router.post("/upload", verifyToken, (req, res) => {
   if(req.user.userRole === 'storeManager'){
       let imageUrls = [];
       try {
-          let url = "https://ishoppingplaza.herokuapp.com/images/";
+          let url = "https://ishoppingplaza.herokuapp.com/images";
           for (let x = 0; x < req.files.file.length; x++) {
               let imageName = Date.now() + "-" + req.files.file[x].name;
               let image = req.files.file[x];
