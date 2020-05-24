@@ -69,7 +69,7 @@ class StoreManager extends Component{
             // Send a POST request to API
 /*            const apiURL =
                 process.env.apiURL || "http://localhost:8080/api/StoreManager/AddStoreManager";*/
-            axios.post("api/StoreManager/AddStoreManager", {
+            axios.post("https://ishoppingplaza.herokuapp.com/api/StoreManager/AddStoreManager", {
                 empName: this.state.userName.toString(),
                 empAddress: this.state.userAddress.toString(),
                 empEmail: this.state.userEmail.toString(),
@@ -152,7 +152,7 @@ class StoreManager extends Component{
 /*            const apiURL =
                 process.env.apiURL || "http://localhost:8080/api/StoreManager/";*/
             axios
-                .get("api/StoreManager/", {
+                .get("https://ishoppingplaza.herokuapp.com/api/StoreManager/", {
                     headers: {
                         "auth-token": JSON.parse(localStorage.getItem("emp")).empToken,
                     },
@@ -216,7 +216,7 @@ class StoreManager extends Component{
                     process.env.apiURL || "http://localhost:8080/api/StoreManager/DeleteStoreManager";*/
                 axios
                     .delete(
-                        `api/StoreManager/DeleteStoreManager/${id}`  //delete store manager by id
+                        `https://ishoppingplaza.herokuapp.com/api/StoreManager/DeleteStoreManager/${id}`  //delete store manager by id
                     )
                     .then((res) => {
                         Swal.fire(
