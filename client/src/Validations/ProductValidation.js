@@ -12,9 +12,9 @@ export const alertMsg = (icon, title, text) => {
 export const productDetailsValidation = (productDetails) => {
     const schema = {
         ProductName: joi.string().min(6).max(255).required(),
-        BrandName: joi.string().min(6).max(255).required(),
+        BrandName: joi.string().min(3).max(255).required(),
         Category: joi.string().min(3).max(255).required(),
-        ProductPrice: joi.number().integer().positive().required(),
+        ProductPrice: joi.number().positive().required(),
         Description: joi.string().min(6).max(255).required(),
 
     };
@@ -30,8 +30,8 @@ export const productDetailsValidation = (productDetails) => {
 
 export const productSizeValidation = (sizes) => {
     const schema = {
-        productSize: joi.string().min(6).max(255).required(),
-        productColour: joi.string().min(6).max(255).required(),
+        productSize: joi.string().min(3).max(255).required(),
+        productColour: joi.string().min(3).max(255).required(),
         productQuantity: joi.number().integer().positive().min(5).required(),
 
 

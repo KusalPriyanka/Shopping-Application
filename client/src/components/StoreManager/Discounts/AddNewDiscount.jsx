@@ -19,6 +19,7 @@ import {withStyles} from "@material-ui/styles";
 import SnackBar from "../../Shared/SnackBar";
 
 import {OfferValidations, alertMsg} from "../../../Validations/OfferValidations"
+import Swal from "sweetalert2";
 
 const styles = (theme) => ({
     backdrop: {
@@ -124,8 +125,9 @@ class AddNewDiscount extends Component {
         this.setState({
             open: true
         })
+        const getAllCategories = process.env.apiURL || "http://localhost:8080/" + "api/Categories/";
         axios
-            .get("http://localhost:8080/api/Categories/")
+            .get(getAllCategories)
             .then((res) => {
                 this.setState({
                     allCategories: res.data,
@@ -134,7 +136,10 @@ class AddNewDiscount extends Component {
 
             })
             .catch((err) => {
-                alertMsg("error", "Oooooopz! Some thing went wrong" , err)
+                this.setState({
+                    open: false
+                })
+                alertMsg("error", "Oooooopz! Something went wrong" , err)
             });
     }
 
@@ -164,8 +169,9 @@ class AddNewDiscount extends Component {
         let validate = OfferValidations(offer)
 
         if(validate){
+            const addOffer = process.env.apiURL || "http://localhost:8080/" + "api/offers/AddOffer";
             axios
-                .post('http://localhost:8080/api/offers/AddOffer', offer)
+                .post(addOffer, offer)
                 .then(res => {
                     this.setState({
                         open: false,
@@ -175,7 +181,10 @@ class AddNewDiscount extends Component {
                     this.props.showAddDiscountDialog(true)
                 })
                 .catch(err => {
-                    alertMsg("error", "Oooooopz! Some thing went wrong" , err)
+                    this.setState({
+                        open: false
+                    })
+                    this.handleError(err)
                 })
         }else {
             this.setState({
@@ -183,6 +192,29 @@ class AddNewDiscount extends Component {
             })
         }
     }
+
+    handleError = (err) => {
+        if(err){
+            if (err.response){
+                if (err.response.status === 401){
+                    this.alertMsg("error", "Something Went Wrong ", err.response.data)
+                    this.props.removeUser()
+                }
+            }else {
+                this.alertMsg("error", "Something Went Wrong ", err)
+            }
+        }
+    }
+
+
+    alertMsg = (icon, title, text) => {
+        Swal.fire({
+            icon: icon,
+            title: title,
+            text: text,
+        });
+    }
+
 
     setShowSnackBar = () => {
         this.setState({

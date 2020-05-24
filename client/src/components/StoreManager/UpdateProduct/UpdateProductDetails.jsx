@@ -7,6 +7,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import axios from "axios";
+import {productDetailsValidation} from "../../../Validations/ProductValidation";
 
 export default class AddProductDetails extends Component {
     constructor(props) {
@@ -57,7 +58,7 @@ export default class AddProductDetails extends Component {
         axios
             .get("http://localhost:8080/api/Categories/")
             .then((res) => {
-                res.data.forEach(category =>  {
+                res.data.forEach(category => {
                     categories.push(category.CategoryName)
                 })
                 this.setState({
@@ -81,6 +82,18 @@ export default class AddProductDetails extends Component {
             category: this.state.category,
             productPrice: this.state.productPrice
         })
+    }
+
+    validate = () => {
+        let productDetails = {
+            "ProductName": this.state.productName,
+            "BrandName": this.state.brandName,
+            "Description": this.state.description,
+            "Category": this.state.category,
+            "ProductPrice": this.state.productPrice,
+        }
+        return productDetailsValidation(productDetails)
+
     }
 
     render() {
@@ -152,7 +165,7 @@ export default class AddProductDetails extends Component {
                         />
                     </Grid>
 
-                    <Grid item xs={12} >
+                    <Grid item xs={12}>
                         <TextField
                             required
                             id="description"
