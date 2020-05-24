@@ -21,11 +21,11 @@ export default class WishList extends Component{
             state : true
         }
     }
-
+/*Update the state of the details*/
     updateState = () => {
         this.updateDetails()
     }
-
+/*Sweet alert*/
     ShowMsg = (icon, title, text) => {
         Swal.fire({
             icon: icon,
@@ -33,7 +33,7 @@ export default class WishList extends Component{
             text: text,
         });
     }
-
+/*Checking the log in status of the user*/
     checkLoginState = () => {
         /* localStorage.clear();*/
         let User;
@@ -50,7 +50,7 @@ export default class WishList extends Component{
         }
 
     }
-
+/*Updates the details*/
     updateDetails = () => {
 
         let status = this.checkLoginState();
@@ -59,10 +59,13 @@ export default class WishList extends Component{
             this.setState({
                 isShowBackDrop : true,
             })
-            axios.get("http://localhost:8080/api/wishlists/getWishListByUserID")
+            const getwishlistbyuserId = process.env.apiURL || "http://localhost:8080/" + "api/wishlists/getWishListByUserID";
+
+            axios.get(getwishlistbyuserId)
                 .then(res => {
                     watchList = res.data;
-                    axios.get('http://localhost:8080/api/products/')
+                    const productsurl = process.env.apiURL || `http://localhost:8080/` + `api/products/`;
+                    axios.get(productsurl)
                         .then(response => {
                             productList = response.data
                             this.setState({
