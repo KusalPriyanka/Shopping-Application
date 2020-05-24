@@ -5,6 +5,7 @@ import HomeNavigator from "../Shared/HomeNavigator";
 import { useHistory } from "react-router-dom";
 import { useState } from "react";
 import { useEffect } from "react";
+import axios from "axios";
 
 const MainProductViewContainer = (props) => {
   const history = useHistory();
@@ -16,6 +17,11 @@ const MainProductViewContainer = (props) => {
       setUserLogIn(false);
     }
     setUserLogIn(true);
+    if (localStorage.getItem("user")) {
+      axios.defaults.headers.common["auth-token"] = JSON.parse(
+        localStorage.getItem("user")
+      ).userToken;
+    }
   }, []);
 
   return (
