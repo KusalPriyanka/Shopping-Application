@@ -42,7 +42,10 @@ function App({ location }) {
       currentPath === "/register" ||
       currentPath === "/employee" ||
       currentPath === "/admin" ||
-      currentPath === "/storeManager"
+      currentPath === "/storeManager" ||
+      currentPath === "/storeManager/addProducts" ||
+      currentPath === "/storeManager/updateProducts/:id" ||
+      currentPath === "/storeManager/allDiscounts"
     ) {
       return false;
     }

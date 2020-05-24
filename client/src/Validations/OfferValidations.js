@@ -32,7 +32,7 @@ export const OfferValidations = (offer) => {
             alertMsg("error", "Ooooooooooooopz!" , "Please Provide Promo Code.")
             return false
         }
-    }else {
-        return true
     }
+
+    return true
 }

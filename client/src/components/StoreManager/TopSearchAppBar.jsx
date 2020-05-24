@@ -27,6 +27,9 @@ import Avatar from '@material-ui/core/Avatar';
 import {  deepPurple } from '@material-ui/core/colors';
 import Grid from '@material-ui/core/Grid';
 import Container from '@material-ui/core/Container';
+import AssignmentIcon from "@material-ui/icons/Assignment";
+import PostAddIcon from "@material-ui/icons/PostAdd";
+import LocalOfferIcon from "@material-ui/icons/LocalOffer";
 
 const useStyles = makeStyles((theme) => ({
     grow: {
@@ -102,7 +105,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export default function TopSearchAppBar() {
+export default function TopSearchAppBar(props) {
     const classes = useStyles();
     const [anchorEl, setAnchorEl] = React.useState(null);
     const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
@@ -150,19 +153,19 @@ export default function TopSearchAppBar() {
             <List>
                 <ListItem button component={Link} to="/storeManager">
                     <ListItemIcon>
-                        <InboxIcon />
+                        <AssignmentIcon style={{color : "green"}} />
                     </ListItemIcon>
                     <ListItemText>All Products</ListItemText>
                 </ListItem>
                 <ListItem button component={Link} to="/storeManager/addProducts">
                     <ListItemIcon>
-                        <InboxIcon />
+                        <PostAddIcon style={{color : "orange"}} />
                     </ListItemIcon>
                     <ListItemText>Add Product</ListItemText>
                 </ListItem>
                 <ListItem button component={Link} to="/storeManager/allDiscounts">
                     <ListItemIcon>
-                        <InboxIcon />
+                        <LocalOfferIcon style={{color : "purple"}}/>
                     </ListItemIcon>
                     <ListItemText>All Discounts</ListItemText>
                 </ListItem>
@@ -201,6 +204,7 @@ export default function TopSearchAppBar() {
         >
             <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
             <MenuItem onClick={handleMenuClose}>My account</MenuItem>
+            <MenuItem onClick={() => props.removeUser()}>Log Out</MenuItem>
         </Menu>
     );
 

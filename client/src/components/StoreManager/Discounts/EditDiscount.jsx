@@ -19,6 +19,7 @@ import {withStyles} from "@material-ui/styles";
 import SnackBar from "../../Shared/SnackBar";
 
 import {OfferValidations, alertMsg} from "../../../Validations/OfferValidations"
+import Swal from "sweetalert2";
 
 const styles = (theme) => ({
     backdrop: {
@@ -248,7 +249,7 @@ class EditDiscount extends Component {
                     this.props.showEditDiscountDialog(true, "")
                 })
                 .catch(err => {
-                    console.log(err)
+                    this.handleError(err)
                 })
         }else {
             this.setState({
@@ -256,6 +257,28 @@ class EditDiscount extends Component {
             })
         }
 
+    }
+
+    handleError = (err) => {
+        if(err){
+            if (err.response){
+                if (err.response.status === 401){
+                    this.alertMsg("error", "Something Went Wrong ", err.response.data)
+                    this.props.removeUser()
+                }
+            }else {
+                this.alertMsg("error", "Something Went Wrong ", err)
+            }
+        }
+    }
+
+
+    alertMsg = (icon, title, text) => {
+        Swal.fire({
+            icon: icon,
+            title: title,
+            text: text,
+        });
     }
 
     setShowSnackBar = () => {

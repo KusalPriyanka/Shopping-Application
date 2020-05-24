@@ -1,6 +1,5 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useRef} from 'react';
 import {makeStyles} from '@material-ui/core/styles';
-import Paper from '@material-ui/core/Paper';
 import Stepper from '@material-ui/core/Stepper';
 import Step from '@material-ui/core/Step';
 import StepLabel from '@material-ui/core/StepLabel';
@@ -18,14 +17,15 @@ import Grid from "@material-ui/core/Grid";
 import '../../../css/hoverable.css'
 
 
-
-import { withStyles } from '@material-ui/core/styles';
+import {withStyles} from '@material-ui/core/styles';
 import Dialog from '@material-ui/core/Dialog';
 import MuiDialogTitle from '@material-ui/core/DialogTitle';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogActions from "@material-ui/core/DialogActions";
 import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
+import Swal from "sweetalert2";
+import {useHistory} from "react-router-dom";
 
 const styles = (theme) => ({
     root: {
@@ -40,7 +40,6 @@ const styles = (theme) => ({
     },
 });
 
-;
 
 const useStyles = makeStyles((theme) => ({
 
@@ -80,6 +79,31 @@ const getSizes = (product) => {
     return sizes
 }
 
+const getData = (product) => {
+    let data = [];
+
+    product.detailsWithSize.map(size => {
+        size.productDetails.map(item => {
+            let dataItem = {
+                productSize: size.productSize,
+                productQuantity: item.productQuantity,
+                productColour: item.productColour,
+            }
+            data.push(dataItem)
+        })
+    });
+    return data
+}
+
+const getImages = (product) => {
+    let images = [];
+
+    product.productImageURLS.map(image => {
+        images.push(image.imageURL)
+    });
+    return images
+}
+
 
 export default function UpdateProduct(props) {
     const classes = useStyles();
@@ -87,7 +111,6 @@ export default function UpdateProduct(props) {
     const [open, setOpen] = React.useState(false);
     const [isDialogOpen, setIsDialogOpen] = React.useState(true);
 
-    const [addedProduct, setAddedProduct] = React.useState({});
     const [productDetails, setProductDetails] = React.useState({
         productName: props.updateProduct.productName,
         brandName: props.updateProduct.productBrand,
@@ -95,11 +118,13 @@ export default function UpdateProduct(props) {
         category: props.updateProduct.productCategory,
         productPrice: props.updateProduct.productPrice
     });
-    const [sizeAndPrice, setSizeAndPrice] = React.useState([]);
+    const [sizeAndPrice, setSizeAndPrice] = React.useState(getData(props.updateProduct));
     const [sizes, setSizes] = React.useState(getSizes(props.updateProduct));
-    const [selectedFile, setSelectedFile] = React.useState([]);
+    const [selectedFile, setSelectedFile] = React.useState(getImages(props.updateProduct));
 
-
+    const refProductDetails = useRef();
+    const refProductSize = useRef();
+    const refProductImages = useRef();
 
 
     const handleCloseDialog = () => {
@@ -124,13 +149,13 @@ export default function UpdateProduct(props) {
     }
 
     const DialogTitle = withStyles(styles)((props) => {
-        const { children, classes, onClose, ...other } = props;
+        const {children, classes, onClose, ...other} = props;
         return (
             <MuiDialogTitle disableTypography className={classes.root} {...other}>
                 <Typography color={"textSecondary"} variant="h6">{children}</Typography>
                 {onClose ? (
                     <IconButton aria-label="close" className={classes.closeButton} onClick={() => handleCloseDialog()}>
-                        <CloseIcon />
+                        <CloseIcon/>
                     </IconButton>
                 ) : null}
             </MuiDialogTitle>
@@ -157,10 +182,10 @@ export default function UpdateProduct(props) {
             });
 
             sizeAndPrice.map(item => {
-                if(item.productSize === size){
+                if (item.productSize === size) {
                     b.productDetails.push({
                         productColour: item.productColour,
-                        productQuantity : item.productQuantity
+                        productQuantity: item.productQuantity
                     })
                 }
             })
@@ -169,44 +194,90 @@ export default function UpdateProduct(props) {
             b = {}
         })
 
-        const data = new FormData()
-        for (let x = 0; x < selectedFile.length; x++) {
-            data.append('file', selectedFile[x])
+        let imageUrls = []
+
+        selectedFile.map(image => {
+            imageUrls.push({
+                imageURL : image
+            })
+        })
+
+        let product = {
+            "productName": productDetails.productName,
+            "productDescription": productDetails.description,
+            "productCategory": productDetails.category,
+            "productImageURLS": imageUrls,
+            "productBrand": productDetails.brandName,
+            "productWatchers": 0,
+            "productPrice": productDetails.productPrice,
+            "detailsWithSize": detailsWithSize
+
         }
 
-        axios.post("http://localhost:8080/api/products/upload", data, {})
+        console.log(product)
+
+        const updateProduct = process.env.apiURL || "http://localhost:8080/" + `api/products/UpdateProduct/${props.updateProduct._id}`;
+        axios.put(updateProduct, product)
             .then(res => {
-
-                let product = {
-                    "productName": productDetails.productName,
-                    "productDescription": productDetails.description,
-                    "productCategory": productDetails.category,
-                    "productImageURLS": res.data.files,
-                    "productBrand": productDetails.brandName,
-                    "productWatchers": 0,
-                    "productPrice" : productDetails.productPrice,
-                    "detailsWithSize": detailsWithSize
-
-                }
-
-                axios.post('http://localhost:8080/api/products/AddProduct', product)
-                    .then(res => {
-                        setAddedProduct(res.data)
-                        setOpen(false);
-                    }).catch(err => {
-                    console.log(err)
-                })
+                setOpen(false);
+                handleCloseDialog()
+                redirectToAllProduct()
 
             }).catch(err => {
-            console.log(err)
+            setOpen(false);
+            handleError(err)
+            handleCloseDialog()
+        })
+    }
+
+    const handleError = (err) => {
+        if (err.response.status === 401){
+            alertMsg("error", "Something Went Wrong ", err.response.data)
+            props.removeUser()
+        }else {
+            alertMsg("error", "Something Went Wrong ", err)
+        }
+    }
+
+    const alertMsg = (icon, title, text) => {
+        Swal.fire({
+            icon: icon,
+            title: title,
+            text: text,
+        });
+    }
+
+    const redirectToAllProduct = () => {
+        Swal.fire({
+            icon : "success",
+            title: 'Done!',
+            text : "Product Update Successfully.",
+
+            confirmButtonText: 'OK',
+            showLoaderOnConfirm: true,
+            preConfirm: (code) => {
+               props.getProductsFromDB()
+            },
         })
     }
 
     const handleNext = () => {
-        setActiveStep(activeStep + 1);
+        let state = true;
+        if (activeStep === 0) {
+            state = refProductDetails.current.validate()
+        }
+        if(activeStep === 1){
+            state = refProductSize.current.checkSize()
+        }
         if (activeStep === 2) {
-            setOpen(true);
-            onClickHandler();
+            state = refProductImages.current.checkImageSize()
+        }
+        if (state) {
+            setActiveStep(activeStep + 1);
+            if (activeStep === 2) {
+                setOpen(true);
+                onClickHandler();
+            }
         }
     };
 
@@ -219,11 +290,13 @@ export default function UpdateProduct(props) {
     function getStepContent(step) {
         switch (step) {
             case 0:
-                return <AddProductDetails product={productDetails} updateProductDetails={updateProductDetails}/>;
+                return <AddProductDetails ref={refProductDetails} product={productDetails}
+                                          updateProductDetails={updateProductDetails}/>;
             case 1:
-                return <AddProductSizeAndPrice sizeAndPrice={sizeAndPrice} sizes={sizes} updateSizeAndPrice={updateSizeAndPrice}/>;
+                return <AddProductSizeAndPrice ref={refProductSize} sizeAndPrice={sizeAndPrice} sizes={sizes}
+                                               updateSizeAndPrice={updateSizeAndPrice}/>;
             case 2:
-                return <AddProductImages selectedFile={selectedFile} updateSelectedFile={updateSelectedFile}/>;
+                return <AddProductImages ref={refProductImages} selectedFile={selectedFile} updateSelectedFile={updateSelectedFile}/>;
             default:
                 throw new Error('Unknown step');
         }
@@ -231,7 +304,8 @@ export default function UpdateProduct(props) {
 
     return (
         <React.Fragment>
-            <Dialog style={{color: "green"}}  aria-labelledby="customized-dialog-title" maxWidth={"lg"} open={isDialogOpen}>
+            <Dialog style={{color: "green"}} aria-labelledby="customized-dialog-title" maxWidth={"lg"}
+                    open={isDialogOpen}>
                 <DialogTitle id="customized-dialog-title" onClose>
                     Edit Product
                 </DialogTitle>
@@ -239,40 +313,40 @@ export default function UpdateProduct(props) {
                     <main className={classes.layout}>
 
 
-                            <Stepper activeStep={activeStep} className={classes.stepper}>
-                                {steps.map((label) => (
-                                    <Step key={label}>
-                                        <StepLabel>{label}</StepLabel>
-                                    </Step>
-                                ))}
-                            </Stepper>
-                            <React.Fragment>
-                                {activeStep === steps.length ?
-                                    <React.Fragment>
-                                        <Backdrop className={classes.backdrop} open={open} onClick={handleClose}>
-                                            <CircularProgress color="inherit"/>
-                                        </Backdrop>
+                        <Stepper activeStep={activeStep} className={classes.stepper}>
+                            {steps.map((label) => (
+                                <Step key={label}>
+                                    <StepLabel>{label}</StepLabel>
+                                </Step>
+                            ))}
+                        </Stepper>
+                        <React.Fragment>
+                            {activeStep === steps.length ?
+                                <React.Fragment>
+                                    <Backdrop className={classes.backdrop} open={open} >
+                                        <CircularProgress color="inherit"/>
+                                    </Backdrop>
 
-                                        {open ? <LoadingView/> : <React.Fragment><Typography variant="h5" gutterBottom>
-                                            Product Added To Store SuccessFully
-                                        </Typography>
-                                            <Grid container direction="row"
-                                                  justify="center"
-                                                  alignItems="center" spacing={5}>
-                                                <Grid item xs={12} sm={6}>
-                                                    <ProductView product={addedProduct} />
-                                                </Grid>
+                                    {open ? <LoadingView/> : <React.Fragment><Typography variant="h5" gutterBottom>
+                                        Product Update Successfully
+                                    </Typography>
+                                        <Grid container direction="row"
+                                              justify="center"
+                                              alignItems="center" spacing={5}>
+                                            <Grid item xs={12} sm={6}>
+
                                             </Grid>
-                                        </React.Fragment>}
+                                        </Grid>
+                                    </React.Fragment>}
 
-                                    </React.Fragment>
-                                    :
-                                    <React.Fragment>
-                                        {getStepContent(activeStep)}
+                                </React.Fragment>
+                                :
+                                <React.Fragment>
+                                    {getStepContent(activeStep)}
 
-                                    </React.Fragment>
-                                }
-                            </React.Fragment>
+                                </React.Fragment>
+                            }
+                        </React.Fragment>
                     </main>
                 </DialogContent>
                 <DialogActions>
@@ -288,7 +362,7 @@ export default function UpdateProduct(props) {
                             onClick={handleNext}
                             className={classes.button}
                         >
-                            {activeStep === steps.length - 1 ? 'Add Product' : 'Next'}
+                                {activeStep === steps.length - 1 ? 'Update Product' : 'Next'}
                         </Button>
                     </div>
                 </DialogActions>
