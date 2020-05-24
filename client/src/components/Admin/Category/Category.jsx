@@ -9,7 +9,7 @@ import Skeleton from '@material-ui/lab/Skeleton';
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 import { Redirect } from "react-router-dom";
-const axios = require('axios').default;
+const axios = require('axios');
 
 const styles = (theme) => ({
 
@@ -55,6 +55,16 @@ class Category extends Component {
         id: "",
         redirect: null,
     };
+
+    componentDidMount() {
+        setInterval(this.getCategoryFromDB(), 5000); //Refresh every 5 seconds.
+        if (localStorage.getItem("emp")) {
+            axios.defaults.headers.common["auth-token"] = JSON.parse(
+                localStorage.getItem("emp")
+            ).empToken;
+        }
+        // this.getCategoryFromDB()
+    }
 
     //=============================== Add Category functions ===============================
     //handle change event for category name
@@ -103,8 +113,18 @@ class Category extends Component {
                     this.getCategoryFromDB();
                 })
                 .catch(err => {
-                    //console.log(err.response);
-                    if(err.response.data === "Already published the category!"){
+                    if(err.response.status === 401){
+                        Swal.fire({
+                            icon: "error",
+                            title: "Something went wrong!",
+                            text: err.response.data
+                        }).then((result) => {
+                            this.setState({
+                                redirect: "/employee"
+                            })
+                        });
+                    }
+                    if(err.response.status === 404){
                         Swal.fire({
                             icon: "error",
                             title: "Something went wrong!",
@@ -143,8 +163,18 @@ class Category extends Component {
                     this.getCategoryFromDB();
                 })
                 .catch(err => {
-                    //console.log(err.response);
-                    if(err.response.data === "Already published the category!"){
+                    if(err.response.status === 401){
+                        Swal.fire({
+                            icon: "error",
+                            title: "Something went wrong!",
+                            text: err.response.data
+                        }).then((result) => {
+                            this.setState({
+                                redirect: "/employee"
+                            })
+                        });
+                    }
+                    if(err.response.status === 404){
                         Swal.fire({
                             icon: "error",
                             title: "Something went wrong!",
@@ -182,35 +212,17 @@ class Category extends Component {
                     data: res.data,
                     isLoading: false,
                 });
-
-                //console.log(this.state.data)
             })
             .catch((err) => {
-                if(err.response.data === "Access Denied!"){
+                if(err.response.status === 400){
                     Swal.fire({
                         icon: "error",
                         title: "Something went wrong!",
                         text: err.response.data
-                    }).then((result) => {
-                        this.setState({
-                            redirect: "/employee"
-                        })
-                    });
+                    })
                 }
             });
     };
-
-    componentDidMount() {
-        //const history = useHistory();
-       if (localStorage.getItem("emp")) {
-            axios.defaults.headers.common["auth-token"] = JSON.parse(
-                localStorage.getItem("emp")
-            ).empToken;
-        }
-
-       // this.getCategoryFromDB()
-
-    }
 
     //Handle edit category
     handleEditCategory  = (id) => {
@@ -225,7 +237,6 @@ class Category extends Component {
                   id: id,
                 });
                 document.getElementById("CategoryName").focus();    //focus to category name
-                //console.log(this.state)
             })
             .catch((err) => {
                 console.log(err);
@@ -257,7 +268,17 @@ class Category extends Component {
                         this.getCategoryFromDB();
                     })
                     .catch((err) => {
-                        console.log(err);
+                        if(err.response.status === 401){
+                            Swal.fire({
+                                icon: "error",
+                                title: "Something went wrong!",
+                                text: err.response.data
+                            }).then((result) => {
+                                this.setState({
+                                    redirect: "/employee"
+                                })
+                            });
+                        }
                     });
             }
         })
@@ -265,7 +286,6 @@ class Category extends Component {
 
 
     render() {
-        setInterval(this.getCategoryFromDB(), 5000); //Refresh every 5 seconds.
         const {classes, isDashboard} = this.props;
         if (this.state.redirect) {
             return <Redirect to={this.state.redirect} />
