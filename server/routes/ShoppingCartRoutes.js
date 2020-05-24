@@ -54,5 +54,13 @@ router.put("/UpdateCartItem", verifyToken, async (req, res) => {
       .catch((err) => res.status(400).send("Error :" + err));
   });
 });
-
+router.delete("/DeleteCart", verifyToken, async (req, res) => {
+  await ShoppingCarts.find({ userId: req.user._id })
+      .then(cart => {
+        ShoppingCarts.findByIdAndDelete(cart[0]._id)
+            .then(() => res.send(req.params.id + " Deleted Successfully!"))
+            .catch((err) => res.status(400).send("Error : " + err));
+      })
+      .catch((err) => res.status(400).send("Error : " + err));
+});
 module.exports = router;
