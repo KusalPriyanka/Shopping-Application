@@ -194,6 +194,7 @@ export default class ShoppingCartContainer extends Component {
             total = <Total
                 total={tot}
                 quantity={quantity}
+                forceUpdateByChild={this.forceUpdateByChild}
             />
         }
         return (
