@@ -39,7 +39,7 @@ export default class Total extends Component {
                     <Grid item xs={6}  alignItems={"left"}
                           justify={"center"}>
                         <Typography variant={'h5'} color={"textSecondary"} align={"left"}>
-                           Total
+                            Total
                         </Typography>
                     </Grid>
                     <Grid item xs={6}  alignItems={"left"}
