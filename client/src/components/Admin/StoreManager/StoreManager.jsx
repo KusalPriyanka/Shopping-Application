@@ -67,7 +67,9 @@ class StoreManager extends Component{
         {
            this.setState({ isLoading_add: true})
             // Send a POST request to API
-            axios.post("http://localhost:8080/api/StoreManager/AddStoreManager", {
+            const apiURL =
+                process.env.apiURL || "http://localhost:8080/api/StoreManager/AddStoreManager";
+            axios.post(apiURL, {
                 empName: this.state.userName.toString(),
                 empAddress: this.state.userAddress.toString(),
                 empEmail: this.state.userEmail.toString(),
@@ -147,8 +149,10 @@ class StoreManager extends Component{
                 redirect: "/employee"
             })
         }else{
+            const apiURL =
+                process.env.apiURL || "http://localhost:8080/api/StoreManager/";
             axios
-                .get("http://localhost:8080/api/StoreManager/", {
+                .get(apiURL, {
                     headers: {
                         "auth-token": JSON.parse(localStorage.getItem("emp")).empToken,
                     },
@@ -208,9 +212,11 @@ class StoreManager extends Component{
             //if click yes
             if (result.value) {
                 this.setState({isLoading_list: true});
+                const apiURL =
+                    process.env.apiURL || "http://localhost:8080/api/StoreManager/DeleteStoreManager";
                 axios
                     .delete(
-                        `http://localhost:8080/api/StoreManager/DeleteStoreManager/${id}`  //delete store manager by id
+                        `${apiURL}/${id}`  //delete store manager by id
                     )
                     .then((res) => {
                         Swal.fire(
@@ -232,7 +238,7 @@ class StoreManager extends Component{
                             });
                         }
                     });
-            }
+            };
         })
     };
 

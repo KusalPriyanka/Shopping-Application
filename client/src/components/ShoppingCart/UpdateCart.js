@@ -1,5 +1,5 @@
 import axios from "axios";
-import {hostUrl} from "../../Constannts/Constants"
+
 import Swal from "sweetalert2";
 
 let User;

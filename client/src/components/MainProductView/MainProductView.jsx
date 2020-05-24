@@ -60,15 +60,20 @@ class MainProductView extends Component {
     componentDidMount() {
         this.setState({
             isShowBackDrop: true,
+
         })
-        let url = `http://localhost:8080/api/products/${this.props.productId}`
+/*Getting products by the ID*/
+        let url = process.env.apiURL || `http://localhost:8080/` + `api/products/${this.props.productId}`;
         axios.get(url)
             .then(res => {
                 let sizes = [];
                 res.data.detailsWithSize.map((size) => {
                     sizes.push(size.productSize);
                 });
-                axios.get("http://localhost:8080/api/offers/")
+
+      /* Getting the offers */
+                const offersurl = process.env.apiURL || "http://localhost:8080/" + "api/offers/";
+                axios.get(offersurl)
                     .then(response => {
                         let offers = response.data
                         let discount = null;
@@ -106,7 +111,7 @@ class MainProductView extends Component {
             console.log(err)
         })
     }
-
+/*Getting the selected size*/
     getDetailsBySize = (SelectedSize) => {
         let details = [];
         this.state.product.detailsWithSize.map((size) => {
@@ -116,7 +121,7 @@ class MainProductView extends Component {
         });
         return details;
     };
-
+/*Setting the selected color and size*/
     setSize = (e) => {
         let colors = [];
         let details = this.getDetailsBySize(e.target.value);
@@ -130,7 +135,7 @@ class MainProductView extends Component {
             details: details
         })
     }
-
+/*Get Quantity by color*/
     getQuantityByColor = (selectedColor) => {
         let quantity;
         this.state.details.productDetails.map((color) => {
@@ -140,7 +145,7 @@ class MainProductView extends Component {
         });
         return quantity;
     };
-
+/*Set color*/
     setColor = (e) => {
         let q = this.getQuantityByColor(e.target.value);
         this.setState({
@@ -148,7 +153,7 @@ class MainProductView extends Component {
             quantity: q
         })
     }
-
+/*Set Quantity*/
     setQuantity = (e) => {
         let val = e.target.value;
         if (val <= 0) {
@@ -171,7 +176,7 @@ class MainProductView extends Component {
             })
         }
     }
-
+/*Sweet alert*/
     ShowMsg = (icon, title, text) => {
         Swal.fire({
             icon: icon,
@@ -179,7 +184,7 @@ class MainProductView extends Component {
             text: text,
         });
     }
-
+/*Check ogin status of the user */
     checkLoginState = () => {
         //localStorage.clear();
         let User;
@@ -196,7 +201,7 @@ class MainProductView extends Component {
         }
 
     }
-
+/*Function to add to wishlist*/
     addToWatchList = () => {
         let status = this.checkLoginState();
         if (status) {
@@ -215,11 +220,14 @@ class MainProductView extends Component {
             let validate = validateWishList(wishList.watchingProducts[0])
             if (validate.state) {
                 let userWishList = null;
-                axios.get("http://localhost:8080/api/wishlists/getWishListByUserID")
+                const getwishlistbyuserID = process.env.apiURL || "http://localhost:8080/" + "api/wishlists/getWishListByUserID";
+                axios.get(getwishlistbyuserID)
                     .then(res => {
                         userWishList = res.data
                         if (res.data.length === 0) {
-                            let url = "http://localhost:8080/api/wishlists/AddToWishList"
+
+
+                            let url = process.env.apiURL || "http://localhost:8080/" + "api/wishlists/AddToWishList";
 
                             axios.post(url, wishList)
                                 .then(res => {
@@ -252,7 +260,9 @@ class MainProductView extends Component {
                                 this.ShowMsg('error', "Error Occurred", "This product is already in your wish list")
                             } else {
                                 userWishList.watchingProducts.push(wishList.watchingProducts[0])
-                                let url = "http://localhost:8080/api/wishlists/UpdateWishList"
+
+
+                                let url =  process.env.apiURL || "http://localhost:8080/" + "api/wishlists/UpdateWishList";
                                 let updateWishList = {
                                     "watchingProducts": userWishList.watchingProducts
                                 }
@@ -290,7 +300,7 @@ class MainProductView extends Component {
             this.ShowMsg('error', "Unauthorized User", "Please Log In to the System to continue!")
         }
     }
-
+/*Validations for inputs*/
     validate = () => {
         if (this.state.size === null) {
             return {
@@ -320,7 +330,7 @@ class MainProductView extends Component {
             }
         }
     }
-
+/*Getting the offer ID*/
     getOfferID = () => {
         if (this.state.promoCodeApproved) {
             return this.state.promoCode._id
@@ -331,18 +341,19 @@ class MainProductView extends Component {
         }
     }
 
-
+/*Function to add items for the cart*/
     addToCart = () => {
         let status = this.checkLoginState();
         if (status) {
             let validate = this.validate()
             if (validate.state) {
                 let cart = null;
-                axios.get("http://localhost:8080/api/shoppingcarts/getShoppingCartByUserID")
+                const getshoppingcartuserbyid = process.env.apiURL || "http://localhost:8080/" + "api/shoppingcarts/getShoppingCartByUserID";
+                axios.get(getshoppingcartuserbyid)
                     .then(res => {
                         cart = res.data;
                         if (cart.length === 0) {
-                            let url = "http://localhost:8080/api/shoppingcarts/AddToCart"
+                            let url =  process.env.apiURL || "http://localhost:8080/" + "api/shoppingcarts/AddToCart";
                             let cartItem = {
                                 "cartItems": [
                                     {
@@ -395,7 +406,7 @@ class MainProductView extends Component {
                                     "cartItems": cart.cartItems
                                 }
 
-                                let url = "http://localhost:8080/api/shoppingcarts/UpdateCartItem"
+                                let url =  process.env.apiURL || "http://localhost:8080/" + "api/shoppingcarts/UpdateCartItem"
                                 axios.put(url, cartData)
                                     .then(response => {
                                             this.setState({
@@ -431,7 +442,7 @@ class MainProductView extends Component {
         }
     }
 
-
+/*Taking the promo code*/
     getPromoCode = () => {
         Swal.fire({
             title: 'Enter Promo Code',
@@ -619,16 +630,7 @@ class MainProductView extends Component {
                                             <Grid container item xs={12} sm={12} md={6} lg={6}>
                                                 <Grid xs={12}>
 
-                                                    <Button
-                                                        fullWidth
-                                                        variant="contained"
-                                                        color="secondary"
-                                                        size={"large"}
-                                                        startIcon={<ShopIcon/>}
-                                                        onClick={() => this.test()}
-                                                    >
-                                                        Buy Now
-                                                    </Button>
+
                                                     <Button
                                                         fullWidth
                                                         variant="contained"

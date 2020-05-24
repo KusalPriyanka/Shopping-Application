@@ -15,6 +15,7 @@ import HomeNavigator from "../Shared/HomeNavigator";
 
 
 
+
 export default class ShoppingCartContainer extends Component {
     constructor(props) {
         super(props);
@@ -29,7 +30,7 @@ export default class ShoppingCartContainer extends Component {
             total : 0
         }
     }
-
+/*Sweet alert*/
     ShowMsg = (icon, title, text) => {
         Swal.fire({
             icon: icon,
@@ -37,7 +38,7 @@ export default class ShoppingCartContainer extends Component {
             text: text,
         });
     }
-
+/*Check the log in status of the user*/
     checkLoginState = () => {
         //localStorage.clear();
         let User;
@@ -54,11 +55,11 @@ export default class ShoppingCartContainer extends Component {
         }
 
     }
-
+/*Updating*/
     forceUpdateByChild = () => {
         this.updateValues()
     }
-
+/*Update the values*/
     updateValues = () => {
         let status = this.checkLoginState();
         if (status) {
@@ -66,15 +67,21 @@ export default class ShoppingCartContainer extends Component {
             this.setState({
                 isShowBackDrop: true,
             })
-            axios.get("http://localhost:8080/api/shoppingcarts/getShoppingCartByUserID")
+            const getshoppingcartbyuserId = process.env.apiURL || `http://localhost:8080/` + `api/shoppingcarts/getShoppingCartByUserID`;
+
+            axios.get(getshoppingcartbyuserId)
                 .then(res => {
                     shoppingCart = res.data;
 
                     if (shoppingCart) {
-                        axios.get('http://localhost:8080/api/products/')
+                        const productsurl = process.env.apiURL || "http://localhost:8080/" + "api/products/";
+
+                        axios.get(productsurl)
                             .then(response => {
                                 productList = response.data
-                                axios.get("http://localhost:8080/api/offers/")
+                                const offersurl = process.env.apiURL || "http://localhost:8080/" + "api/offers/";
+
+                                axios.get(offersurl)
                                     .then(response => {
                                         this.setState({
                                             shoppingCart: shoppingCart,
@@ -117,7 +124,7 @@ export default class ShoppingCartContainer extends Component {
     componentDidMount() {
         this.updateValues()
     }
-
+/*Get the particular product*/
     getProduct = (id, productList) => {
         let product = null
         productList.map(p => {
@@ -127,7 +134,7 @@ export default class ShoppingCartContainer extends Component {
         })
         return product;
     }
-
+/*Get the particular offer ID*/
     getOffer = (id, offers) => {
         let offer = null
         offers.map(o => {
@@ -137,7 +144,7 @@ export default class ShoppingCartContainer extends Component {
         })
         return offer;
     }
-
+/*Calculating the total bill with quantity and price*/
     getTotal = (quantity, productId, offerId) => {
         let total = 0;
         let product = null
@@ -155,7 +162,7 @@ export default class ShoppingCartContainer extends Component {
         return total;
 
     }
-
+/*Getting the quantity*/
     getQuantity = () => {
         let q = 0
         let t = 0

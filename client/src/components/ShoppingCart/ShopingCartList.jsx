@@ -4,7 +4,7 @@ import {getRemainingQuantity} from "../../Validations/CartItemValidation"
 
 
 export default class ShoppingCartList extends Component {
-
+/*Get the Shopping Cart*/
     getProduct = (cartItem, productList) => {
         let product = null
         productList.map(p => {
@@ -14,7 +14,7 @@ export default class ShoppingCartList extends Component {
         })
         return product;
     }
-
+/*Get the offer*/
     getOffer = (cartItem, offers) => {
         let offer = null
         offers.map(o => {

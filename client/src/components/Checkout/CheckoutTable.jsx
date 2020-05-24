@@ -68,12 +68,7 @@ export default class CheckoutTable extends Component{
     }
 
 
-    /*check the states of the address details by clicking the submit button*/
-    mySubmitHandler = (event) => {
-        event.preventDefault();
-        let sumName= alert((this.state.firstName)+ " " + (this.state.address1)+ " " +(this.state.mobileNumber)+" " +(this.state.email));
-        return sumName;
-    }
+
 
 
 
@@ -113,7 +108,12 @@ export default class CheckoutTable extends Component{
         })
     }
 
-
+    /*check the states of the address details by clicking the submit button*/
+    mySubmitHandler = (event) => {
+        event.preventDefault();
+        let sumName= alert((this.state.firstName)+ " " + (this.state.address1)+ " " +(this.state.mobileNumber)+" " +(this.state.email) +(this.state.cardName));
+        return sumName;
+    }
 
     ShowMsg = (icon, title, text) => {
         Swal.fire({
@@ -208,22 +208,16 @@ export default class CheckoutTable extends Component{
                                             onChange={this.ChangFieldsfour}
                                         />
                                     </Grid>
-                                    <Grid item xs={12}>
-                                        <form onSubmit={this.mySubmitHandler}>
-
-                                            <input style={{color:"#1976d2"}}
-                                                   type='submit'
-                                            />
-                                        </form>
-                                    </Grid>
 
 
+                                  {/*Pay from card check box*/}
                                     <Grid item xs={12}>
                                         <FormControlLabel
                                             control={<Checkbox color="secondary"  name="savePay" value="yes" onChange={this.handleCheck}/>}
                                             label="Pay From Card"
                                         />
                                     </Grid>
+                                   {/* Pay in cash check box*/}
                                     <Grid item xs={12}>
                                         <FormControlLabel
                                             control={<Checkbox color="secondary" name="saveCard" value="yes" onChange={this.handleChecktwo}/>}
@@ -234,7 +228,7 @@ export default class CheckoutTable extends Component{
                                 </Grid>
                             </React.Fragment>
                           {/*Payment method */}
-{/*Show details for first check box*/}
+                    {/*Show details for first check box*/}
                             {(!this.state.checked)?
                             <React.Fragment>
                                 <Typography variant="h6" gutterBottom>
@@ -244,13 +238,13 @@ export default class CheckoutTable extends Component{
                                 </Typography>
                                 <Grid container spacing={3}>
                                     <Grid item xs={12} md={6}>
-                                        <TextField required id="cardName" label="Name on card" fullWidth onChange={this.state.ChangeCardName}/>
+                                        <TextField required id="cardName" label="Name on card" fullWidth onChange={this.ChangeCardName}/>
                                     </Grid>
                                     <Grid item xs={12} md={6}>
-                                        <TextField required id="cardNumber" label="Card number" fullWidth onChange={this.state.ChangeCardNumber}/>
+                                        <TextField required id="cardNumber" label="Card number" fullWidth onChange={this.ChangeCardNumber}/>
                                     </Grid>
                                     <Grid item xs={12} md={6}>
-                                        <TextField required id="expDate" label="Expiry date" fullWidth onChange={this.state.ChangeExpireDate} />
+                                        <TextField required id="expDate" label="Expiry date" fullWidth onChange={this.ChangeExpireDate} />
                                     </Grid>
                                     <Grid item xs={12} md={6}>
                                         <TextField
@@ -259,11 +253,11 @@ export default class CheckoutTable extends Component{
                                             label="CVV"
                                             helperText="Last three digits on signature strip"
                                             fullWidth
-                                            onChange={this.state.cvv}
+                                            onChange={this.cvv}
                                         />
                                     </Grid>
                                     <Grid item xs={12}>
-                                        <form onSubmit={this.paymentalert}>
+                                        <form onSubmit={this.mySubmitHandler}>
 
                                             <input style={{color:"#1976d2"}}
                                                    type='submit'
@@ -278,7 +272,7 @@ export default class CheckoutTable extends Component{
                                 <React.Fragment></React.Fragment>}
 
 
-{/*Show details for second check box*/}
+                     {/*Show details for second check box*/}
                             {(!this.state.checked2)?
                             <React.Fragment>
 
@@ -286,12 +280,21 @@ export default class CheckoutTable extends Component{
 
                                 <Typography variant="h6" gutterBottom>
                                     Payment method 2
+                                    <h6>You are going to pay in cash</h6>
                                 </Typography>
                                 <Grid item xs={12}>
                                     <FormControlLabel
                                         control={<Checkbox color="secondary" name="saveCard" value="yes" />}
                                         label="Cash on Delivery"
                                     />
+                                </Grid>
+                                <Grid item xs={12}>
+                                    <form onSubmit={this.mySubmitHandler}>
+
+                                        <input style={{color:"#1976d2"}}
+                                               type='submit'
+                                        />
+                                    </form>
                                 </Grid>
                             </React.Fragment>:
 
