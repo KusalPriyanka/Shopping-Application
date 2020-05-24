@@ -37,33 +37,33 @@ function Project(props) {
 
 const items = [
     {
-        name: "Lear Music Reader",
+        name: "",
         description:"Dress That Makes You Happy And Beautiful...",
         color: "#7D85B1",
         image:h16
 
     },
     {
-        name: "Hash Code 2019",
+        name: "",
         description: "Our Solution For Any Casual Event... ",
         color: "#7D85B1",
         image: h4
     },
     {
-        name: "Terrio",
+        name: "",
         description: "An Exciting Romance With Warmth Of Freedom...",
         color: "#CE7E78",
         image: h3
     },
     {
-        name: "React Carousel",
+        name: "",
         description: "Find Your Gorgeous Wear..." ,
         color: "#C9A27E",
         image: h5
     },
 
     {
-        name: "React Carousel",
+        name: "",
         description: "Leather Collection Styles To Let You Free...",
         color: "#C9A27E",
         image:h12
