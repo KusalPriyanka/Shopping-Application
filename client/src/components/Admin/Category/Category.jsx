@@ -93,7 +93,7 @@ class Category extends Component {
             // Send a POST request to API
 /*            const apiURL =
                 process.env.apiURL || "http://localhost:8080/api/Categories/AddCategory";*/
-            axios.post("api/Categories/AddCategory", {
+            axios.post("https://ishoppingplaza.herokuapp.com/api/Categories/AddCategory", {
                 CategoryName: this.state.categoryName.toString(),
                 categoryImageURL: "test",
                 categoryDescription: this.state.categoryDescription.toString()
@@ -145,7 +145,7 @@ class Category extends Component {
             // Send a POST request to API
 /*            const apiURL =
                 process.env.apiURL || "http://localhost:8080/api/Categories/UpdateCategory";*/
-            axios.put(`api/Categories/UpdateCategory/${this.state.id}`, {
+            axios.put(`https://ishoppingplaza.herokuapp.com/api/Categories/UpdateCategory/${this.state.id}`, {
                 CategoryName: this.state.categoryName.toString(),
                 categoryImageURL: "test",
                 categoryDescription: this.state.categoryDescription.toString()
@@ -212,7 +212,7 @@ class Category extends Component {
 /*        const apiURL =
             process.env.apiURL || "http://localhost:8080/api/Categories/";*/
         axios
-            .get("api/Categories/")
+            .get("https://ishoppingplaza.herokuapp.com/api/Categories/")
             .then((res) => {
                 this.setState({
                     data: res.data,
@@ -236,7 +236,7 @@ class Category extends Component {
 /*        const apiURL =
             process.env.apiURL || "http://localhost:8080/api/Categories";*/
         axios
-            .get(`api/Categories/${id}`)
+            .get(`https://ishoppingplaza.herokuapp.com/api/Categories/${id}`)
             .then((res) => {
                 this.setState({
                     categoryName: res.data.CategoryName,
@@ -268,7 +268,7 @@ class Category extends Component {
                     process.env.apiURL || "http://localhost:8080/api/Categories/DeleteCategory";*/
                 axios
                     .delete(
-                        `api/Categories/DeleteCategory/${id}`  //delete category by id
+                        `https://ishoppingplaza.herokuapp.com/api/Categories/DeleteCategory/${id}`  //delete category by id
                     )
                     .then((res) => {
                         Swal.fire(
