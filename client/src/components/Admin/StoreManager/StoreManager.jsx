@@ -67,9 +67,9 @@ class StoreManager extends Component{
         {
            this.setState({ isLoading_add: true})
             // Send a POST request to API
-            const apiURL =
-                process.env.apiURL || "http://localhost:8080/api/StoreManager/AddStoreManager";
-            axios.post(apiURL, {
+/*            const apiURL =
+                process.env.apiURL || "http://localhost:8080/api/StoreManager/AddStoreManager";*/
+            axios.post("api/StoreManager/AddStoreManager", {
                 empName: this.state.userName.toString(),
                 empAddress: this.state.userAddress.toString(),
                 empEmail: this.state.userEmail.toString(),
@@ -149,10 +149,10 @@ class StoreManager extends Component{
                 redirect: "/employee"
             })
         }else{
-            const apiURL =
-                process.env.apiURL || "http://localhost:8080/api/StoreManager/";
+/*            const apiURL =
+                process.env.apiURL || "http://localhost:8080/api/StoreManager/";*/
             axios
-                .get(apiURL, {
+                .get("api/StoreManager/", {
                     headers: {
                         "auth-token": JSON.parse(localStorage.getItem("emp")).empToken,
                     },
@@ -212,11 +212,11 @@ class StoreManager extends Component{
             //if click yes
             if (result.value) {
                 this.setState({isLoading_list: true});
-                const apiURL =
-                    process.env.apiURL || "http://localhost:8080/api/StoreManager/DeleteStoreManager";
+/*                const apiURL =
+                    process.env.apiURL || "http://localhost:8080/api/StoreManager/DeleteStoreManager";*/
                 axios
                     .delete(
-                        `${apiURL}/${id}`  //delete store manager by id
+                        `api/StoreManager/DeleteStoreManager/${id}`  //delete store manager by id
                     )
                     .then((res) => {
                         Swal.fire(

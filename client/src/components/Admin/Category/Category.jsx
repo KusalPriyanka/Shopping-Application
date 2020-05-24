@@ -91,9 +91,9 @@ class Category extends Component {
         //Check whether new category
         if (!this.state.editItem) {
             // Send a POST request to API
-            const apiURL =
-                process.env.apiURL || "http://localhost:8080/api/Categories/AddCategory";
-            axios.post(apiURL, {
+/*            const apiURL =
+                process.env.apiURL || "http://localhost:8080/api/Categories/AddCategory";*/
+            axios.post("api/Categories/AddCategory", {
                 CategoryName: this.state.categoryName.toString(),
                 categoryImageURL: "test",
                 categoryDescription: this.state.categoryDescription.toString()
@@ -143,9 +143,9 @@ class Category extends Component {
         //Update category
         else if (this.state.editItem) {
             // Send a POST request to API
-            const apiURL =
-                process.env.apiURL || "http://localhost:8080/api/Categories/UpdateCategory";
-            axios.put(`${apiURL}/${this.state.id}`, {
+/*            const apiURL =
+                process.env.apiURL || "http://localhost:8080/api/Categories/UpdateCategory";*/
+            axios.put(`api/Categories/UpdateCategory/${this.state.id}`, {
                 CategoryName: this.state.categoryName.toString(),
                 categoryImageURL: "test",
                 categoryDescription: this.state.categoryDescription.toString()
@@ -209,10 +209,10 @@ class Category extends Component {
     //=============================== CategoryList ===============================
     //Get all categories
     getCategoryFromDB = () => {
-        const apiURL =
-            process.env.apiURL || "http://localhost:8080/api/Categories/";
+/*        const apiURL =
+            process.env.apiURL || "http://localhost:8080/api/Categories/";*/
         axios
-            .get(apiURL)
+            .get("api/Categories/")
             .then((res) => {
                 this.setState({
                     data: res.data,
@@ -233,10 +233,10 @@ class Category extends Component {
     //Handle edit category
     handleEditCategory = (id) => {
         //get category by id
-        const apiURL =
-            process.env.apiURL || "http://localhost:8080/api/Categories";
+/*        const apiURL =
+            process.env.apiURL || "http://localhost:8080/api/Categories";*/
         axios
-            .get(`${apiURL}/${id}`)
+            .get(`api/Categories/${id}`)
             .then((res) => {
                 this.setState({
                     categoryName: res.data.CategoryName,
@@ -264,11 +264,11 @@ class Category extends Component {
         }).then((result) => {
             //if click yes
             if (result.value) {
-                const apiURL =
-                    process.env.apiURL || "http://localhost:8080/api/Categories/DeleteCategory";
+/*                const apiURL =
+                    process.env.apiURL || "http://localhost:8080/api/Categories/DeleteCategory";*/
                 axios
                     .delete(
-                        `${apiURL}/${id}`  //delete category by id
+                        `api/Categories/DeleteCategory/${id}`  //delete category by id
                     )
                     .then((res) => {
                         Swal.fire(
