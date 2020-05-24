@@ -59,12 +59,12 @@ export default class WishList extends Component{
             this.setState({
                 isShowBackDrop : true,
             })
-            const getwishlistbyuserId = process.env.apiURL || "http://localhost:8080/" + "api/wishlists/getWishListByUserID";
+            const getwishlistbyuserId = "https://ishoppingplaza.herokuapp.com/api/wishlists/getWishListByUserID";
 
             axios.get(getwishlistbyuserId)
                 .then(res => {
                     watchList = res.data;
-                    const productsurl = process.env.apiURL || `http://localhost:8080/` + `api/products/`;
+                    const productsurl = `https://ishoppingplaza.herokuapp.com/api/products/`;
                     axios.get(productsurl)
                         .then(response => {
                             productList = response.data
