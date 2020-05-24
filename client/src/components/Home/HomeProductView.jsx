@@ -36,17 +36,10 @@ const HomeProductView = () => {
     return categories.map((cate) => {
       return {
         category: cate.CategoryName,
-        data: productList.filter(
-          (p) => p.productCategory === cate.CategoryName
-        ),
+        data: productList
+          .filter((p) => p.productCategory === cate.CategoryName)
+          .slice(0, 3),
       };
-    });
-  };
-
-  const displaySmallProductView = (productList) => {
-    console.log(productList);
-    productList.map((product) => {
-      return <SmallProductView key={product._id} product={product} />;
     });
   };
 
