@@ -1,5 +1,6 @@
 const router = require("express").Router();
 const Products = require("../model/Product");
+const verifyToken = require("./Authentication/VerifyToken");
 
 /*Router to get all Products from db*/
 router.get("/", (req, res) => {
@@ -23,29 +24,38 @@ router.get("/productByCategory/:category", (req, res) => {
 });
 
 /*Router to add Products to db*/
-router.post("/AddProduct", (req, res) => {
-  let product = new Products({
-    productName: req.body.productName,
-    productDescription: req.body.productDescription,
-    productCategory: req.body.productCategory,
-    productImageURLS: req.body.productImageURLS,
-    productBrand: req.body.productBrand,
-    productWatchers: req.body.productWatchers,
-    productPrice: req.body.productPrice,
-    detailsWithSize: req.body.detailsWithSize,
-  });
+router.post("/AddProduct", verifyToken, (req, res) => {
+  if(req.user.userRole === 'storeManager'){
+      let product = new Products({
+          productName: req.body.productName,
+          productDescription: req.body.productDescription,
+          productCategory: req.body.productCategory,
+          productImageURLS: req.body.productImageURLS,
+          productBrand: req.body.productBrand,
+          productWatchers: req.body.productWatchers,
+          productPrice: req.body.productPrice,
+          detailsWithSize: req.body.detailsWithSize,
+      });
 
-  product
-    .save()
-    .then((product) => res.send(product))
-    .catch((err) => res.status(400).send("Error: " + err));
+      product
+          .save()
+          .then((product) => res.send(product))
+          .catch((err) => res.status(400).send("Error: " + err));
+  }else{
+      return res.status(401).send("Access Denied!")
+    }
 });
 
 /*Router to delete Products from db*/
-router.delete("/DeleteProduct/:id", (req, res) => {
-  Products.findByIdAndDelete(req.params.id)
-    .then(() => res.send(req.params.id + " Deleted!"))
-    .catch((err) => res.status(400).send("Error : " + err));
+router.delete("/DeleteProduct/:id", verifyToken, async (req, res) => {
+    if(req.user.userRole === 'storeManager'){
+        await Products.findByIdAndDelete(req.params.id)
+            .then(() => res.send(req.params.id + " Deleted!"))
+            .catch((err) => res.status(400).send("Error : " + err));
+    }else {
+        return res.status(401).send("Access Denied!")
+    }
+
 });
 
 /*Router to Update Products*/
@@ -84,26 +94,30 @@ router.put("/UpdateProductWatchers/:id", (req, res) => {
 });
 
 /*Route To ADD Product Images to server*/
-router.post("/upload", (req, res) => {
-  let imageUrls = [];
-  try {
-    let url = req.protocol + "://" + req.get("host");
-    for (let x = 0; x < req.files.file.length; x++) {
-      let imageName = Date.now() + "-" + req.files.file[x].name + ".jpg";
-      let image = req.files.file[x];
-      image.mv("./images/ProductImages/" + imageName, (err, result) => {
-        if (err) return res.status(400).send("Error : " + err);
-      });
-      let imageUrl = url + "/images/ProductImages/" + imageName;
-      imageUrls.push({ imageURL: imageUrl });
-    }
-  } catch (err) {
-    return res.status(404).send("Please upload the image");
-  }
+router.post("/upload", verifyToken, (req, res) => {
+  if(req.user.userRole === 'storeManager'){
+      let imageUrls = [];
+      try {
+          let url = req.protocol + "://" + req.get("host");
+          for (let x = 0; x < req.files.file.length; x++) {
+              let imageName = Date.now() + "-" + req.files.file[x].name;
+              let image = req.files.file[x];
+              image.mv("./images/ProductImages/" + imageName, (err, result) => {
+                  if (err) return res.status(400).send("Error : " + err);
+              });
+              let imageUrl = url + "/images/ProductImages/" + imageName;
+              imageUrls.push({ imageURL: imageUrl });
+          }
+      } catch (err) {
+          return res.status(404).send("Please upload the image");
+      }
 
-  return res.status(200).send({
-    files: imageUrls,
-  });
+      return res.status(200).send({
+          files: imageUrls,
+      });
+  }else {
+      return res.status(401).send("Access Denied!")
+  }
 });
 
 module.exports = router;
