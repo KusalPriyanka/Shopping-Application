@@ -9,7 +9,7 @@ import Skeleton from '@material-ui/lab/Skeleton';
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 import { Redirect } from "react-router-dom";
-const axios = require('axios').default;
+const axios = require('axios');
 
 const styles = (theme) => ({
 
@@ -45,7 +45,7 @@ const styles = (theme) => ({
 class Category extends Component {
 
     state = {
-        categoryName : '',
+        categoryName: '',
         categoryDescription: '',
         editItem: false,
         data: [],
@@ -56,32 +56,44 @@ class Category extends Component {
         redirect: null,
     };
 
+    componentDidMount() {
+        setInterval(this.getCategoryFromDB(), 5000); //Refresh every 5 seconds.
+        if (localStorage.getItem("emp")) {
+            axios.defaults.headers.common["auth-token"] = JSON.parse(
+                localStorage.getItem("emp")
+            ).empToken;
+        }
+        // this.getCategoryFromDB()
+    }
+
     //=============================== Add Category functions ===============================
     //handle change event for category name
     onChangeHandlerCategoryName = (e) => {
         e.preventDefault();
         this.setState({
-            categoryName:e.target.value
+            categoryName: e.target.value
         });
     };
     //handle change event for category description
     onChangeHandlerCategoryDescription = (e) => {
         e.preventDefault();
         this.setState({
-            categoryDescription:e.target.value
+            categoryDescription: e.target.value
         });
     };
     //handle click save button
-    onSubmitHandler = (e) =>{
+    onSubmitHandler = (e) => {
         e.preventDefault();
         this.setState({
             isLoading_Add: true,
         });
 
         //Check whether new category
-        if(!this.state.editItem ){
+        if (!this.state.editItem) {
             // Send a POST request to API
-            axios.post("http://localhost:8080/api/Categories/AddCategory", {
+            const apiURL =
+                process.env.apiURL || "http://localhost:8080/api/Categories/AddCategory";
+            axios.post(apiURL, {
                 CategoryName: this.state.categoryName.toString(),
                 categoryImageURL: "test",
                 categoryDescription: this.state.categoryDescription.toString()
@@ -103,8 +115,18 @@ class Category extends Component {
                     this.getCategoryFromDB();
                 })
                 .catch(err => {
-                    //console.log(err.response);
-                    if(err.response.data === "Already published the category!"){
+                    if (err.response.status === 401) {
+                        Swal.fire({
+                            icon: "error",
+                            title: "Something went wrong!",
+                            text: err.response.data
+                        }).then((result) => {
+                            this.setState({
+                                redirect: "/employee"
+                            })
+                        });
+                    }
+                    if (err.response.status === 404) {
                         Swal.fire({
                             icon: "error",
                             title: "Something went wrong!",
@@ -119,9 +141,11 @@ class Category extends Component {
                 });
         }
         //Update category
-        else if(this.state.editItem ){
+        else if (this.state.editItem) {
             // Send a POST request to API
-            axios.put(`http://localhost:8080/api/Categories/UpdateCategory/${this.state.id}`, {
+            const apiURL =
+                process.env.apiURL || "http://localhost:8080/api/Categories/UpdateCategory";
+            axios.put(`${apiURL}/${this.state.id}`, {
                 CategoryName: this.state.categoryName.toString(),
                 categoryImageURL: "test",
                 categoryDescription: this.state.categoryDescription.toString()
@@ -143,8 +167,18 @@ class Category extends Component {
                     this.getCategoryFromDB();
                 })
                 .catch(err => {
-                    //console.log(err.response);
-                    if(err.response.data === "Already published the category!"){
+                    if (err.response.status === 401) {
+                        Swal.fire({
+                            icon: "error",
+                            title: "Something went wrong!",
+                            text: err.response.data
+                        }).then((result) => {
+                            this.setState({
+                                redirect: "/employee"
+                            })
+                        });
+                    }
+                    if (err.response.status === 404) {
                         Swal.fire({
                             icon: "error",
                             title: "Something went wrong!",
@@ -163,7 +197,7 @@ class Category extends Component {
     //Clear text field
     clearTextFeild = () => {
         this.setState({
-            categoryName : '',
+            categoryName: '',
             categoryDescription: '',
             data: [],
             editItem: false,
@@ -175,57 +209,42 @@ class Category extends Component {
     //=============================== CategoryList ===============================
     //Get all categories
     getCategoryFromDB = () => {
+        const apiURL =
+            process.env.apiURL || "http://localhost:8080/api/Categories/";
         axios
-            .get("http://localhost:8080/api/Categories/")
+            .get(apiURL)
             .then((res) => {
                 this.setState({
                     data: res.data,
                     isLoading: false,
                 });
-
-                //console.log(this.state.data)
             })
             .catch((err) => {
-                if(err.response.data === "Access Denied!"){
+                if (err.response.status === 400) {
                     Swal.fire({
                         icon: "error",
                         title: "Something went wrong!",
                         text: err.response.data
-                    }).then((result) => {
-                        this.setState({
-                            redirect: "/employee"
-                        })
-                    });
+                    })
                 }
             });
     };
 
-    componentDidMount() {
-        //const history = useHistory();
-       if (localStorage.getItem("emp")) {
-            axios.defaults.headers.common["auth-token"] = JSON.parse(
-                localStorage.getItem("emp")
-            ).empToken;
-        }
-
-       // this.getCategoryFromDB()
-
-    }
-
     //Handle edit category
-    handleEditCategory  = (id) => {
+    handleEditCategory = (id) => {
         //get category by id
+        const apiURL =
+            process.env.apiURL || "http://localhost:8080/api/Categories";
         axios
-            .get(`http://localhost:8080/api/Categories/${id}`)
+            .get(`${apiURL}/${id}`)
             .then((res) => {
-              this.setState({
-                  categoryName : res.data.CategoryName,
-                  categoryDescription: res.data.categoryDescription,
-                  editItem: true,
-                  id: id,
+                this.setState({
+                    categoryName: res.data.CategoryName,
+                    categoryDescription: res.data.categoryDescription,
+                    editItem: true,
+                    id: id,
                 });
                 document.getElementById("CategoryName").focus();    //focus to category name
-                //console.log(this.state)
             })
             .catch((err) => {
                 console.log(err);
@@ -245,9 +264,11 @@ class Category extends Component {
         }).then((result) => {
             //if click yes
             if (result.value) {
+                const apiURL =
+                    process.env.apiURL || "http://localhost:8080/api/Categories/DeleteCategory";
                 axios
                     .delete(
-                        `http://localhost:8080/api/Categories/DeleteCategory/${id}`  //delete category by id
+                        `${apiURL}/${id}`  //delete category by id
                     )
                     .then((res) => {
                         Swal.fire(
@@ -257,15 +278,24 @@ class Category extends Component {
                         this.getCategoryFromDB();
                     })
                     .catch((err) => {
-                        console.log(err);
+                        if (err.response.status === 401) {
+                            Swal.fire({
+                                icon: "error",
+                                title: "Something went wrong!",
+                                text: err.response.data
+                            }).then((result) => {
+                                this.setState({
+                                    redirect: "/employee"
+                                })
+                            });
+                        }
                     });
             }
         })
-    };
+    }
 
 
     render() {
-        setInterval(this.getCategoryFromDB(), 5000); //Refresh every 5 seconds.
         const {classes, isDashboard} = this.props;
         if (this.state.redirect) {
             return <Redirect to={this.state.redirect} />

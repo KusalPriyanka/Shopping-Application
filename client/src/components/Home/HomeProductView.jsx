@@ -10,8 +10,10 @@ const HomeProductView = () => {
   const [productList, setProductList] = useState([]);
 
   useEffect(() => {
+    const apiURL =
+      process.env.apiURL || "http://localhost:8080/" + "api/Categories/";
     axios
-      .get("http://localhost:8080/api/Categories/")
+      .get(apiURL)
       .then((res) => {
         setCategories(res.data);
         getProducts();
@@ -22,8 +24,10 @@ const HomeProductView = () => {
   }, []);
 
   const getProducts = (categories) => {
+    const apiURL =
+      process.env.apiURL || "http://localhost:8080/" + "api/products/";
     axios
-      .get("http://localhost:8080/api/products/")
+      .get(apiURL)
       .then((res) => {
         setProductList(res.data);
       })
@@ -36,17 +40,10 @@ const HomeProductView = () => {
     return categories.map((cate) => {
       return {
         category: cate.CategoryName,
-        data: productList.filter(
-          (p) => p.productCategory === cate.CategoryName
-        ),
+        data: productList
+          .filter((p) => p.productCategory === cate.CategoryName)
+          .slice(0, 3),
       };
-    });
-  };
-
-  const displaySmallProductView = (productList) => {
-    console.log(productList);
-    productList.map((product) => {
-      return <SmallProductView key={product._id} product={product} />;
     });
   };
 
@@ -64,7 +61,7 @@ const HomeProductView = () => {
             style={{ marginTop: "25px", marginBottom: "25px" }}
           >
             <Typography variant="h3" align="center" color="textSecondary">
-              {proCategory.category}
+              {proCategory.data.length > 0 ? proCategory.category : null}
             </Typography>
           </Grid>
           <Grid container direction={"row"}>

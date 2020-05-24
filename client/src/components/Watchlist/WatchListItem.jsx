@@ -40,7 +40,7 @@ class WatchListItem extends Component {
             }
         })
     }
-
+/*Sweet alert*/
     ShowMsg = (icon, title, text) => {
         Swal.fire({
             icon: icon,
@@ -48,7 +48,7 @@ class WatchListItem extends Component {
             text: text,
         });
     }
-
+/*Checking the log in status*/
     checkLoginState = () => {
         /*localStorage.clear();*/
         let User;
@@ -65,7 +65,7 @@ class WatchListItem extends Component {
         }
 
     }
-
+/*Remove an item from the watchlist*/
     removeWatchListItem = () => {
         let status = this.checkLoginState();
         if (status) {
@@ -73,12 +73,15 @@ class WatchListItem extends Component {
                 isShowBackDrop: true
             })
             let userWishList = null;
-            axios.get("http://localhost:8080/api/wishlists/getWishListByUserID")
+            const getwishlistuserbyID = process.env.apiURL || "http://localhost:8080/" + "api/wishlists/getWishListByUserID";
+            axios.get(getwishlistuserbyID)
                 .then(res => {
                     userWishList = res.data
                     console.log(userWishList)
                     if (res.data.watchingProducts.length === 1) {
-                        axios.delete(`http://localhost:8080/api/wishlists/DeleteWishListItem/${this.state.wID}`)
+                        const getshoppingcartbyuserId = process.env.apiURL || `http://localhost:8080/` + `api/wishlists/DeleteWishListItem/${this.state.wID}`;
+
+                        axios.delete(getshoppingcartbyuserId)
                             .then(res => {
                                     this.setState({
                                         isShowBackDrop: false
@@ -102,7 +105,7 @@ class WatchListItem extends Component {
                             wItem.productID !== this.state.product._id
                         )
                         console.log(userWishList.watchingProducts)
-                        let url = "http://localhost:8080/api/wishlists/UpdateWishList/"
+                        let url = "http://localhost:8080/" + "api/wishlists/UpdateWishList/"
                         let updateWishList = {
                             "watchingProducts": userWishList.watchingProducts
                         }
@@ -136,7 +139,7 @@ class WatchListItem extends Component {
         }
     }
 
-
+/*Function to Adding the products to cart from wish list*/
     addrProductToCart = () => {
         this.setState({
             isShowBackDrop: true
@@ -147,7 +150,7 @@ class WatchListItem extends Component {
             productQuantity: 1,
         }
 
-        let url = `${hostUrl}products/${this.state.product._id}`
+        let url =  process.env.apiURL || `http://localhost:8080/` +`api/products/${this.state.product._id}`
         let latestProduct;
         axios.get(url).then(res => {
             latestProduct = res.data

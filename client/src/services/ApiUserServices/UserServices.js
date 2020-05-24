@@ -2,7 +2,7 @@ import axios from "axios";
 
 export const registerUserApiService = (registerUserObj) => {
   const apiURL =
-    process.env.apiURL || "http://localhost:8080/api/users/register";
+    process.env.apiURL || "http://localhost:8080/" + "api/users/register";
 
   const formData = new FormData();
   formData.append("photo", registerUserObj.userImage.raw);
@@ -29,7 +29,8 @@ export const registerUserApiService = (registerUserObj) => {
 };
 
 export const loginUserApiService = (loginUserObj) => {
-  const apiURL = process.env.apiURL || "http://localhost:8080/api/users/login";
+  const apiURL =
+    process.env.apiURL || "http://localhost:8080/" + "api/users/login";
 
   return axios
     .post(apiURL, loginUserObj)

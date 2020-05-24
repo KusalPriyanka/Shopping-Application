@@ -93,29 +93,73 @@ const RegisterForm = () => {
     e.preventDefault();
     setProgressStatus(true);
 
-    await registerUserApiService(regUserObj).then((res) => {
-      if (!res.status) {
-        Swal.fire({
-          icon: "error",
-          title: "Something went wrong in registration!",
-          text: res.data.response.data,
-        });
-      } else {
-        Swal.fire({
-          title: "Sucessfully Registered!",
-          icon: "success",
-          confirmButtonColor: "#3085d6",
-          confirmButtonText: "Sign In Now",
-          allowOutsideClick: false,
-        }).then((result) => {
-          if (result.value) {
-            history.push("/login");
-          }
-        });
-      }
-    });
+    if (validateUserInputs()) {
+      await registerUserApiService(regUserObj).then((res) => {
+        if (!res.status) {
+          Swal.fire({
+            icon: "error",
+            title: "Something went wrong in registration!",
+            text: res.data.response.data,
+          });
+        } else {
+          Swal.fire({
+            title: "Sucessfully Registered!",
+            icon: "success",
+            confirmButtonColor: "#3085d6",
+            confirmButtonText: "Sign In Now",
+            allowOutsideClick: false,
+          }).then((result) => {
+            if (result.value) {
+              history.push("/login");
+            }
+          });
+        }
+      });
+    }
 
     setProgressStatus(false);
+  };
+
+  const validateUserInputs = () => {
+    if (regUserObj.userName === "") {
+      showValidationError("Please enter user name !");
+      return false;
+    }
+    if (regUserObj.userAddress === "") {
+      showValidationError("Please enter user address !");
+      return false;
+    }
+    if (regUserObj.userEmail === "") {
+      showValidationError("Please enter user email !");
+      return false;
+    }
+    if (regUserObj.userPassword === "") {
+      showValidationError("Please enter user password !");
+      return false;
+    }
+    if (regUserObj.userMobileNo === "") {
+      showValidationError("Please enter user mobile no !");
+      return false;
+    }
+    if (regUserObj.userImage.raw === "") {
+      showValidationError("Please upload photo !");
+      return false;
+    }
+    return true;
+  };
+
+  const showValidationError = (errMsg) => {
+    return Swal.fire({
+      icon: "error",
+      title: "Something went wrong in login!",
+      text: errMsg,
+    });
+  };
+
+  const mobileNoOnInput = (e) => {
+    const MobNumbersRegex = /^[0-9]{1,10}$/;
+    if (!e.target.value.match(MobNumbersRegex))
+      e.target.value = e.target.value.substring(0, e.target.value.length - 1);
   };
 
   return (
@@ -200,6 +244,7 @@ const RegisterForm = () => {
               autoComplete="off"
               type="text"
               onChange={handleChange}
+              onInput={(e) => mobileNoOnInput(e)}
             />
             <input
               accept="image/*"

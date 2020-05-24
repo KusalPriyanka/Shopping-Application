@@ -24,13 +24,11 @@ class AllProducts extends Component {
     };
 
     render() {
-        const { classes, data, handleEditCategory, handleDeleteCategory } = this.props;
+        const { classes, data, handleEditCategory, handleDeleteCategory, isDashboard } = this.props;
         return (
             <Container>
                 <Grid container>
                     <Grid item xs={12} className={classes.paper + " hoverable"}>
-                        {/*{this.renderRedirect()}*/}
-
                         <MaterialTable
                             title="All Categories"  //table title
                             //table column names
@@ -49,18 +47,18 @@ class AllProducts extends Component {
                             }}
                             actions={[
                                 {
-                                    icon: () => this.getIcon("edit"),
-                                    tooltip: "Update Product",
-                                    onClick: (event, rowData) =>
-                                        handleEditCategory(rowData._id),
-                                },
-                                {
                                     icon: () => this.getIcon("delete"),
                                     tooltip: "Delete Product",
-                                    // onClick: (event, rowData) => this.deleteProduct(rowData._id)
                                     onClick: (event, rowData) =>
                                         handleDeleteCategory(rowData._id),
                                 },
+                                isDashboard ? null :
+                                    {
+                                        icon: () => this.getIcon("edit"),
+                                        tooltip: "Update Product",
+                                        onClick: (event, rowData) =>
+                                            handleEditCategory(rowData._id),
+                                    },
                             ]}
                         />
                     </Grid>

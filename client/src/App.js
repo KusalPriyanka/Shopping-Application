@@ -22,7 +22,7 @@ function App({ location }) {
 
   const getCategoryFromDB = () => {
     axios
-      .get("http://localhost:8080/api/Categories/")
+      .get("api/Categories/")
       .then((res) => {
         setCategories(res.data);
       })
