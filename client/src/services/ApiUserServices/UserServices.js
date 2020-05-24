@@ -1,9 +1,6 @@
 import axios from "axios";
 
 export const registerUserApiService = (registerUserObj) => {
-  const apiURL =
-    process.env.apiURL || "http://localhost:8080/" + "api/users/register";
-
   const formData = new FormData();
   formData.append("photo", registerUserObj.userImage.raw);
   formData.set("username", registerUserObj.userName);
@@ -13,7 +10,7 @@ export const registerUserApiService = (registerUserObj) => {
   formData.set("password", registerUserObj.userPassword);
 
   return axios
-    .post(apiURL, formData)
+    .post("api/users/register", formData)
     .then((res) => {
       return {
         status: true,
@@ -29,11 +26,8 @@ export const registerUserApiService = (registerUserObj) => {
 };
 
 export const loginUserApiService = (loginUserObj) => {
-  const apiURL =
-    process.env.apiURL || "http://localhost:8080/" + "api/users/login";
-
   return axios
-    .post(apiURL, loginUserObj)
+    .post("api/users/login", loginUserObj)
     .then((res) => {
       return {
         status: true,
