@@ -1,11 +1,5 @@
 import axios from "axios";
 
-if (localStorage.getItem("user")) {
-  axios.defaults.headers.common["auth-token"] = JSON.parse(
-    localStorage.getItem("user")
-  ).userToken;
-}
-
 export const getFeedbacks = (productId) => {
   const apiURL =
     "https://ishoppingplaza.herokuapp.com/api/feedback/" + productId;
