@@ -10,7 +10,7 @@ export const registerUserApiService = (registerUserObj) => {
   formData.set("password", registerUserObj.userPassword);
 
   return axios
-    .post("api/users/register", formData)
+    .post("https://ishoppingplaza.herokuapp.com/api/users/register", formData)
     .then((res) => {
       return {
         status: true,
@@ -27,7 +27,7 @@ export const registerUserApiService = (registerUserObj) => {
 
 export const loginUserApiService = (loginUserObj) => {
   return axios
-    .post("api/users/login", loginUserObj)
+    .post("https://ishoppingplaza.herokuapp.com/api/users/login", loginUserObj)
     .then((res) => {
       return {
         status: true,

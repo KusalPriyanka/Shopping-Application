@@ -7,7 +7,8 @@ if (localStorage.getItem("user")) {
 }
 
 export const getFeedbacks = (productId) => {
-  const apiURL = "api/feedback/" + productId;
+  const apiURL =
+    "https://ishoppingplaza.herokuapp.com/api/feedback/" + productId;
 
   return axios
     .get(apiURL)
@@ -27,7 +28,7 @@ export const getFeedbacks = (productId) => {
 
 export const addFeedback = (feedback) => {
   return axios
-    .post("api/feedback/add", feedback)
+    .post("https://ishoppingplaza.herokuapp.com/api/feedback/add", feedback)
     .then((res) => {
       return {
         status: true,
@@ -44,7 +45,7 @@ export const addFeedback = (feedback) => {
 
 export const editFeedback = (feedback) => {
   return axios
-    .put("api/feedback/edit", feedback)
+    .put("https://ishoppingplaza.herokuapp.com/api/feedback/edit", feedback)
     .then((res) => {
       return {
         status: true,
@@ -61,7 +62,9 @@ export const editFeedback = (feedback) => {
 
 export const deleteFeedback = (feedback) => {
   return axios
-    .delete("api/feedback/delete", { data: feedback })
+    .delete("https://ishoppingplaza.herokuapp.com/api/feedback/delete", {
+      data: feedback,
+    })
     .then((res) => {
       return {
         status: true,

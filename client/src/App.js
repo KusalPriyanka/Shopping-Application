@@ -22,7 +22,7 @@ function App({ location }) {
 
   const getCategoryFromDB = () => {
     axios
-      .get("api/Categories/")
+      .get("https://ishoppingplaza.herokuapp.com/api/Categories/")
       .then((res) => {
         setCategories(res.data);
       })

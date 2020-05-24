@@ -2,7 +2,7 @@ import axios from "axios";
 
 export const empLogin = (empObj) => {
   return axios
-    .post("api/EmployeeLogin/", empObj)
+    .post("https://ishoppingplaza.herokuapp.com/api/EmployeeLogin/", empObj)
     .then((res) => {
       return {
         status: true,
