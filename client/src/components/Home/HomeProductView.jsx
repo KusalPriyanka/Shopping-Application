@@ -10,8 +10,10 @@ const HomeProductView = () => {
   const [productList, setProductList] = useState([]);
 
   useEffect(() => {
+    const apiURL =
+      process.env.apiURL || "http://localhost:8080/" + "api/Categories/";
     axios
-      .get("http://localhost:8080/api/Categories/")
+      .get(apiURL)
       .then((res) => {
         setCategories(res.data);
         getProducts();
@@ -22,8 +24,10 @@ const HomeProductView = () => {
   }, []);
 
   const getProducts = (categories) => {
+    const apiURL =
+      process.env.apiURL || "http://localhost:8080/" + "api/products/";
     axios
-      .get("http://localhost:8080/api/products/")
+      .get(apiURL)
       .then((res) => {
         setProductList(res.data);
       })
