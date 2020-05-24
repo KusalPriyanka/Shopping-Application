@@ -15,7 +15,7 @@ export const productDetailsValidation = (productDetails) => {
         BrandName: joi.string().min(3).max(255).required(),
         Category: joi.string().min(3).max(255).required(),
         ProductPrice: joi.number().positive().required(),
-        Description: joi.string().min(6).max(255).required(),
+        Description: joi.string().min(6).required(),
 
     };
     const result = joi.validate(productDetails, schema)

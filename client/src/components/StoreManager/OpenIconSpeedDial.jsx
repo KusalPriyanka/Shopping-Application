@@ -25,8 +25,8 @@ const actions = [
     { icon: <AssignmentIcon style={{color : "green"}} />, name: 'All Products', to : '/storeManager' },
     { icon: <PostAddIcon style={{color : "orange"}} />, name: 'Add New Product', to : '/storeManager/addProducts'  },
     { icon: <LocalOfferIcon style={{color : "purple"}}/>, name: 'All Offers', to : '/storeManager/allDiscounts'  },
-    { icon: <InsertInvitationIcon color={"error"} />, name: 'Dashboard', to : ''  },
-    { icon: <HomeIcon style={{color : "yellow"}} />, name: 'Home', to : ''  },
+    { icon: <InsertInvitationIcon color={"error"} />, name: 'Dashboard', to : '/storeManager'  },
+    { icon: <HomeIcon style={{color : "yellow"}} />, name: 'Home', to : '/storeManager'  },
 ];
 
 export default function OpenIconSpeedDial() {
