@@ -94,57 +94,79 @@ const Feedback = (props) => {
     });
   }, [formChange]);
 
+  const validateUserInputs = () => {
+    if (feedback.feedback === "") {
+      showValidationError("Please enter feedback Message !");
+      return false;
+    }
+    if (feedback.rating === 0) {
+      showValidationError("Please provide rating !");
+      return false;
+    }
+    return true;
+  };
+
+  const showValidationError = (errMsg) => {
+    return Swal.fire({
+      icon: "error",
+      title: "Something went wrong in login!",
+      text: errMsg,
+    });
+  };
+
   const addorEditFeedback = () => {
-    if (formStatus === "ADD") {
-      const reqObj = {
-        productId: productId,
-        feedback: feedback.feedback,
-        rating: feedback.rating,
-      };
-      addFeedback(reqObj).then((res) => {
-        if (res.status) {
-          Swal.fire(
-            "Sucessfully Added Feedback!",
-            "Thank you for your valuable feedback!",
-            "success"
-          );
-          setFormChange(Date.now());
-        } else {
-          Swal.fire({
-            icon: "error",
-            title: "Something went wrong in login!",
-            text: res.data.response.data,
-          });
-        }
-      });
-    } else if (formStatus === "EDIT") {
-      const reqObj = {
-        feedbackId: feedback._id,
-        feedback: feedback.feedback,
-        rating: feedback.rating,
-      };
-      editFeedback(reqObj).then((res) => {
-        if (res.status) {
-          Swal.fire(
-            "Sucessfully Edited Your Feedback!",
-            "Thank you for your valuable feedback!",
-            "success"
-          );
-          setFormChange(Date.now());
-        } else {
-          Swal.fire({
-            icon: "error",
-            title: "Something went wrong in login!",
-            text: res.data.response.data,
-          });
-        }
-        setFeedback((feedback) => ({
-          ...feedback,
-          _id: "",
-          feedback: "",
-          rating: 0,
-        }));
-      });
+    if (validateUserInputs()) {
+      if (formStatus === "ADD") {
+        const reqObj = {
+          productId: productId,
+          feedback: feedback.feedback,
+          rating: feedback.rating,
+        };
+        addFeedback(reqObj).then((res) => {
+          if (res.status) {
+            Swal.fire(
+              "Sucessfully Added Feedback!",
+              "Thank you for your valuable feedback!",
+              "success"
+            );
+            setFormChange(Date.now());
+          } else {
+            Swal.fire({
+              icon: "error",
+              title: "Something went wrong in login!",
+              text: res.data.response.data,
+            });
+          }
+        });
+      } else if (formStatus === "EDIT") {
+        const reqObj = {
+          feedbackId: feedback._id,
+          feedback: feedback.feedback,
+          rating: feedback.rating,
+        };
+        editFeedback(reqObj).then((res) => {
+          if (res.status) {
+            Swal.fire(
+              "Sucessfully Edited Your Feedback!",
+              "Thank you for your valuable feedback!",
+              "success"
+            );
+            setFormChange(Date.now());
+          } else {
+            Swal.fire({
+              icon: "error",
+              title: "Something went wrong in login!",
+              text: res.data.response.data,
+            });
+          }
+          setFeedback((feedback) => ({
+            ...feedback,
+            _id: "",
+            feedback: "",
+            rating: 0,
+          }));
+        });
+      }
     }
   };
 
