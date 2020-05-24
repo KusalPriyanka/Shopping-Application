@@ -108,7 +108,7 @@ class AllDiscounts extends Component {
 
     getOffersFromDB = () => {
         axios
-            .get("http://localhost:8080/api/offers/")
+            .get("https://ishoppingplaza.herokuapp.com/api/offers/")
             .then((res) => {
                 this.setState({
                     data: res.data,
@@ -147,7 +147,7 @@ class AllDiscounts extends Component {
         this.setState({
             open: true,
         });
-        const deleteOffer = process.env.apiURL || "http://localhost:8080/" + `api/offers/DeleteOffer/${this.state.id}`;
+        const deleteOffer = `https://ishoppingplaza.herokuapp.com/api/offers/DeleteOffer/${this.state.id}`;
         axios
             .delete(
                 deleteOffer

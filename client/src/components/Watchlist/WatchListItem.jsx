@@ -73,13 +73,13 @@ class WatchListItem extends Component {
                 isShowBackDrop: true
             })
             let userWishList = null;
-            const getwishlistuserbyID = process.env.apiURL || "http://localhost:8080/" + "api/wishlists/getWishListByUserID";
+            const getwishlistuserbyID = "https://ishoppingplaza.herokuapp.com/api/wishlists/getWishListByUserID";
             axios.get(getwishlistuserbyID)
                 .then(res => {
                     userWishList = res.data
                     console.log(userWishList)
                     if (res.data.watchingProducts.length === 1) {
-                        const getshoppingcartbyuserId = process.env.apiURL || `http://localhost:8080/` + `api/wishlists/DeleteWishListItem/${this.state.wID}`;
+                        const getshoppingcartbyuserId = `https://ishoppingplaza.herokuapp.com/api/wishlists/DeleteWishListItem/${this.state.wID}`;
 
                         axios.delete(getshoppingcartbyuserId)
                             .then(res => {
@@ -100,12 +100,16 @@ class WatchListItem extends Component {
                                 this.ShowMsg('error', "Error Occurred", err)
                             })
                     } else {
+
                         console.log(userWishList.watchingProducts)
+
                         userWishList.watchingProducts = userWishList.watchingProducts.filter(wItem =>
                             wItem.productID !== this.state.product._id
                         )
+
                         console.log(userWishList.watchingProducts)
-                        let url = "http://localhost:8080/" + "api/wishlists/UpdateWishList/"
+
+                        let url = "https://ishoppingplaza.herokuapp.com/api/wishlists/UpdateWishList/"
                         let updateWishList = {
                             "watchingProducts": userWishList.watchingProducts
                         }
@@ -150,7 +154,7 @@ class WatchListItem extends Component {
             productQuantity: 1,
         }
 
-        let url =  process.env.apiURL || `http://localhost:8080/` +`api/products/${this.state.product._id}`
+        let url = `https://ishoppingplaza.herokuapp.com/api/products/${this.state.product._id}`
         let latestProduct;
         axios.get(url).then(res => {
             latestProduct = res.data

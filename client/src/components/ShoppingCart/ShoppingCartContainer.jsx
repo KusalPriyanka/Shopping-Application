@@ -67,19 +67,19 @@ export default class ShoppingCartContainer extends Component {
             this.setState({
                 isShowBackDrop: true,
             })
-            const getshoppingcartbyuserId = process.env.apiURL || `http://localhost:8080/` + `api/shoppingcarts/getShoppingCartByUserID`;
+            const getshoppingcartbyuserId = `https://ishoppingplaza.herokuapp.com/api/shoppingcarts/getShoppingCartByUserID`;
 
             axios.get(getshoppingcartbyuserId)
                 .then(res => {
                     shoppingCart = res.data;
 
                     if (shoppingCart) {
-                        const productsurl = process.env.apiURL || "http://localhost:8080/" + "api/products/";
+                        const productsurl = "https://ishoppingplaza.herokuapp.com/api/products/";
 
                         axios.get(productsurl)
                             .then(response => {
                                 productList = response.data
-                                const offersurl = process.env.apiURL || "http://localhost:8080/" + "api/offers/";
+                                const offersurl = "https://ishoppingplaza.herokuapp.com/api/offers/";
 
                                 axios.get(offersurl)
                                     .then(response => {

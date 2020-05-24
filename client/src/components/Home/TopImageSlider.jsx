@@ -4,6 +4,12 @@ import autoBind from 'auto-bind';
 import {Paper, Button} from '@material-ui/core'
 import "../../scss/imageSlider.scss"
 import "../../css/hoverable.css"
+import h3 from './h3.jpg'
+import h4 from './h4.jpg'
+import h16 from './h16.jpg'
+import h5 from './h5.jpg'
+import h12 from './h12.jpg'
+
 
 function Project(props) {
     return (
@@ -32,35 +38,35 @@ function Project(props) {
 const items = [
     {
         name: "Lear Music Reader",
-        description: "A PDF Reader specially designed for musicians.",
+        description:"Dress That Makes You Happy And Beautiful...",
         color: "#7D85B1",
-        image: "https://source.unsplash.com/featured/?wedding"
+        image:h16
 
     },
     {
         name: "Hash Code 2019",
-        description: "My Solution on the 2019 Hash Code by Google Slideshow problem.",
+        description: "Our Solution For Any Casual Event... ",
         color: "#7D85B1",
-        image: "https://source.unsplash.com/featured/?fashion-men"
+        image: h4
     },
     {
         name: "Terrio",
-        description: "A exciting mobile game game made in the Unity Engine.",
+        description: "An Exciting Romance With Warmth Of Freedom...",
         color: "#CE7E78",
-        image: "https://source.unsplash.com/featured/?fashion-woman"
+        image: h3
     },
     {
         name: "React Carousel",
-        description: "A Generic carousel UI component for React using material ui.",
+        description: "Find Your Gorgeous Wear..." ,
         color: "#C9A27E",
-        image: "https://source.unsplash.com/featured/?fashion-bag"
+        image: h5
     },
 
     {
         name: "React Carousel",
-        description: "A Generic carousel UI component for React using material ui.",
+        description: "Leather Collection Styles To Let You Free...",
         color: "#C9A27E",
-        image: "https://source.unsplash.com/featured/?party-dress"
+        image:h12
     }
 ]
 

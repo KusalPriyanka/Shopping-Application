@@ -63,7 +63,7 @@ class MainProductView extends Component {
 
         })
 /*Getting products by the ID*/
-        let url = process.env.apiURL || `http://localhost:8080/` + `api/products/${this.props.productId}`;
+        let url = `https://ishoppingplaza.herokuapp.com/api/products/${this.props.productId}`;
         axios.get(url)
             .then(res => {
                 let sizes = [];
@@ -72,7 +72,7 @@ class MainProductView extends Component {
                 });
 
       /* Getting the offers */
-                const offersurl = process.env.apiURL || "http://localhost:8080/" + "api/offers/";
+                const offersurl = "https://ishoppingplaza.herokuapp.com/api/offers/";
                 axios.get(offersurl)
                     .then(response => {
                         let offers = response.data
@@ -220,14 +220,14 @@ class MainProductView extends Component {
             let validate = validateWishList(wishList.watchingProducts[0])
             if (validate.state) {
                 let userWishList = null;
-                const getwishlistbyuserID = process.env.apiURL || "http://localhost:8080/" + "api/wishlists/getWishListByUserID";
+                const getwishlistbyuserID = "https://ishoppingplaza.herokuapp.com/api/wishlists/getWishListByUserID";
                 axios.get(getwishlistbyuserID)
                     .then(res => {
                         userWishList = res.data
                         if (res.data.length === 0) {
 
 
-                            let url = process.env.apiURL || "http://localhost:8080/" + "api/wishlists/AddToWishList";
+                            let url = "https://ishoppingplaza.herokuapp.com/api/wishlists/AddToWishList";
 
                             axios.post(url, wishList)
                                 .then(res => {
@@ -262,7 +262,7 @@ class MainProductView extends Component {
                                 userWishList.watchingProducts.push(wishList.watchingProducts[0])
 
 
-                                let url =  process.env.apiURL || "http://localhost:8080/" + "api/wishlists/UpdateWishList";
+                                let url = "https://ishoppingplaza.herokuapp.com/api/wishlists/UpdateWishList";
                                 let updateWishList = {
                                     "watchingProducts": userWishList.watchingProducts
                                 }
@@ -348,12 +348,12 @@ class MainProductView extends Component {
             let validate = this.validate()
             if (validate.state) {
                 let cart = null;
-                const getshoppingcartuserbyid = process.env.apiURL || "http://localhost:8080/" + "api/shoppingcarts/getShoppingCartByUserID";
+                const getshoppingcartuserbyid = "https://ishoppingplaza.herokuapp.com/api/shoppingcarts/getShoppingCartByUserID";
                 axios.get(getshoppingcartuserbyid)
                     .then(res => {
                         cart = res.data;
                         if (cart.length === 0) {
-                            let url =  process.env.apiURL || "http://localhost:8080/" + "api/shoppingcarts/AddToCart";
+                            let url = "api/shoppingcarts/AddToCart";
                             let cartItem = {
                                 "cartItems": [
                                     {
@@ -406,7 +406,7 @@ class MainProductView extends Component {
                                     "cartItems": cart.cartItems
                                 }
 
-                                let url =  process.env.apiURL || "http://localhost:8080/" + "api/shoppingcarts/UpdateCartItem"
+                                let url = "https://ishoppingplaza.herokuapp.com/api/shoppingcarts/UpdateCartItem"
                                 axios.put(url, cartData)
                                     .then(response => {
                                             this.setState({

@@ -56,7 +56,7 @@ export default class AddProductDetails extends Component {
     getCategoryFromDB = () => {
         let categories = [];
         axios
-            .get("http://localhost:8080/api/Categories/")
+            .get("https://ishoppingplaza.herokuapp.com/api/Categories/")
             .then((res) => {
                 res.data.forEach(category => {
                     categories.push(category.CategoryName)

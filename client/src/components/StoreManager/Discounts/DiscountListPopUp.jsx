@@ -1,20 +1,13 @@
 import React from "react";
-import CardHeader from "@material-ui/core/CardHeader";
-import Checkbox from "@material-ui/core/Checkbox";
 import Divider from "@material-ui/core/Divider";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemAvatar from "@material-ui/core/ListItemAvatar";
 import Avatar from "@material-ui/core/Avatar";
 import ListItemText from "@material-ui/core/ListItemText";
-import ListItemIcon from "@material-ui/core/ListItemIcon";
 import Card from "@material-ui/core/Card";
 import {makeStyles} from "@material-ui/core/styles";
 import DialogTitle from "@material-ui/core/DialogTitle";
-import DialogContent from "@material-ui/core/DialogContent";
-import DialogContentText from "@material-ui/core/DialogContentText";
-import DialogActions from "@material-ui/core/DialogActions";
-import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
 
 const useStyles = makeStyles((theme) => ({

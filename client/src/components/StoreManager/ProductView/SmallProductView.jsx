@@ -16,12 +16,10 @@ import PopUpSlider from "../../Shared/PopUpSlider";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import Fab from '@material-ui/core/Fab';
 import ZoomInIcon from '@material-ui/icons/ZoomIn';
-import LoyaltyIcon from '@material-ui/icons/Loyalty';
 import "../../../css/hoverable.css";
 import Badge from '@material-ui/core/Badge';
 import { withStyles } from '@material-ui/core/styles';
 import ViewMore from "./ViewMore";
-import DialogActions from "@material-ui/core/DialogActions";
 import Dialog from "@material-ui/core/Dialog";
 import Slide from "@material-ui/core/Slide";
 

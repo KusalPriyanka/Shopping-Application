@@ -41,7 +41,7 @@ export default class ShoppingCartItem extends Component {
         })
         let quantity = e.target.value
         let cart = null;
-        const getshoppingcartbyid = process.env.apiURL || "http://localhost:8080/" + "api/shoppingcarts/getShoppingCartByUserID";
+        const getshoppingcartbyid = "https://ishoppingplaza.herokuapp.com/api/shoppingcarts/getShoppingCartByUserID";
         axios.get(getshoppingcartbyid)
             .then(res => {
                 cart = res.data;
@@ -53,7 +53,7 @@ export default class ShoppingCartItem extends Component {
                 let cartData = {
                     "cartItems": cart.cartItems
                 }
-                const updatecartItem = process.env.apiURL || "http://localhost:8080/" + "api/shoppingcarts/UpdateCartItem";
+                const updatecartItem = "https://ishoppingplaza.herokuapp.com/api/shoppingcarts/UpdateCartItem";
                 let url = updatecartItem;
                 axios.put(url, cartData)
                     .then(response => {
@@ -120,12 +120,12 @@ export default class ShoppingCartItem extends Component {
                 isShowBackDrop: true
             })
             let cart = null;
-            const getshoppingcartbyUserId = process.env.apiURL || "http://localhost:8080/" + "api/shoppingcarts/getShoppingCartByUserID";
+            const getshoppingcartbyUserId = "https://ishoppingplaza.herokuapp.com/api/shoppingcarts/getShoppingCartByUserID";
             axios.get(getshoppingcartbyUserId)
                 .then(res => {
                     cart = res.data
                     if (cart.cartItems.length === 1) {
-                        const deletecartItem = process.env.apiURL || `http://localhost:8080/` + `api/shoppingcarts/DeleteCartItem/${this.props.id}`;
+                        const deletecartItem = `https://ishoppingplaza.herokuapp.com/api/shoppingcarts/DeleteCartItem/${this.props.id}`;
 
                         axios.delete(deletecartItem)
                             .then(res => {
@@ -150,7 +150,7 @@ export default class ShoppingCartItem extends Component {
                             cItem.productID !== this.state.cartItem.productID
                         )
                         // console.log(cart.cartItems)
-                        const updateCartItems = process.env.apiURL || `http://localhost:8080/` + `api/shoppingcarts/UpdateCartItem`;
+                        const updateCartItems = `https://ishoppingplaza.herokuapp.com/api/shoppingcarts/UpdateCartItem`;
 
                         let url = updateCartItems
                         let updatedCartItem = {

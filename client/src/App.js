@@ -24,6 +24,7 @@ function App({ location }) {
     axios
       .get("https://ishoppingplaza.herokuapp.com/api/Categories/")
       .then((res) => {
+        console.log(res.data)
         setCategories(res.data);
       })
       .catch((err) => {
